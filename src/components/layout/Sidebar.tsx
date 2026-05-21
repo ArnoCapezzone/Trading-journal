@@ -40,6 +40,21 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/analysis',
+    end: false,
+    label: 'AI Analysis',
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <circle cx="8" cy="8" r="2" />
+        <path d="M8 2C4.69 2 2 4.69 2 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 1.5A4.5 4.5 0 0 1 12.5 8 4.5 4.5 0 0 1 8 12.5 4.5 4.5 0 0 1 3.5 8 4.5 4.5 0 0 1 8 3.5z" fillOpacity="0.5" />
+        <line x1="8" y1="2" x2="8" y2="4.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <line x1="14" y1="8" x2="11.5" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <line x1="8" y1="14" x2="8" y2="11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <line x1="2" y1="8" x2="4.5" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
     to: '/settings',
     end: false,
     label: 'Settings',

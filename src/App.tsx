@@ -8,6 +8,7 @@ import Journal from './pages/Journal';
 import Import from './pages/Import';
 import Settings from './pages/Settings';
 import TradeFormPage from './pages/TradeFormPage';
+import Analysis from './pages/Analysis';
 import { useTradesStore } from './store/tradesStore';
 import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
@@ -82,6 +83,7 @@ export default function App() {
           <Route path="/journal/new" element={<TradeFormPage />} />
           <Route path="/journal/edit/:id" element={<TradeFormPage />} />
           <Route path="/import" element={<Import />} />
+          <Route path="/analysis" element={<Analysis />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

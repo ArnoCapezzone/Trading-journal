@@ -67,44 +67,59 @@ export default function Dashboard() {
             display: 'flex',
             alignItems: 'center',
             gap: 10,
-            padding: '10px 16px',
-            backgroundColor: 'rgba(255, 154, 60, 0.1)',
-            border: '1px solid rgba(255, 154, 60, 0.35)',
+            padding: '9px 16px',
+            backgroundColor: 'rgba(240,160,48,0.07)',
+            border: '1px solid rgba(240,160,48,0.22)',
+            borderLeft: '3px solid #F0A030',
             borderRadius: 7,
             textDecoration: 'none',
-            color: '#ff9a3c',
-            fontSize: 13,
+            color: '#F0A030',
+            fontSize: 12,
             fontWeight: 500,
+            transition: 'background 0.15s',
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(240,160,48,0.12)')}
+          onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(240,160,48,0.07)')}
         >
-          <span style={{ fontSize: 16 }}>⚠</span>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#F0A030" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M8 2L14.5 13H1.5L8 2z" />
+            <line x1="8" y1="7" x2="8" y2="10" />
+            <circle cx="8" cy="12" r="0.5" fill="#F0A030" />
+          </svg>
           <span>
-            <strong>{pendingCount} trade{pendingCount !== 1 ? 's' : ''}</strong> pending review — click to complete them
+            <strong>{pendingCount} trade{pendingCount !== 1 ? 's' : ''}</strong> pending review
           </span>
-          <span style={{ marginLeft: 'auto', fontSize: 11, opacity: 0.8 }}>View →</span>
+          <span style={{ marginLeft: 'auto', fontSize: 11, opacity: 0.6 }}>View →</span>
         </Link>
       )}
 
       {/* Period selector */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 12, color: '#8892a4' }}>
+        <div style={{ fontSize: 11, color: '#4A5368', fontWeight: 500 }}>
           {periodTrades.length} trade{periodTrades.length !== 1 ? 's' : ''} in period
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div style={{ display: 'flex', gap: 2, backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 7, padding: 3 }}>
           {PERIODS.map((p) => (
             <button
               key={p.value}
               onClick={() => setSelectedPeriod(p.value)}
               style={{
-                padding: '5px 12px',
+                padding: '4px 12px',
                 borderRadius: 5,
-                border: `1px solid ${selectedPeriod === p.value ? '#4d9eff' : '#2d3148'}`,
-                backgroundColor: selectedPeriod === p.value ? 'rgba(77,158,255,0.15)' : 'transparent',
-                color: selectedPeriod === p.value ? '#4d9eff' : '#8892a4',
-                fontSize: 12,
+                border: 'none',
+                backgroundColor: selectedPeriod === p.value ? '#19202F' : 'transparent',
+                color: selectedPeriod === p.value ? '#EEF0F6' : '#4A5368',
+                fontSize: 11,
                 fontWeight: selectedPeriod === p.value ? 600 : 400,
                 cursor: 'pointer',
-                transition: 'all 0.15s',
+                transition: 'all 0.12s',
+                boxShadow: selectedPeriod === p.value ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
+              }}
+              onMouseEnter={(e) => {
+                if (selectedPeriod !== p.value) e.currentTarget.style.color = '#8E97AC';
+              }}
+              onMouseLeave={(e) => {
+                if (selectedPeriod !== p.value) e.currentTarget.style.color = '#4A5368';
               }}
             >
               {p.label}

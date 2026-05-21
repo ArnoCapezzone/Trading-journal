@@ -6,11 +6,11 @@ const NAV_ITEMS = [
     end: true,
     label: 'Dashboard',
     icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <rect x="1" y="1" width="6" height="6" rx="1" />
-        <rect x="9" y="1" width="6" height="6" rx="1" />
-        <rect x="1" y="9" width="6" height="6" rx="1" />
-        <rect x="9" y="9" width="6" height="6" rx="1" />
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor">
+        <rect x="1" y="1" width="6" height="6" rx="1.5" />
+        <rect x="9" y="1" width="6" height="6" rx="1.5" />
+        <rect x="1" y="9" width="6" height="6" rx="1.5" />
+        <rect x="9" y="9" width="6" height="6" rx="1.5" />
       </svg>
     ),
   },
@@ -19,11 +19,11 @@ const NAV_ITEMS = [
     end: false,
     label: 'Journal',
     icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <rect x="2" y="1" width="12" height="14" rx="1" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.2" fill="none" />
-        <line x1="5" y1="5" x2="11" y2="5" stroke="currentColor" strokeWidth="1.2" />
-        <line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" strokeWidth="1.2" />
-        <line x1="5" y1="11" x2="9" y2="11" stroke="currentColor" strokeWidth="1.2" />
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+        <rect x="2.5" y="1.5" width="11" height="13" rx="1.5" />
+        <line x1="5" y1="5.5" x2="11" y2="5.5" />
+        <line x1="5" y1="8" x2="11" y2="8" />
+        <line x1="5" y1="10.5" x2="8.5" y2="10.5" />
       </svg>
     ),
   },
@@ -32,10 +32,10 @@ const NAV_ITEMS = [
     end: false,
     label: 'Import',
     icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <polyline points="8,2 8,10" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" />
-        <polyline points="5,7 8,10 11,7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        <rect x="2" y="12" width="12" height="2" rx="1" />
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="8,2.5 8,10" />
+        <polyline points="5,7 8,10 11,7" />
+        <line x1="2" y1="13" x2="14" y2="13" />
       </svg>
     ),
   },
@@ -44,13 +44,9 @@ const NAV_ITEMS = [
     end: false,
     label: 'AI Analysis',
     icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
         <circle cx="8" cy="8" r="2" />
-        <path d="M8 2C4.69 2 2 4.69 2 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 1.5A4.5 4.5 0 0 1 12.5 8 4.5 4.5 0 0 1 8 12.5 4.5 4.5 0 0 1 3.5 8 4.5 4.5 0 0 1 8 3.5z" fillOpacity="0.5" />
-        <line x1="8" y1="2" x2="8" y2="4.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        <line x1="14" y1="8" x2="11.5" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        <line x1="8" y1="14" x2="8" y2="11.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-        <line x1="2" y1="8" x2="4.5" y2="8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+        <path d="M8 2v1.5M8 12.5V14M2 8h1.5M12.5 8H14M3.5 3.5l1.1 1.1M11.4 11.4l1.1 1.1M12.5 3.5l-1.1 1.1M4.6 11.4l-1.1 1.1" />
       </svg>
     ),
   },
@@ -59,14 +55,9 @@ const NAV_ITEMS = [
     end: false,
     label: 'Settings',
     icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-        <circle cx="8" cy="8" r="2.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
-        <path
-          d="M8 1.5v1.2M8 13.3v1.2M1.5 8h1.2M13.3 8h1.2M3.2 3.2l0.85 0.85M11.95 11.95l0.85 0.85M3.2 12.8l0.85-0.85M11.95 4.05l0.85-0.85"
-          stroke="currentColor"
-          strokeWidth="1.3"
-          strokeLinecap="round"
-        />
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+        <circle cx="8" cy="8" r="2.5" />
+        <path d="M8 1.5v1.2M8 13.3v1.2M1.5 8h1.2M13.3 8h1.2M3.2 3.2l.85.85M11.95 11.95l.85.85M3.2 12.8l.85-.85M11.95 4.05l.85-.85" />
       </svg>
     ),
   },
@@ -78,8 +69,8 @@ export default function Sidebar() {
       style={{
         width: 220,
         minWidth: 220,
-        backgroundColor: '#1a1d27',
-        borderRight: '1px solid #2d3148',
+        backgroundColor: '#070A11',
+        borderRight: '1px solid #1A2235',
         display: 'flex',
         flexDirection: 'column',
         position: 'fixed',
@@ -92,8 +83,8 @@ export default function Sidebar() {
       {/* Logo */}
       <div
         style={{
-          padding: '20px 24px',
-          borderBottom: '1px solid #2d3148',
+          padding: '18px 20px',
+          borderBottom: '1px solid #1A2235',
           display: 'flex',
           alignItems: 'center',
           gap: 12,
@@ -101,32 +92,38 @@ export default function Sidebar() {
       >
         <div
           style={{
-            width: 34,
-            height: 34,
-            backgroundColor: '#4d9eff',
+            width: 32,
+            height: 32,
+            background: 'linear-gradient(135deg, #3D8EF0, #5AA0F5)',
             borderRadius: 8,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontFamily: '"JetBrains Mono", monospace',
             fontWeight: 700,
-            fontSize: 14,
-            color: '#0f1117',
+            fontSize: 13,
+            color: '#fff',
             flexShrink: 0,
+            boxShadow: '0 2px 12px rgba(61,142,240,0.3)',
           }}
         >
           TJ
         </div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#e8eaf0', lineHeight: 1.2 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: '#EEF0F6', lineHeight: 1.2, letterSpacing: '0.01em' }}>
             Trading
           </div>
-          <div style={{ fontSize: 11, color: '#8892a4', lineHeight: 1.2 }}>Journal</div>
+          <div style={{ fontSize: 10, color: '#4A5368', lineHeight: 1.2, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Journal</div>
         </div>
       </div>
 
+      {/* Section label */}
+      <div style={{ padding: '16px 20px 6px', fontSize: 9, fontWeight: 600, color: '#2E3A52', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+        Navigation
+      </div>
+
       {/* Nav */}
-      <nav style={{ flex: 1, padding: '12px 0' }}>
+      <nav style={{ flex: 1, padding: '4px 10px 12px' }}>
         {NAV_ITEMS.map((item) => (
           <NavLink
             key={item.to}
@@ -135,17 +132,32 @@ export default function Sidebar() {
             style={({ isActive }) => ({
               display: 'flex',
               alignItems: 'center',
-              gap: 10,
-              padding: '9px 24px',
+              gap: 9,
+              padding: '8px 12px',
               fontSize: 13,
-              fontWeight: 500,
+              fontWeight: isActive ? 600 : 400,
               textDecoration: 'none',
-              color: isActive ? '#4d9eff' : '#8892a4',
-              backgroundColor: isActive ? 'rgba(77, 158, 255, 0.08)' : 'transparent',
-              borderLeft: isActive ? '2px solid #4d9eff' : '2px solid transparent',
-              transition: 'all 0.15s ease',
-              marginLeft: 0,
+              color: isActive ? '#EEF0F6' : '#8E97AC',
+              backgroundColor: isActive ? 'rgba(61,142,240,0.12)' : 'transparent',
+              borderRadius: 7,
+              borderLeft: isActive ? '2px solid #3D8EF0' : '2px solid transparent',
+              marginBottom: 2,
+              transition: 'all 0.12s ease',
             })}
+            onMouseEnter={(e) => {
+              const el = e.currentTarget;
+              if (!el.classList.contains('active')) {
+                el.style.backgroundColor = 'rgba(255,255,255,0.04)';
+                el.style.color = '#C8CDD8';
+              }
+            }}
+            onMouseLeave={(e) => {
+              const el = e.currentTarget;
+              if (!el.classList.contains('active')) {
+                el.style.backgroundColor = 'transparent';
+                el.style.color = '#8E97AC';
+              }
+            }}
           >
             {item.icon}
             {item.label}
@@ -156,14 +168,19 @@ export default function Sidebar() {
       {/* Footer */}
       <div
         style={{
-          padding: '16px 24px',
-          borderTop: '1px solid #2d3148',
-          fontSize: 11,
-          color: '#8892a4',
-          fontFamily: '"JetBrains Mono", monospace',
+          padding: '12px 20px',
+          borderTop: '1px solid #1A2235',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
-        v1.0.0
+        <div style={{ fontSize: 10, color: '#2E3A52', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
+          v1.0.0
+        </div>
+        <div style={{ display: 'flex', gap: 4 }}>
+          <div style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: '#00C47A' }} title="Connected" />
+        </div>
       </div>
     </aside>
   );

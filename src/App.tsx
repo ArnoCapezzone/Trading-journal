@@ -19,7 +19,7 @@ function AppLayout() {
       <Sidebar />
       <div style={{ marginLeft: 220, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <TopBar />
-        <main style={{ flex: 1, backgroundColor: '#0f1117', overflowY: 'auto' }}>
+        <main style={{ flex: 1, backgroundColor: '#080B12', overflowY: 'auto' }}>
           <Outlet />
         </main>
       </div>

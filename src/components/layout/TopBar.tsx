@@ -6,6 +6,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/journal': 'Journal',
   '/journal/new': 'New Trade',
   '/import': 'Import',
+  '/analysis': 'AI Analysis',
   '/settings': 'Settings',
 };
 
@@ -25,9 +26,9 @@ export default function TopBar() {
   return (
     <header
       style={{
-        height: 56,
-        backgroundColor: '#1a1d27',
-        borderBottom: '1px solid #2d3148',
+        height: 52,
+        backgroundColor: '#0D1017',
+        borderBottom: '1px solid #1A2235',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -37,18 +38,19 @@ export default function TopBar() {
         zIndex: 40,
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <h1
           style={{
             margin: 0,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: 600,
-            color: '#e8eaf0',
+            color: '#EEF0F6',
             letterSpacing: '0.01em',
           }}
         >
           {title}
         </h1>
+
         {pendingCount > 0 && (
           <Link
             to="/journal?filter=pending"
@@ -56,27 +58,30 @@ export default function TopBar() {
               display: 'flex',
               alignItems: 'center',
               gap: 6,
-              padding: '3px 10px',
-              backgroundColor: 'rgba(255, 154, 60, 0.12)',
-              border: '1px solid rgba(255, 154, 60, 0.3)',
+              padding: '3px 10px 3px 6px',
+              backgroundColor: 'rgba(240,160,48,0.10)',
+              border: '1px solid rgba(240,160,48,0.25)',
               borderRadius: 20,
               textDecoration: 'none',
               fontSize: 11,
-              color: '#ff9a3c',
+              color: '#F0A030',
               fontWeight: 500,
+              transition: 'background 0.15s',
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(240,160,48,0.16)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(240,160,48,0.10)')}
           >
             <span
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 16,
-                height: 16,
-                backgroundColor: '#ff9a3c',
-                color: '#0f1117',
+                width: 17,
+                height: 17,
+                backgroundColor: '#F0A030',
+                color: '#080B12',
                 borderRadius: '50%',
-                fontSize: 10,
+                fontSize: 9,
                 fontWeight: 700,
                 fontFamily: '"JetBrains Mono", monospace',
               }}
@@ -88,28 +93,36 @@ export default function TopBar() {
         )}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <Link
           to="/journal/new"
           style={{
-            display: 'flex',
+            display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
-            padding: '7px 16px',
-            backgroundColor: '#4d9eff',
-            color: '#0f1117',
+            padding: '6px 14px',
+            backgroundColor: '#3D8EF0',
+            color: '#fff',
             borderRadius: 6,
             textDecoration: 'none',
-            fontSize: 13,
+            fontSize: 12,
             fontWeight: 600,
-            transition: 'opacity 0.15s',
+            letterSpacing: '0.01em',
+            transition: 'background 0.15s, box-shadow 0.15s',
+            boxShadow: '0 1px 8px rgba(61,142,240,0.2)',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-          onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#5AA0F5';
+            e.currentTarget.style.boxShadow = '0 2px 14px rgba(61,142,240,0.32)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#3D8EF0';
+            e.currentTarget.style.boxShadow = '0 1px 8px rgba(61,142,240,0.2)';
+          }}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor">
-            <line x1="7" y1="2" x2="7" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            <line x1="2" y1="7" x2="12" y2="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <line x1="6" y1="1" x2="6" y2="11" />
+            <line x1="1" y1="6" x2="11" y2="6" />
           </svg>
           Add Trade
         </Link>

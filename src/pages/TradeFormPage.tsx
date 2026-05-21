@@ -27,7 +27,7 @@ export default function TradeFormPage() {
   return (
     <div style={{ padding: 24, maxWidth: 1000 }}>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 13, color: '#8892a4' }}>
+        <div style={{ fontSize: 13, color: '#8E97AC' }}>
           {isEdit
             ? `Editing trade — ${editTrade?.instrument} ${editTrade?.direction}`
             : voicePrefill
@@ -35,7 +35,7 @@ export default function TradeFormPage() {
             : 'Record a new trade in your journal'}
         </div>
         {voicePrefill && (
-          <div style={{ marginTop: 6, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', backgroundColor: 'rgba(77,158,255,0.1)', border: '1px solid rgba(77,158,255,0.3)', borderRadius: 4, fontSize: 11, color: '#4d9eff' }}>
+          <div style={{ marginTop: 6, display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', backgroundColor: 'rgba(77,158,255,0.1)', border: '1px solid rgba(77,158,255,0.3)', borderRadius: 4, fontSize: 11, color: '#3D8EF0' }}>
             ✓ Pre-filled by Groq AI — verify each field before saving
           </div>
         )}

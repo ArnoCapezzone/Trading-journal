@@ -46,7 +46,7 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
 
   const labelStyle: React.CSSProperties = {
     fontSize: 10,
-    color: '#8892a4',
+    color: '#8E97AC',
     fontWeight: 600,
     textTransform: 'uppercase',
     letterSpacing: '0.06em',
@@ -66,9 +66,9 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
         style={{
           padding: '4px 10px',
           borderRadius: 4,
-          border: `1px solid ${active ? '#4d9eff' : '#2d3148'}`,
+          border: `1px solid ${active ? '#3D8EF0' : '#252D3F'}`,
           backgroundColor: active ? 'rgba(77, 158, 255, 0.15)' : 'transparent',
-          color: active ? '#4d9eff' : '#8892a4',
+          color: active ? '#3D8EF0' : '#8E97AC',
           fontSize: 11,
           fontWeight: active ? 600 : 400,
           cursor: 'pointer',
@@ -83,8 +83,8 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
   return (
     <div
       style={{
-        backgroundColor: '#1a1d27',
-        border: '1px solid #2d3148',
+        backgroundColor: '#0D1017',
+        border: '1px solid #252D3F',
         borderRadius: 8,
         padding: '14px 16px',
         display: 'flex',
@@ -100,10 +100,10 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
           onClick={() => setInstrOpen((o) => !o)}
           style={{
             padding: '5px 10px',
-            backgroundColor: '#22263a',
-            border: `1px solid ${filters.instruments.length > 0 ? '#4d9eff' : '#2d3148'}`,
+            backgroundColor: '#141823',
+            border: `1px solid ${filters.instruments.length > 0 ? '#3D8EF0' : '#252D3F'}`,
             borderRadius: 4,
-            color: filters.instruments.length > 0 ? '#4d9eff' : '#8892a4',
+            color: filters.instruments.length > 0 ? '#3D8EF0' : '#8E97AC',
             fontSize: 11,
             cursor: 'pointer',
             display: 'flex',
@@ -122,8 +122,8 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
               top: '100%',
               left: 0,
               marginTop: 4,
-              backgroundColor: '#22263a',
-              border: '1px solid #2d3148',
+              backgroundColor: '#141823',
+              border: '1px solid #252D3F',
               borderRadius: 6,
               zIndex: 100,
               minWidth: 150,
@@ -131,7 +131,7 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
             }}
           >
             {availableInstruments.length === 0 && (
-              <div style={{ padding: '8px 12px', fontSize: 11, color: '#8892a4' }}>No instruments</div>
+              <div style={{ padding: '8px 12px', fontSize: 11, color: '#8E97AC' }}>No instruments</div>
             )}
             {availableInstruments.map((instr) => (
               <div
@@ -141,7 +141,7 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
                   padding: '7px 12px',
                   fontSize: 12,
                   fontFamily: '"JetBrains Mono", monospace',
-                  color: filters.instruments.includes(instr) ? '#4d9eff' : '#e8eaf0',
+                  color: filters.instruments.includes(instr) ? '#3D8EF0' : '#EEF0F6',
                   cursor: 'pointer',
                   backgroundColor: filters.instruments.includes(instr) ? 'rgba(77,158,255,0.1)' : 'transparent',
                   display: 'flex',
@@ -186,10 +186,10 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
           onClick={() => setSetupOpen((o) => !o)}
           style={{
             padding: '5px 10px',
-            backgroundColor: '#22263a',
-            border: `1px solid ${filters.setups.length > 0 ? '#4d9eff' : '#2d3148'}`,
+            backgroundColor: '#141823',
+            border: `1px solid ${filters.setups.length > 0 ? '#3D8EF0' : '#252D3F'}`,
             borderRadius: 4,
-            color: filters.setups.length > 0 ? '#4d9eff' : '#8892a4',
+            color: filters.setups.length > 0 ? '#3D8EF0' : '#8E97AC',
             fontSize: 11,
             cursor: 'pointer',
             display: 'flex',
@@ -208,8 +208,8 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
               top: '100%',
               left: 0,
               marginTop: 4,
-              backgroundColor: '#22263a',
-              border: '1px solid #2d3148',
+              backgroundColor: '#141823',
+              border: '1px solid #252D3F',
               borderRadius: 6,
               zIndex: 100,
               minWidth: 160,
@@ -223,7 +223,7 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
                 style={{
                   padding: '7px 12px',
                   fontSize: 11,
-                  color: filters.setups.includes(s) ? '#4d9eff' : '#e8eaf0',
+                  color: filters.setups.includes(s) ? '#3D8EF0' : '#EEF0F6',
                   cursor: 'pointer',
                   backgroundColor: filters.setups.includes(s) ? 'rgba(77,158,255,0.1)' : 'transparent',
                   display: 'flex',
@@ -258,10 +258,10 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
           onChange={(e) => onFiltersChange({ dateFrom: e.target.value ? new Date(e.target.value) : undefined })}
           style={{
             padding: '5px 8px',
-            backgroundColor: '#22263a',
-            border: '1px solid #2d3148',
+            backgroundColor: '#141823',
+            border: '1px solid #252D3F',
             borderRadius: 4,
-            color: '#e8eaf0',
+            color: '#EEF0F6',
             fontSize: 11,
             fontFamily: '"JetBrains Mono", monospace',
           }}
@@ -275,10 +275,10 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
           onChange={(e) => onFiltersChange({ dateTo: e.target.value ? new Date(e.target.value) : undefined })}
           style={{
             padding: '5px 8px',
-            backgroundColor: '#22263a',
-            border: '1px solid #2d3148',
+            backgroundColor: '#141823',
+            border: '1px solid #252D3F',
             borderRadius: 4,
-            color: '#e8eaf0',
+            color: '#EEF0F6',
             fontSize: 11,
             fontFamily: '"JetBrains Mono", monospace',
           }}
@@ -292,9 +292,9 @@ export default function TradeFilters({ filters, onFiltersChange, onClear, availa
           style={{
             padding: '5px 12px',
             backgroundColor: 'transparent',
-            border: '1px solid #ff4d4d',
+            border: '1px solid #F04848',
             borderRadius: 4,
-            color: '#ff4d4d',
+            color: '#F04848',
             fontSize: 11,
             cursor: 'pointer',
             display: 'flex',

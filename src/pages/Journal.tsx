@@ -38,7 +38,7 @@ export default function Journal() {
     <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* Summary bar */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 12, color: '#8892a4' }}>
+        <div style={{ fontSize: 12, color: '#8E97AC' }}>
           {filteredTrades.length} trade{filteredTrades.length !== 1 ? 's' : ''}
           {filteredTrades.length !== trades.length && ` (filtered from ${trades.length})`}
         </div>
@@ -48,10 +48,10 @@ export default function Journal() {
             onClick={() => navigate('/journal/new')}
             style={{
               padding: '7px 16px',
-              backgroundColor: '#4d9eff',
+              backgroundColor: '#3D8EF0',
               border: 'none',
               borderRadius: 6,
-              color: '#0f1117',
+              color: '#080B12',
               fontSize: 12,
               fontWeight: 700,
               cursor: 'pointer',
@@ -71,7 +71,7 @@ export default function Journal() {
       />
 
       {/* Table */}
-      <div style={{ backgroundColor: '#1a1d27', border: '1px solid #2d3148', borderRadius: 8, overflow: 'hidden' }}>
+      <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 8, overflow: 'hidden' }}>
         <TradeTable
           trades={filteredTrades}
           onView={(t) => setSelectedTrade(t)}

@@ -20,7 +20,7 @@ export default function Import() {
   return (
     <div style={{ padding: 24 }}>
       {/* Tab bar */}
-      <div style={{ display: 'flex', gap: 2, marginBottom: 20, backgroundColor: '#1a1d27', padding: 4, borderRadius: 8, border: '1px solid #2d3148', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: 2, marginBottom: 20, backgroundColor: '#0D1017', padding: 4, borderRadius: 8, border: '1px solid #252D3F', width: 'fit-content' }}>
         {TABS.map((tab) => (
           <button
             key={tab.value}
@@ -29,8 +29,8 @@ export default function Import() {
               padding: '7px 18px',
               borderRadius: 5,
               border: 'none',
-              backgroundColor: activeTab === tab.value ? '#22263a' : 'transparent',
-              color: activeTab === tab.value ? '#e8eaf0' : '#8892a4',
+              backgroundColor: activeTab === tab.value ? '#141823' : 'transparent',
+              color: activeTab === tab.value ? '#EEF0F6' : '#8E97AC',
               fontSize: 13,
               fontWeight: activeTab === tab.value ? 600 : 400,
               cursor: 'pointer',
@@ -43,26 +43,26 @@ export default function Import() {
       </div>
 
       {/* Tab content */}
-      <div style={{ backgroundColor: '#1a1d27', border: '1px solid #2d3148', borderRadius: 8, padding: 24 }}>
+      <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 8, padding: 24 }}>
         {activeTab === 'mt5' && <MT5Importer />}
         {activeTab === 'csv' && <CSVImporter />}
         {activeTab === 'export' && (
           <div>
-            <div style={{ fontSize: 13, color: '#8892a4', marginBottom: 24, lineHeight: 1.6 }}>
+            <div style={{ fontSize: 13, color: '#8E97AC', marginBottom: 24, lineHeight: 1.6 }}>
               Export your trade data for backup or analysis in external tools.
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, maxWidth: 600 }}>
               {/* CSV export */}
-              <div style={{ backgroundColor: '#0f1117', border: '1px solid #2d3148', borderRadius: 8, padding: 20 }}>
+              <div style={{ backgroundColor: '#080B12', border: '1px solid #252D3F', borderRadius: 8, padding: 20 }}>
                 <div style={{ fontSize: 20, marginBottom: 10 }}>📊</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#e8eaf0', marginBottom: 6 }}>Export as CSV</div>
-                <div style={{ fontSize: 12, color: '#8892a4', marginBottom: 16, lineHeight: 1.5 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#EEF0F6', marginBottom: 6 }}>Export as CSV</div>
+                <div style={{ fontSize: 12, color: '#8E97AC', marginBottom: 16, lineHeight: 1.5 }}>
                   Export trades with all calculated fields (P&L, pips, duration, R:R) — compatible with Excel, Google Sheets.
                 </div>
-                <div style={{ fontSize: 11, color: '#8892a4', marginBottom: 12 }}>
+                <div style={{ fontSize: 11, color: '#8E97AC', marginBottom: 12 }}>
                   {filteredTrades.length !== trades.length ? (
-                    <span style={{ color: '#ff9a3c' }}>Active filters: {filteredTrades.length} trades</span>
+                    <span style={{ color: '#F0A030' }}>Active filters: {filteredTrades.length} trades</span>
                   ) : (
                     <span>{trades.length} total trades</span>
                   )}
@@ -73,10 +73,10 @@ export default function Import() {
                     disabled={filteredTrades.length === 0}
                     style={{
                       padding: '8px 16px',
-                      backgroundColor: filteredTrades.length > 0 ? '#4d9eff' : '#22263a',
+                      backgroundColor: filteredTrades.length > 0 ? '#3D8EF0' : '#141823',
                       border: 'none',
                       borderRadius: 5,
-                      color: filteredTrades.length > 0 ? '#0f1117' : '#8892a4',
+                      color: filteredTrades.length > 0 ? '#080B12' : '#8E97AC',
                       fontWeight: 600,
                       fontSize: 12,
                       cursor: filteredTrades.length > 0 ? 'pointer' : 'not-allowed',
@@ -88,7 +88,7 @@ export default function Import() {
                   {filteredTrades.length !== trades.length && (
                     <button
                       onClick={() => exportToCSV(trades)}
-                      style={{ padding: '7px 16px', backgroundColor: 'transparent', border: '1px solid #2d3148', borderRadius: 5, color: '#8892a4', fontSize: 12, cursor: 'pointer', width: '100%' }}
+                      style={{ padding: '7px 16px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#8E97AC', fontSize: 12, cursor: 'pointer', width: '100%' }}
                     >
                       Export All {trades.length} Trades
                     </button>
@@ -97,13 +97,13 @@ export default function Import() {
               </div>
 
               {/* JSON backup */}
-              <div style={{ backgroundColor: '#0f1117', border: '1px solid #2d3148', borderRadius: 8, padding: 20 }}>
+              <div style={{ backgroundColor: '#080B12', border: '1px solid #252D3F', borderRadius: 8, padding: 20 }}>
                 <div style={{ fontSize: 20, marginBottom: 10 }}>💾</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#e8eaf0', marginBottom: 6 }}>Full Backup (JSON)</div>
-                <div style={{ fontSize: 12, color: '#8892a4', marginBottom: 16, lineHeight: 1.5 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#EEF0F6', marginBottom: 6 }}>Full Backup (JSON)</div>
+                <div style={{ fontSize: 12, color: '#8E97AC', marginBottom: 16, lineHeight: 1.5 }}>
                   Complete backup including all fields, notes, tags, and screenshots. Use to restore your journal.
                 </div>
-                <div style={{ fontSize: 11, color: '#8892a4', marginBottom: 12 }}>
+                <div style={{ fontSize: 11, color: '#8E97AC', marginBottom: 12 }}>
                   {trades.length} total trades
                 </div>
                 <button
@@ -111,10 +111,10 @@ export default function Import() {
                   disabled={trades.length === 0}
                   style={{
                     padding: '8px 16px',
-                    backgroundColor: trades.length > 0 ? '#22263a' : '#1a1d27',
-                    border: `1px solid ${trades.length > 0 ? '#2d3148' : '#1a1d27'}`,
+                    backgroundColor: trades.length > 0 ? '#141823' : '#0D1017',
+                    border: `1px solid ${trades.length > 0 ? '#252D3F' : '#0D1017'}`,
                     borderRadius: 5,
-                    color: trades.length > 0 ? '#e8eaf0' : '#8892a4',
+                    color: trades.length > 0 ? '#EEF0F6' : '#8E97AC',
                     fontWeight: 600,
                     fontSize: 12,
                     cursor: trades.length > 0 ? 'pointer' : 'not-allowed',

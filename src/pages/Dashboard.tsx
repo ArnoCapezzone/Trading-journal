@@ -150,23 +150,23 @@ export default function Dashboard() {
       </div>
 
       {/* Last 10 trades */}
-      <div style={{ backgroundColor: '#1a1d27', border: '1px solid #2d3148', borderRadius: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid #2d3148' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#8892a4', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid #252D3F' }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
             Recent Trades
           </div>
-          <Link to="/journal" style={{ fontSize: 11, color: '#4d9eff', textDecoration: 'none' }}>See all →</Link>
+          <Link to="/journal" style={{ fontSize: 11, color: '#3D8EF0', textDecoration: 'none' }}>See all →</Link>
         </div>
         {last10.length === 0 ? (
-          <div style={{ padding: '24px', textAlign: 'center', color: '#8892a4', fontSize: 13 }}>
-            No trades in selected period. <Link to="/journal/new" style={{ color: '#4d9eff' }}>Add your first trade</Link>
+          <div style={{ padding: '24px', textAlign: 'center', color: '#8E97AC', fontSize: 13 }}>
+            No trades in selected period. <Link to="/journal/new" style={{ color: '#3D8EF0' }}>Add your first trade</Link>
           </div>
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
             <thead>
               <tr>
                 {['Date', 'Instrument', 'L/S', 'Entry', 'Exit', 'P&L $', 'Setup', 'Status'].map((h) => (
-                  <th key={h} style={{ padding: '7px 12px', textAlign: 'left', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148' }}>{h}</th>
+                  <th key={h} style={{ padding: '7px 12px', textAlign: 'left', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -174,23 +174,23 @@ export default function Dashboard() {
               {last10.map((trade) => {
                 const calc = calculateTrade(trade, accountBalance);
                 return (
-                  <tr key={trade.id} style={{ borderBottom: '1px solid #1a1d27', backgroundColor: calc.isWin ? 'rgba(0,209,122,0.03)' : 'rgba(255,77,77,0.03)' }}>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#8892a4' }}>
+                  <tr key={trade.id} style={{ borderBottom: '1px solid #0D1017', backgroundColor: calc.isWin ? 'rgba(0,209,122,0.03)' : 'rgba(255,77,77,0.03)' }}>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#8E97AC' }}>
                       {format(new Date(trade.exitTime), 'dd/MM/yy HH:mm')}
                     </td>
-                    <td style={{ padding: '6px 12px', fontWeight: 600, fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0' }}>{trade.instrument}</td>
+                    <td style={{ padding: '6px 12px', fontWeight: 600, fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{trade.instrument}</td>
                     <td style={{ padding: '6px 12px' }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: trade.direction === 'LONG' ? '#00d17a' : '#ff4d4d' }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: trade.direction === 'LONG' ? '#00C47A' : '#F04848' }}>
                         {trade.direction === 'LONG' ? '▲' : '▼'} {trade.direction === 'LONG' ? 'L' : 'S'}
                       </span>
                     </td>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0', fontSize: 11 }}>{trade.entryPrice.toFixed(5)}</td>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0', fontSize: 11 }}>{trade.exitPrice.toFixed(5)}</td>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600, color: calc.isWin ? '#00d17a' : '#ff4d4d' }}>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6', fontSize: 11 }}>{trade.entryPrice.toFixed(5)}</td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6', fontSize: 11 }}>{trade.exitPrice.toFixed(5)}</td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600, color: calc.isWin ? '#00C47A' : '#F04848' }}>
                       {calc.pnlDollar >= 0 ? '+' : ''}{c}{calc.pnlDollar.toFixed(2)}
                     </td>
-                    <td style={{ padding: '6px 12px', color: '#8892a4', fontSize: 11 }}>{trade.setup ?? '—'}</td>
-                    <td style={{ padding: '6px 12px', fontSize: 10, color: trade.status === 'COMPLETE' ? '#00d17a' : '#ff9a3c' }}>
+                    <td style={{ padding: '6px 12px', color: '#8E97AC', fontSize: 11 }}>{trade.setup ?? '—'}</td>
+                    <td style={{ padding: '6px 12px', fontSize: 10, color: trade.status === 'COMPLETE' ? '#00C47A' : '#F0A030' }}>
                       {trade.status === 'COMPLETE' ? '✓' : '⚠'}
                     </td>
                   </tr>

@@ -88,7 +88,7 @@ export default function MT5Importer() {
   }
 
   const dropZoneStyle: React.CSSProperties = {
-    border: `2px dashed ${dragging ? '#4d9eff' : '#2d3148'}`,
+    border: `2px dashed ${dragging ? '#3D8EF0' : '#252D3F'}`,
     borderRadius: 10,
     padding: '48px 24px',
     textAlign: 'center',
@@ -101,14 +101,14 @@ export default function MT5Importer() {
     return (
       <div style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: '#00d17a', marginBottom: 8 }}>Import Complete</div>
-        <div style={{ color: '#8892a4', fontSize: 14, marginBottom: 24 }}>
+        <div style={{ fontSize: 18, fontWeight: 700, color: '#00C47A', marginBottom: 8 }}>Import Complete</div>
+        <div style={{ color: '#8E97AC', fontSize: 14, marginBottom: 24 }}>
           {importResult.imported} trade{importResult.imported !== 1 ? 's' : ''} imported
           {importResult.duplicates > 0 && `, ${importResult.duplicates} duplicate${importResult.duplicates !== 1 ? 's' : ''} skipped`}
         </div>
         <button
           onClick={reset}
-          style={{ padding: '8px 20px', backgroundColor: '#4d9eff', border: 'none', borderRadius: 6, color: '#0f1117', fontWeight: 600, cursor: 'pointer' }}
+          style={{ padding: '8px 20px', backgroundColor: '#3D8EF0', border: 'none', borderRadius: 6, color: '#080B12', fontWeight: 600, cursor: 'pointer' }}
         >
           Import Another File
         </button>
@@ -120,9 +120,9 @@ export default function MT5Importer() {
     return (
       <div style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>❌</div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: '#ff4d4d', marginBottom: 8 }}>Error</div>
-        <div style={{ color: '#8892a4', fontSize: 13, marginBottom: 24, maxWidth: 400, margin: '0 auto' }}>{errorMsg}</div>
-        <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: '#22263a', border: '1px solid #2d3148', borderRadius: 6, color: '#e8eaf0', cursor: 'pointer' }}>
+        <div style={{ fontSize: 16, fontWeight: 700, color: '#F04848', marginBottom: 8 }}>Error</div>
+        <div style={{ color: '#8E97AC', fontSize: 13, marginBottom: 24, maxWidth: 400, margin: '0 auto' }}>{errorMsg}</div>
+        <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: '#141823', border: '1px solid #252D3F', borderRadius: 6, color: '#EEF0F6', cursor: 'pointer' }}>
           Try Again
         </button>
       </div>
@@ -134,20 +134,20 @@ export default function MT5Importer() {
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#e8eaf0' }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: '#EEF0F6' }}>
               Preview — {result.fileName}
             </div>
-            <div style={{ fontSize: 12, color: '#8892a4', marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: '#8E97AC', marginTop: 4 }}>
               {result.toImport.length} new trade{result.toImport.length !== 1 ? 's' : ''}
               {result.duplicates.length > 0 && (
-                <span style={{ color: '#ff9a3c', marginLeft: 8 }}>
+                <span style={{ color: '#F0A030', marginLeft: 8 }}>
                   ⚠ {result.duplicates.length} duplicate{result.duplicates.length !== 1 ? 's' : ''} will be skipped
                 </span>
               )}
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={reset} style={{ padding: '7px 16px', backgroundColor: 'transparent', border: '1px solid #2d3148', borderRadius: 5, color: '#8892a4', cursor: 'pointer', fontSize: 12 }}>
+            <button onClick={reset} style={{ padding: '7px 16px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#8E97AC', cursor: 'pointer', fontSize: 12 }}>
               Cancel
             </button>
             <button
@@ -155,10 +155,10 @@ export default function MT5Importer() {
               disabled={result.toImport.length === 0}
               style={{
                 padding: '7px 20px',
-                backgroundColor: result.toImport.length > 0 ? '#4d9eff' : '#2d3148',
+                backgroundColor: result.toImport.length > 0 ? '#3D8EF0' : '#252D3F',
                 border: 'none',
                 borderRadius: 5,
-                color: result.toImport.length > 0 ? '#0f1117' : '#8892a4',
+                color: result.toImport.length > 0 ? '#080B12' : '#8E97AC',
                 fontWeight: 600,
                 fontSize: 12,
                 cursor: result.toImport.length > 0 ? 'pointer' : 'not-allowed',
@@ -172,9 +172,9 @@ export default function MT5Importer() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
             <thead>
-              <tr style={{ backgroundColor: '#0f1117' }}>
+              <tr style={{ backgroundColor: '#080B12' }}>
                 {['Date', 'Symbol', 'Dir', 'Entry', 'Exit', 'Lots', 'Est. P&L', 'Ticket'].map((h) => (
-                  <th key={h} style={{ padding: '7px 10px', textAlign: 'left', color: '#8892a4', fontSize: 10, textTransform: 'uppercase', borderBottom: '1px solid #2d3148' }}>{h}</th>
+                  <th key={h} style={{ padding: '7px 10px', textAlign: 'left', color: '#8E97AC', fontSize: 10, textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -182,25 +182,25 @@ export default function MT5Importer() {
               {result.toImport.slice(0, 50).map((t, i) => {
                 const calc = t.entryPrice && t.exitPrice && t.lotSize ? calculateTrade(t as Trade) : null;
                 return (
-                  <tr key={i} style={{ borderBottom: '1px solid #2d3148' }}>
-                    <td style={{ padding: '6px 10px', color: '#8892a4', fontFamily: '"JetBrains Mono", monospace' }}>
+                  <tr key={i} style={{ borderBottom: '1px solid #252D3F' }}>
+                    <td style={{ padding: '6px 10px', color: '#8E97AC', fontFamily: '"JetBrains Mono", monospace' }}>
                       {t.exitTime ? format(new Date(t.exitTime), 'dd/MM/yy') : '—'}
                     </td>
-                    <td style={{ padding: '6px 10px', fontWeight: 600, color: '#e8eaf0', fontFamily: '"JetBrains Mono", monospace' }}>{t.instrument}</td>
-                    <td style={{ padding: '6px 10px', color: t.direction === 'LONG' ? '#00d17a' : '#ff4d4d', fontWeight: 700 }}>{t.direction === 'LONG' ? 'L' : 'S'}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0' }}>{t.entryPrice?.toFixed(5)}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0' }}>{t.exitPrice?.toFixed(5)}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0' }}>{t.lotSize}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: calc?.isWin ? '#00d17a' : '#ff4d4d' }}>
+                    <td style={{ padding: '6px 10px', fontWeight: 600, color: '#EEF0F6', fontFamily: '"JetBrains Mono", monospace' }}>{t.instrument}</td>
+                    <td style={{ padding: '6px 10px', color: t.direction === 'LONG' ? '#00C47A' : '#F04848', fontWeight: 700 }}>{t.direction === 'LONG' ? 'L' : 'S'}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{t.entryPrice?.toFixed(5)}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{t.exitPrice?.toFixed(5)}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{t.lotSize}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: calc?.isWin ? '#00C47A' : '#F04848' }}>
                       {calc ? `${calc.pnlDollar >= 0 ? '+' : ''}$${calc.pnlDollar.toFixed(2)}` : '—'}
                     </td>
-                    <td style={{ padding: '6px 10px', color: '#8892a4', fontFamily: '"JetBrains Mono", monospace', fontSize: 10 }}>{t.mt5TicketId ?? '—'}</td>
+                    <td style={{ padding: '6px 10px', color: '#8E97AC', fontFamily: '"JetBrains Mono", monospace', fontSize: 10 }}>{t.mt5TicketId ?? '—'}</td>
                   </tr>
                 );
               })}
               {result.toImport.length > 50 && (
                 <tr>
-                  <td colSpan={8} style={{ padding: '8px 10px', textAlign: 'center', color: '#8892a4', fontSize: 11 }}>
+                  <td colSpan={8} style={{ padding: '8px 10px', textAlign: 'center', color: '#8E97AC', fontSize: 11 }}>
                     ... and {result.toImport.length - 50} more trades
                   </td>
                 </tr>
@@ -216,21 +216,21 @@ export default function MT5Importer() {
     <div>
       {/* Mac instructions with MQL5 script */}
       <div style={{ backgroundColor: 'rgba(77,158,255,0.07)', border: '1px solid rgba(77,158,255,0.25)', borderRadius: 8, padding: '16px 20px', marginBottom: 20 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, color: '#4d9eff', marginBottom: 10 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, color: '#3D8EF0', marginBottom: 10 }}>
           📋 Comment exporter depuis MT5 Mac
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
           {/* Method 1: MQL5 Script */}
           <div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#e8eaf0', marginBottom: 6 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#EEF0F6', marginBottom: 6 }}>
               ✅ Méthode recommandée — Script MQL5
             </div>
-            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: '#8892a4', lineHeight: 1.8 }}>
-              <li>Dans MT5 → onglet <strong style={{ color: '#e8eaf0' }}>Navigator</strong></li>
-              <li>Ouvre <strong style={{ color: '#e8eaf0' }}>Scripts</strong> → double-clic sur <code style={{ color: '#4d9eff', backgroundColor: '#0f1117', padding: '1px 5px', borderRadius: 3, fontSize: 11 }}>ExportTradingJournal</code></li>
+            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: '#8E97AC', lineHeight: 1.8 }}>
+              <li>Dans MT5 → onglet <strong style={{ color: '#EEF0F6' }}>Navigator</strong></li>
+              <li>Ouvre <strong style={{ color: '#EEF0F6' }}>Scripts</strong> → double-clic sur <code style={{ color: '#3D8EF0', backgroundColor: '#080B12', padding: '1px 5px', borderRadius: 3, fontSize: 11 }}>ExportTradingJournal</code></li>
               <li>Clique OK (choisis le nombre de jours)</li>
               <li>Le fichier se crée automatiquement ici :<br />
-                <code style={{ color: '#ff9a3c', backgroundColor: '#0f1117', padding: '2px 5px', borderRadius: 3, fontSize: 10, display: 'inline-block', marginTop: 4 }}>
+                <code style={{ color: '#F0A030', backgroundColor: '#080B12', padding: '2px 5px', borderRadius: 3, fontSize: 10, display: 'inline-block', marginTop: 4 }}>
                   ~/Library/Application Support/net.metaquotes.wine.metatrader5/drive_c/Program Files/MetaTrader 5/MQL5/Files/trading_journal_export.csv
                 </code>
               </li>
@@ -239,13 +239,13 @@ export default function MT5Importer() {
           </div>
           {/* Method 2: Native export */}
           <div>
-            <div style={{ fontSize: 12, fontWeight: 600, color: '#e8eaf0', marginBottom: 6 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: '#EEF0F6', marginBottom: 6 }}>
               Méthode alternative — Export natif MT5
             </div>
-            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: '#8892a4', lineHeight: 1.8 }}>
-              <li>Onglet <strong style={{ color: '#e8eaf0' }}>Historique du compte</strong> (en bas)</li>
-              <li>Clic droit → <strong style={{ color: '#e8eaf0' }}>Enregistrer comme rapport détaillé</strong></li>
-              <li>Si le dialogue plante, cherche le fichier sauvegardé dans <code style={{ color: '#ff9a3c', backgroundColor: '#0f1117', padding: '1px 4px', borderRadius: 3, fontSize: 10 }}>MQL5/Files/</code></li>
+            <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: '#8E97AC', lineHeight: 1.8 }}>
+              <li>Onglet <strong style={{ color: '#EEF0F6' }}>Historique du compte</strong> (en bas)</li>
+              <li>Clic droit → <strong style={{ color: '#EEF0F6' }}>Enregistrer comme rapport détaillé</strong></li>
+              <li>Si le dialogue plante, cherche le fichier sauvegardé dans <code style={{ color: '#F0A030', backgroundColor: '#080B12', padding: '1px 4px', borderRadius: 3, fontSize: 10 }}>MQL5/Files/</code></li>
             </ol>
           </div>
         </div>
@@ -265,11 +265,11 @@ export default function MT5Importer() {
         }}
       >
         <div style={{ fontSize: 36, marginBottom: 12 }}>📂</div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#e8eaf0', marginBottom: 6 }}>
+        <div style={{ fontSize: 14, fontWeight: 600, color: '#EEF0F6', marginBottom: 6 }}>
           Drop your MT5 file here
         </div>
-        <div style={{ fontSize: 12, color: '#8892a4' }}>
-          or <span style={{ color: '#4d9eff', cursor: 'pointer' }}>browse files</span> — .csv or .json
+        <div style={{ fontSize: 12, color: '#8E97AC' }}>
+          or <span style={{ color: '#3D8EF0', cursor: 'pointer' }}>browse files</span> — .csv or .json
         </div>
       </div>
     </div>

@@ -31,15 +31,15 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
     return (
       <div
         style={{
-          backgroundColor: '#1a1d27',
-          border: '1px solid #2d3148',
+          backgroundColor: '#0D1017',
+          border: '1px solid #252D3F',
           borderRadius: 8,
           padding: 24,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           height: 220,
-          color: '#8892a4',
+          color: '#8E97AC',
           fontSize: 13,
         }}
       >
@@ -78,14 +78,14 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
       {
         label: `Cumulative P&L (${c})`,
         data: values,
-        borderColor: values[values.length - 1] >= 0 ? '#00d17a' : '#ff4d4d',
+        borderColor: values[values.length - 1] >= 0 ? '#00C47A' : '#F04848',
         borderWidth: 2,
         fill: true,
         backgroundColor: 'rgba(0, 209, 122, 0.1)',
         tension: 0.3,
         pointRadius: data.length > 50 ? 0 : 3,
         pointHoverRadius: 5,
-        pointBackgroundColor: '#4d9eff',
+        pointBackgroundColor: '#3D8EF0',
         pointBorderColor: 'transparent',
       },
     ],
@@ -97,11 +97,11 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#22263a',
-        borderColor: '#2d3148',
+        backgroundColor: '#141823',
+        borderColor: '#252D3F',
         borderWidth: 1,
-        titleColor: '#8892a4',
-        bodyColor: '#e8eaf0',
+        titleColor: '#8E97AC',
+        bodyColor: '#EEF0F6',
         padding: 10,
         callbacks: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,17 +114,17 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
     },
     scales: {
       x: {
-        grid: { color: '#2d3148' },
+        grid: { color: '#252D3F' },
         ticks: {
-          color: '#8892a4',
+          color: '#8E97AC',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           maxTicksLimit: 12,
         },
       },
       y: {
-        grid: { color: '#2d3148' },
+        grid: { color: '#252D3F' },
         ticks: {
-          color: '#8892a4',
+          color: '#8E97AC',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           callback: (val: any) => `${c}${Number(val).toFixed(0)}`,
@@ -139,13 +139,13 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
   return (
     <div
       style={{
-        backgroundColor: '#1a1d27',
-        border: '1px solid #2d3148',
+        backgroundColor: '#0D1017',
+        border: '1px solid #252D3F',
         borderRadius: 8,
         padding: '16px 16px 12px',
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#8892a4', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         Equity Curve
       </div>
       <div style={{ height: 200 }}>

@@ -22,9 +22,9 @@ function IconButton({ onClick, title, children }: { onClick: () => void; title: 
       title={title}
       style={{
         background: 'none',
-        border: '1px solid #2d3148',
+        border: '1px solid #252D3F',
         borderRadius: 4,
-        color: '#8892a4',
+        color: '#8E97AC',
         cursor: 'pointer',
         padding: '3px 5px',
         display: 'inline-flex',
@@ -34,12 +34,12 @@ function IconButton({ onClick, title, children }: { onClick: () => void; title: 
         lineHeight: 1,
       }}
       onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.color = '#e8eaf0';
-        (e.currentTarget as HTMLButtonElement).style.borderColor = '#4d9eff';
+        (e.currentTarget as HTMLButtonElement).style.color = '#EEF0F6';
+        (e.currentTarget as HTMLButtonElement).style.borderColor = '#3D8EF0';
       }}
       onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.color = '#8892a4';
-        (e.currentTarget as HTMLButtonElement).style.borderColor = '#2d3148';
+        (e.currentTarget as HTMLButtonElement).style.color = '#8E97AC';
+        (e.currentTarget as HTMLButtonElement).style.borderColor = '#252D3F';
       }}
     >
       {children}
@@ -129,11 +129,11 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
           textAlign: 'left',
           fontSize: 10,
           fontWeight: 600,
-          color: active ? '#4d9eff' : '#8892a4',
+          color: active ? '#3D8EF0' : '#8E97AC',
           cursor: 'pointer',
           textTransform: 'uppercase',
           letterSpacing: '0.05em',
-          borderBottom: '1px solid #2d3148',
+          borderBottom: '1px solid #252D3F',
           whiteSpace: 'nowrap',
           userSelect: 'none',
         }}
@@ -149,12 +149,12 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
         style={{
           textAlign: 'center',
           padding: '60px 24px',
-          color: '#8892a4',
+          color: '#8E97AC',
           fontSize: 14,
         }}
       >
         <div style={{ fontSize: 32, marginBottom: 12 }}>📋</div>
-        <div style={{ fontWeight: 600, color: '#e8eaf0', marginBottom: 8 }}>No trades found</div>
+        <div style={{ fontWeight: 600, color: '#EEF0F6', marginBottom: 8 }}>No trades found</div>
         <div>Add a trade manually or import from MT5 to get started.</div>
       </div>
     );
@@ -165,20 +165,20 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
           <thead>
-            <tr style={{ backgroundColor: '#0f1117' }}>
+            <tr style={{ backgroundColor: '#080B12' }}>
               <SortHeader col="exitTime" label="Date / Time" />
               <SortHeader col="instrument" label="Instrument" />
               <SortHeader col="direction" label="L/S" />
-              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148', textAlign: 'right' }}>Entry</th>
-              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148', textAlign: 'right' }}>Exit</th>
+              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F', textAlign: 'right' }}>Entry</th>
+              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F', textAlign: 'right' }}>Exit</th>
               <SortHeader col="duration" label="Duration" />
               <SortHeader col="pnlPips" label="Pips" />
               <SortHeader col="pnlDollar" label="P&L $" />
-              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148', textAlign: 'right' }}>P&L %</th>
+              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F', textAlign: 'right' }}>P&L %</th>
               <SortHeader col="setup" label="Setup" />
-              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148' }}>TF</th>
-              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148' }}>Status</th>
-              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148' }}>Actions</th>
+              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>TF</th>
+              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>Status</th>
+              <th style={{ padding: '8px 10px', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -190,7 +190,7 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
               return (
                 <tr
                   key={trade.id}
-                  style={{ backgroundColor: rowBg, borderBottom: '1px solid #2d3148' }}
+                  style={{ backgroundColor: rowBg, borderBottom: '1px solid #252D3F' }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLTableRowElement).style.backgroundColor = calc.isWin
                       ? 'rgba(0, 209, 122, 0.08)'
@@ -200,10 +200,10 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                     (e.currentTarget as HTMLTableRowElement).style.backgroundColor = rowBg;
                   }}
                 >
-                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#8892a4', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#8E97AC', whiteSpace: 'nowrap' }}>
                     {format(new Date(trade.exitTime), 'dd/MM/yy HH:mm')}
                   </td>
-                  <td style={{ padding: '7px 10px', fontWeight: 600, color: '#e8eaf0', fontFamily: '"JetBrains Mono", monospace' }}>
+                  <td style={{ padding: '7px 10px', fontWeight: 600, color: '#EEF0F6', fontFamily: '"JetBrains Mono", monospace' }}>
                     {trade.instrument}
                   </td>
                   <td style={{ padding: '7px 10px' }}>
@@ -215,19 +215,19 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                         fontWeight: 700,
                         fontFamily: '"JetBrains Mono", monospace',
                         backgroundColor: trade.direction === 'LONG' ? 'rgba(0, 209, 122, 0.15)' : 'rgba(255, 77, 77, 0.15)',
-                        color: trade.direction === 'LONG' ? '#00d17a' : '#ff4d4d',
+                        color: trade.direction === 'LONG' ? '#00C47A' : '#F04848',
                       }}
                     >
                       {trade.direction === 'LONG' ? 'L' : 'S'}
                     </span>
                   </td>
-                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, textAlign: 'right', color: '#e8eaf0' }}>
+                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, textAlign: 'right', color: '#EEF0F6' }}>
                     {trade.entryPrice.toFixed(5)}
                   </td>
-                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, textAlign: 'right', color: '#e8eaf0' }}>
+                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, textAlign: 'right', color: '#EEF0F6' }}>
                     {trade.exitPrice.toFixed(5)}
                   </td>
-                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#8892a4' }}>
+                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#8E97AC' }}>
                     {fmtDuration(calc.durationMinutes)}
                   </td>
                   <td
@@ -236,7 +236,7 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                       fontFamily: '"JetBrains Mono", monospace',
                       fontSize: 11,
                       textAlign: 'right',
-                      color: calc.pnlPips >= 0 ? '#00d17a' : '#ff4d4d',
+                      color: calc.pnlPips >= 0 ? '#00C47A' : '#F04848',
                     }}
                   >
                     {calc.pnlPips >= 0 ? '+' : ''}{calc.pnlPips.toFixed(1)}
@@ -248,7 +248,7 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                       fontSize: 12,
                       fontWeight: 600,
                       textAlign: 'right',
-                      color: calc.pnlDollar >= 0 ? '#00d17a' : '#ff4d4d',
+                      color: calc.pnlDollar >= 0 ? '#00C47A' : '#F04848',
                     }}
                   >
                     {calc.pnlDollar >= 0 ? '+' : ''}${calc.pnlDollar.toFixed(2)}
@@ -259,22 +259,22 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                       fontFamily: '"JetBrains Mono", monospace',
                       fontSize: 11,
                       textAlign: 'right',
-                      color: calc.pnlPercent !== null ? (calc.pnlPercent >= 0 ? '#00d17a' : '#ff4d4d') : '#8892a4',
+                      color: calc.pnlPercent !== null ? (calc.pnlPercent >= 0 ? '#00C47A' : '#F04848') : '#8E97AC',
                     }}
                   >
                     {calc.pnlPercent !== null ? `${calc.pnlPercent >= 0 ? '+' : ''}${calc.pnlPercent.toFixed(2)}%` : '—'}
                   </td>
-                  <td style={{ padding: '7px 10px', fontSize: 11, color: '#8892a4' }}>
+                  <td style={{ padding: '7px 10px', fontSize: 11, color: '#8E97AC' }}>
                     {trade.setup ?? '—'}
                   </td>
-                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#8892a4' }}>
+                  <td style={{ padding: '7px 10px', fontFamily: '"JetBrains Mono", monospace', fontSize: 11, color: '#8E97AC' }}>
                     {trade.timeframe ?? '—'}
                   </td>
                   <td style={{ padding: '7px 10px' }}>
                     {trade.status === 'COMPLETE' ? (
-                      <span style={{ color: '#00d17a', fontSize: 10, fontWeight: 600 }}>✓ Complete</span>
+                      <span style={{ color: '#00C47A', fontSize: 10, fontWeight: 600 }}>✓ Complete</span>
                     ) : (
-                      <span style={{ color: '#ff9a3c', fontSize: 10, fontWeight: 600 }}>⚠ Review</span>
+                      <span style={{ color: '#F0A030', fontSize: 10, fontWeight: 600 }}>⚠ Review</span>
                     )}
                   </td>
                   <td style={{ padding: '7px 10px' }}>
@@ -293,12 +293,12 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                       {confirmDelete === trade.id ? (
                         <>
                           <IconButton onClick={() => { onDelete(trade.id); setConfirmDelete(null); }} title="Confirm Delete">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#ff4d4d" strokeWidth="1.5">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#F04848" strokeWidth="1.5">
                               <path d="M2 2l8 8M10 2L2 10" />
                             </svg>
                           </IconButton>
                           <IconButton onClick={() => setConfirmDelete(null)} title="Cancel">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#8892a4" strokeWidth="1.5">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#8E97AC" strokeWidth="1.5">
                               <path d="M2 6h8" />
                             </svg>
                           </IconButton>
@@ -327,10 +327,10 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
             alignItems: 'center',
             justifyContent: 'space-between',
             padding: '12px 16px',
-            borderTop: '1px solid #2d3148',
+            borderTop: '1px solid #252D3F',
           }}
         >
-          <div style={{ fontSize: 12, color: '#8892a4' }}>
+          <div style={{ fontSize: 12, color: '#8E97AC' }}>
             {sorted.length} trades — page {page + 1} of {totalPages}
           </div>
           <div style={{ display: 'flex', gap: 6 }}>
@@ -339,10 +339,10 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
               disabled={page === 0}
               style={{
                 padding: '4px 10px',
-                backgroundColor: '#22263a',
-                border: '1px solid #2d3148',
+                backgroundColor: '#141823',
+                border: '1px solid #252D3F',
                 borderRadius: 4,
-                color: page === 0 ? '#2d3148' : '#8892a4',
+                color: page === 0 ? '#252D3F' : '#8E97AC',
                 cursor: page === 0 ? 'not-allowed' : 'pointer',
                 fontSize: 12,
               }}
@@ -357,10 +357,10 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
                   onClick={() => setPage(pageNum)}
                   style={{
                     padding: '4px 8px',
-                    backgroundColor: page === pageNum ? '#4d9eff' : '#22263a',
-                    border: `1px solid ${page === pageNum ? '#4d9eff' : '#2d3148'}`,
+                    backgroundColor: page === pageNum ? '#3D8EF0' : '#141823',
+                    border: `1px solid ${page === pageNum ? '#3D8EF0' : '#252D3F'}`,
                     borderRadius: 4,
-                    color: page === pageNum ? '#0f1117' : '#8892a4',
+                    color: page === pageNum ? '#080B12' : '#8E97AC',
                     cursor: 'pointer',
                     fontSize: 12,
                     fontFamily: '"JetBrains Mono", monospace',
@@ -375,10 +375,10 @@ export default function TradeTable({ trades, onView, onEdit, onDelete }: Props) 
               disabled={page === totalPages - 1}
               style={{
                 padding: '4px 10px',
-                backgroundColor: '#22263a',
-                border: '1px solid #2d3148',
+                backgroundColor: '#141823',
+                border: '1px solid #252D3F',
                 borderRadius: 4,
-                color: page === totalPages - 1 ? '#2d3148' : '#8892a4',
+                color: page === totalPages - 1 ? '#252D3F' : '#8E97AC',
                 cursor: page === totalPages - 1 ? 'not-allowed' : 'pointer',
                 fontSize: 12,
               }}

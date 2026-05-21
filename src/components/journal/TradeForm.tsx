@@ -24,10 +24,10 @@ function inputStyle(hasError = false): React.CSSProperties {
   return {
     width: '100%',
     padding: '7px 10px',
-    backgroundColor: '#0f1117',
-    border: `1px solid ${hasError ? '#ff4d4d' : '#2d3148'}`,
+    backgroundColor: '#080B12',
+    border: `1px solid ${hasError ? '#F04848' : '#252D3F'}`,
     borderRadius: 5,
-    color: '#e8eaf0',
+    color: '#EEF0F6',
     fontSize: 12,
     fontFamily: 'inherit',
     outline: 'none',
@@ -39,7 +39,7 @@ function labelStyle(): React.CSSProperties {
   return {
     display: 'block',
     fontSize: 11,
-    color: '#8892a4',
+    color: '#8E97AC',
     fontWeight: 500,
     marginBottom: 4,
     textTransform: 'uppercase',
@@ -50,7 +50,7 @@ function labelStyle(): React.CSSProperties {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <div style={{ fontSize: 11, fontWeight: 700, color: '#4d9eff', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12, paddingBottom: 6, borderBottom: '1px solid #2d3148' }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12, paddingBottom: 6, borderBottom: '1px solid #252D3F' }}>
         {title}
       </div>
       {children}
@@ -180,14 +180,14 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                   list="instruments-list"
                   value={instrument}
                   onChange={(e) => setInstrument(e.target.value.toUpperCase())}
-                  style={{ ...monoInput, borderColor: errors.instrument ? '#ff4d4d' : '#2d3148' }}
+                  style={{ ...monoInput, borderColor: errors.instrument ? '#F04848' : '#252D3F' }}
                   placeholder="e.g. EURUSD"
                 />
                 <datalist id="instruments-list">
                   {INSTRUMENTS.map((i) => <option key={i} value={i} />)}
                 </datalist>
               </div>
-              {errors.instrument && <div style={{ fontSize: 10, color: '#ff4d4d', marginTop: 3 }}>{errors.instrument}</div>}
+              {errors.instrument && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.instrument}</div>}
             </div>
             <div>
               <label style={labelStyle()}>Direction *</label>
@@ -201,9 +201,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                       flex: 1,
                       padding: '7px',
                       borderRadius: 5,
-                      border: `1px solid ${direction === d ? (d === 'LONG' ? '#00d17a' : '#ff4d4d') : '#2d3148'}`,
-                      backgroundColor: direction === d ? (d === 'LONG' ? 'rgba(0,209,122,0.15)' : 'rgba(255,77,77,0.15)') : '#0f1117',
-                      color: direction === d ? (d === 'LONG' ? '#00d17a' : '#ff4d4d') : '#8892a4',
+                      border: `1px solid ${direction === d ? (d === 'LONG' ? '#00C47A' : '#F04848') : '#252D3F'}`,
+                      backgroundColor: direction === d ? (d === 'LONG' ? 'rgba(0,209,122,0.15)' : 'rgba(255,77,77,0.15)') : '#080B12',
+                      color: direction === d ? (d === 'LONG' ? '#00C47A' : '#F04848') : '#8E97AC',
                       fontWeight: 700,
                       fontSize: 12,
                       cursor: 'pointer',
@@ -226,7 +226,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 onChange={(e) => setEntryTime(e.target.value)}
                 style={{ ...inputStyle(!!errors.entryTime), fontFamily: '"JetBrains Mono", monospace' }}
               />
-              {errors.entryTime && <div style={{ fontSize: 10, color: '#ff4d4d', marginTop: 3 }}>{errors.entryTime}</div>}
+              {errors.entryTime && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.entryTime}</div>}
             </div>
             <div>
               <label style={labelStyle()}>Exit Time *</label>
@@ -236,7 +236,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 onChange={(e) => setExitTime(e.target.value)}
                 style={{ ...inputStyle(!!errors.exitTime), fontFamily: '"JetBrains Mono", monospace' }}
               />
-              {errors.exitTime && <div style={{ fontSize: 10, color: '#ff4d4d', marginTop: 3 }}>{errors.exitTime}</div>}
+              {errors.exitTime && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.exitTime}</div>}
             </div>
           </FormRow>
 
@@ -248,10 +248,10 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 step="any"
                 value={entryPrice}
                 onChange={(e) => setEntryPrice(e.target.value)}
-                style={{ ...monoInput, borderColor: errors.entryPrice ? '#ff4d4d' : '#2d3148' }}
+                style={{ ...monoInput, borderColor: errors.entryPrice ? '#F04848' : '#252D3F' }}
                 placeholder="1.08500"
               />
-              {errors.entryPrice && <div style={{ fontSize: 10, color: '#ff4d4d', marginTop: 3 }}>{errors.entryPrice}</div>}
+              {errors.entryPrice && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.entryPrice}</div>}
             </div>
             <div>
               <label style={labelStyle()}>Exit Price *</label>
@@ -260,10 +260,10 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 step="any"
                 value={exitPrice}
                 onChange={(e) => setExitPrice(e.target.value)}
-                style={{ ...monoInput, borderColor: errors.exitPrice ? '#ff4d4d' : '#2d3148' }}
+                style={{ ...monoInput, borderColor: errors.exitPrice ? '#F04848' : '#252D3F' }}
                 placeholder="1.09200"
               />
-              {errors.exitPrice && <div style={{ fontSize: 10, color: '#ff4d4d', marginTop: 3 }}>{errors.exitPrice}</div>}
+              {errors.exitPrice && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.exitPrice}</div>}
             </div>
             <div>
               <label style={labelStyle()}>Lot Size *</label>
@@ -273,10 +273,10 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 min="0"
                 value={lotSize}
                 onChange={(e) => setLotSize(e.target.value)}
-                style={{ ...monoInput, borderColor: errors.lotSize ? '#ff4d4d' : '#2d3148' }}
+                style={{ ...monoInput, borderColor: errors.lotSize ? '#F04848' : '#252D3F' }}
                 placeholder="0.10"
               />
-              {errors.lotSize && <div style={{ fontSize: 10, color: '#ff4d4d', marginTop: 3 }}>{errors.lotSize}</div>}
+              {errors.lotSize && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.lotSize}</div>}
             </div>
           </FormRow>
 
@@ -312,9 +312,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                       flex: 1,
                       padding: '7px',
                       borderRadius: 5,
-                      border: `1px solid ${status === s ? (s === 'COMPLETE' ? '#00d17a' : '#ff9a3c') : '#2d3148'}`,
-                      backgroundColor: status === s ? (s === 'COMPLETE' ? 'rgba(0,209,122,0.12)' : 'rgba(255,154,60,0.12)') : '#0f1117',
-                      color: status === s ? (s === 'COMPLETE' ? '#00d17a' : '#ff9a3c') : '#8892a4',
+                      border: `1px solid ${status === s ? (s === 'COMPLETE' ? '#00C47A' : '#F0A030') : '#252D3F'}`,
+                      backgroundColor: status === s ? (s === 'COMPLETE' ? 'rgba(0,209,122,0.12)' : 'rgba(255,154,60,0.12)') : '#080B12',
+                      color: status === s ? (s === 'COMPLETE' ? '#00C47A' : '#F0A030') : '#8E97AC',
                       fontWeight: 600,
                       fontSize: 11,
                       cursor: 'pointer',
@@ -382,7 +382,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                       border: '1px solid rgba(77,158,255,0.3)',
                       borderRadius: 3,
                       fontSize: 11,
-                      color: '#4d9eff',
+                      color: '#3D8EF0',
                     }}
                   >
                     {tag}
@@ -409,7 +409,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 if (file) handleImageUpload(file);
               }}
               style={{
-                border: '2px dashed #2d3148',
+                border: '2px dashed #252D3F',
                 borderRadius: 6,
                 padding: chartImage ? 0 : '20px',
                 textAlign: 'center',
@@ -438,9 +438,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                       top: 8,
                       right: 8,
                       backgroundColor: 'rgba(0,0,0,0.7)',
-                      border: '1px solid #ff4d4d',
+                      border: '1px solid #F04848',
                       borderRadius: 4,
-                      color: '#ff4d4d',
+                      color: '#F04848',
                       padding: '3px 7px',
                       cursor: 'pointer',
                       fontSize: 11,
@@ -450,7 +450,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                   </button>
                 </div>
               ) : (
-                <div style={{ color: '#8892a4', fontSize: 12 }}>
+                <div style={{ color: '#8E97AC', fontSize: 12 }}>
                   <div style={{ fontSize: 24, marginBottom: 6 }}>📷</div>
                   <div>Drag & drop or click to upload</div>
                   <div style={{ fontSize: 10, marginTop: 4 }}>PNG, JPG, WEBP — max 2MB</div>
@@ -468,9 +468,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
             style={{
               padding: '9px 20px',
               backgroundColor: 'transparent',
-              border: '1px solid #2d3148',
+              border: '1px solid #252D3F',
               borderRadius: 6,
-              color: '#8892a4',
+              color: '#8E97AC',
               fontSize: 13,
               cursor: 'pointer',
             }}
@@ -482,10 +482,10 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
             onClick={handleSubmit}
             style={{
               padding: '9px 24px',
-              backgroundColor: '#4d9eff',
+              backgroundColor: '#3D8EF0',
               border: 'none',
               borderRadius: 6,
-              color: '#0f1117',
+              color: '#080B12',
               fontSize: 13,
               fontWeight: 700,
               cursor: 'pointer',
@@ -500,31 +500,31 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
       <div>
         <div
           style={{
-            backgroundColor: '#0f1117',
-            border: '1px solid #2d3148',
+            backgroundColor: '#080B12',
+            border: '1px solid #252D3F',
             borderRadius: 8,
             padding: 16,
             position: 'sticky',
             top: 80,
           }}
         >
-          <div style={{ fontSize: 11, fontWeight: 700, color: '#4d9eff', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>
             Live Preview
           </div>
 
           {!canPreview ? (
-            <div style={{ color: '#8892a4', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+            <div style={{ color: '#8E97AC', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
               Fill in prices and lot size
             </div>
           ) : preview ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <PreviewRow label="P&L" value={`${preview.pnlDollar >= 0 ? '+' : ''}$${preview.pnlDollar.toFixed(2)}`} color={preview.pnlDollar >= 0 ? '#00d17a' : '#ff4d4d'} large />
+              <PreviewRow label="P&L" value={`${preview.pnlDollar >= 0 ? '+' : ''}$${preview.pnlDollar.toFixed(2)}`} color={preview.pnlDollar >= 0 ? '#00C47A' : '#F04848'} large />
               {preview.pnlPercent !== null && (
-                <PreviewRow label="P&L %" value={`${preview.pnlPercent >= 0 ? '+' : ''}${preview.pnlPercent.toFixed(2)}%`} color={preview.pnlPercent >= 0 ? '#00d17a' : '#ff4d4d'} />
+                <PreviewRow label="P&L %" value={`${preview.pnlPercent >= 0 ? '+' : ''}${preview.pnlPercent.toFixed(2)}%`} color={preview.pnlPercent >= 0 ? '#00C47A' : '#F04848'} />
               )}
-              <PreviewRow label="Pips" value={`${preview.pnlPips >= 0 ? '+' : ''}${preview.pnlPips.toFixed(1)}`} color={preview.pnlPips >= 0 ? '#00d17a' : '#ff4d4d'} />
+              <PreviewRow label="Pips" value={`${preview.pnlPips >= 0 ? '+' : ''}${preview.pnlPips.toFixed(1)}`} color={preview.pnlPips >= 0 ? '#00C47A' : '#F04848'} />
               {preview.rrRatio !== null && (
-                <PreviewRow label="R:R" value={`${preview.rrRatio.toFixed(2)}R`} color={preview.rrRatio >= 1 ? '#00d17a' : '#ff9a3c'} />
+                <PreviewRow label="R:R" value={`${preview.rrRatio.toFixed(2)}R`} color={preview.rrRatio >= 1 ? '#00C47A' : '#F0A030'} />
               )}
               <PreviewRow
                 label="Duration"
@@ -533,9 +533,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                     ? `${preview.durationMinutes}m`
                     : `${Math.floor(preview.durationMinutes / 60)}h ${preview.durationMinutes % 60}m`
                 }
-                color="#e8eaf0"
+                color="#EEF0F6"
               />
-              <div style={{ marginTop: 4, padding: '8px 10px', borderRadius: 5, backgroundColor: preview.isWin ? 'rgba(0,209,122,0.1)' : 'rgba(255,77,77,0.1)', border: `1px solid ${preview.isWin ? '#00d17a' : '#ff4d4d'}`, textAlign: 'center', fontSize: 12, fontWeight: 700, color: preview.isWin ? '#00d17a' : '#ff4d4d' }}>
+              <div style={{ marginTop: 4, padding: '8px 10px', borderRadius: 5, backgroundColor: preview.isWin ? 'rgba(0,209,122,0.1)' : 'rgba(255,77,77,0.1)', border: `1px solid ${preview.isWin ? '#00C47A' : '#F04848'}`, textAlign: 'center', fontSize: 12, fontWeight: 700, color: preview.isWin ? '#00C47A' : '#F04848' }}>
                 {preview.isWin ? '🟢 WIN' : '🔴 LOSS'}
               </div>
             </div>
@@ -549,7 +549,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
 function PreviewRow({ label, value, color, large }: { label: string; value: string; color: string; large?: boolean }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div style={{ fontSize: 10, color: '#8892a4', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
+      <div style={{ fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
       <div style={{ fontSize: large ? 18 : 13, fontWeight: large ? 700 : 600, color, fontFamily: '"JetBrains Mono", monospace' }}>{value}</div>
     </div>
   );

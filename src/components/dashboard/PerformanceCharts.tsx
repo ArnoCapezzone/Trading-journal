@@ -31,10 +31,10 @@ interface Props {
 }
 
 const SETUP_COLORS = [
-  '#4d9eff',
-  '#00d17a',
-  '#ff9a3c',
-  '#ff4d4d',
+  '#3D8EF0',
+  '#00C47A',
+  '#F0A030',
+  '#F04848',
   '#a78bfa',
   '#f472b6',
   '#34d399',
@@ -45,7 +45,7 @@ const EMPTY_MSG_STYLE: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   height: 180,
-  color: '#8892a4',
+  color: '#8E97AC',
   fontSize: 13,
 };
 
@@ -59,7 +59,7 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
         label: `P&L (${c})`,
         data: byInstrument.map((d) => d.pnl),
         backgroundColor: byInstrument.map((d) => (d.pnl >= 0 ? 'rgba(0, 209, 122, 0.75)' : 'rgba(255, 77, 77, 0.75)')),
-        borderColor: byInstrument.map((d) => (d.pnl >= 0 ? '#00d17a' : '#ff4d4d')),
+        borderColor: byInstrument.map((d) => (d.pnl >= 0 ? '#00C47A' : '#F04848')),
         borderWidth: 1,
         borderRadius: 4,
       },
@@ -73,11 +73,11 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#22263a',
-        borderColor: '#2d3148',
+        backgroundColor: '#141823',
+        borderColor: '#252D3F',
         borderWidth: 1,
-        titleColor: '#8892a4',
-        bodyColor: '#e8eaf0',
+        titleColor: '#8E97AC',
+        bodyColor: '#EEF0F6',
         padding: 10,
         callbacks: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,9 +90,9 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
     },
     scales: {
       x: {
-        grid: { color: '#2d3148' },
+        grid: { color: '#252D3F' },
         ticks: {
-          color: '#8892a4',
+          color: '#8E97AC',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           callback: (val: any) => `${c}${Number(val).toFixed(0)}`,
@@ -101,7 +101,7 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       y: {
         grid: { display: false },
         ticks: {
-          color: '#e8eaf0',
+          color: '#EEF0F6',
           font: { size: 11, family: '"JetBrains Mono", monospace' },
         },
       },
@@ -129,18 +129,18 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       legend: {
         position: 'bottom' as const,
         labels: {
-          color: '#8892a4',
+          color: '#8E97AC',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           padding: 8,
           boxWidth: 10,
         },
       },
       tooltip: {
-        backgroundColor: '#22263a',
-        borderColor: '#2d3148',
+        backgroundColor: '#141823',
+        borderColor: '#252D3F',
         borderWidth: 1,
-        titleColor: '#8892a4',
-        bodyColor: '#e8eaf0',
+        titleColor: '#8E97AC',
+        bodyColor: '#EEF0F6',
         padding: 10,
         callbacks: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -158,13 +158,13 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       {/* By Instrument */}
       <div
         style={{
-          backgroundColor: '#1a1d27',
-          border: '1px solid #2d3148',
+          backgroundColor: '#0D1017',
+          border: '1px solid #252D3F',
           borderRadius: 8,
           padding: '16px 16px 12px',
         }}
       >
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#8892a4', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           P&L by Instrument
         </div>
         {byInstrument.length === 0 ? (
@@ -179,13 +179,13 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       {/* By Setup */}
       <div
         style={{
-          backgroundColor: '#1a1d27',
-          border: '1px solid #2d3148',
+          backgroundColor: '#0D1017',
+          border: '1px solid #252D3F',
           borderRadius: 8,
           padding: '16px 16px 12px',
         }}
       >
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#8892a4', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Trades by Setup
         </div>
         {bySetup.length === 0 ? (

@@ -9,8 +9,8 @@ const INSTRUMENTS = ['EURUSD', 'GBPUSD', 'NZDUSD', 'AUDUSD', 'USDCAD', 'USDCHF',
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ backgroundColor: '#1a1d27', border: '1px solid #2d3148', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: '#4d9eff', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16, paddingBottom: 10, borderBottom: '1px solid #2d3148' }}>
+    <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16, paddingBottom: 10, borderBottom: '1px solid #252D3F' }}>
         {title}
       </div>
       {children}
@@ -22,8 +22,8 @@ function Row({ label, sublabel, children }: { label: string; sublabel?: string; 
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 18, gap: 24 }}>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 500, color: '#e8eaf0' }}>{label}</div>
-        {sublabel && <div style={{ fontSize: 11, color: '#8892a4', marginTop: 3, lineHeight: 1.4 }}>{sublabel}</div>}
+        <div style={{ fontSize: 13, fontWeight: 500, color: '#EEF0F6' }}>{label}</div>
+        {sublabel && <div style={{ fontSize: 11, color: '#8E97AC', marginTop: 3, lineHeight: 1.4 }}>{sublabel}</div>}
       </div>
       <div style={{ flexShrink: 0 }}>{children}</div>
     </div>
@@ -91,10 +91,10 @@ export default function Settings() {
 
   const inputStyle: React.CSSProperties = {
     padding: '7px 10px',
-    backgroundColor: '#0f1117',
-    border: '1px solid #2d3148',
+    backgroundColor: '#080B12',
+    border: '1px solid #252D3F',
     borderRadius: 5,
-    color: '#e8eaf0',
+    color: '#EEF0F6',
     fontSize: 13,
     fontFamily: '"JetBrains Mono", monospace',
     outline: 'none',
@@ -110,9 +110,9 @@ export default function Settings() {
             style={{
               padding: '6px 14px',
               borderRadius: 5,
-              border: `1px solid ${value === o.v ? '#4d9eff' : '#2d3148'}`,
+              border: `1px solid ${value === o.v ? '#3D8EF0' : '#252D3F'}`,
               backgroundColor: value === o.v ? 'rgba(77,158,255,0.15)' : 'transparent',
-              color: value === o.v ? '#4d9eff' : '#8892a4',
+              color: value === o.v ? '#3D8EF0' : '#8E97AC',
               fontSize: 12,
               fontWeight: value === o.v ? 600 : 400,
               cursor: 'pointer',
@@ -131,7 +131,7 @@ export default function Settings() {
       <Section title="Account">
         <Row label="Signed in as" sublabel="Your trades are synced to this account">
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: '#e8eaf0' }}>
+            <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: '#EEF0F6' }}>
               {user?.email}
             </span>
             <button
@@ -139,9 +139,9 @@ export default function Settings() {
               style={{
                 padding: '6px 14px',
                 backgroundColor: 'transparent',
-                border: '1px solid #2d3148',
+                border: '1px solid #252D3F',
                 borderRadius: 5,
-                color: '#8892a4',
+                color: '#8E97AC',
                 fontSize: 12,
                 cursor: 'pointer',
               }}
@@ -189,7 +189,7 @@ export default function Settings() {
 
       {/* Instruments */}
       <Section title="Favorite Instruments">
-        <div style={{ fontSize: 12, color: '#8892a4', marginBottom: 14 }}>
+        <div style={{ fontSize: 12, color: '#8E97AC', marginBottom: 14 }}>
           Quick-access instruments shown first in dropdowns
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -202,9 +202,9 @@ export default function Settings() {
                 style={{
                   padding: '5px 12px',
                   borderRadius: 4,
-                  border: `1px solid ${active ? '#4d9eff' : '#2d3148'}`,
+                  border: `1px solid ${active ? '#3D8EF0' : '#252D3F'}`,
                   backgroundColor: active ? 'rgba(77,158,255,0.12)' : 'transparent',
-                  color: active ? '#4d9eff' : '#8892a4',
+                  color: active ? '#3D8EF0' : '#8E97AC',
                   fontSize: 11,
                   fontFamily: '"JetBrains Mono", monospace',
                   cursor: 'pointer',
@@ -226,10 +226,10 @@ export default function Settings() {
             disabled={trades.length === 0}
             style={{
               padding: '7px 16px',
-              backgroundColor: '#22263a',
-              border: '1px solid #2d3148',
+              backgroundColor: '#141823',
+              border: '1px solid #252D3F',
               borderRadius: 5,
-              color: trades.length > 0 ? '#e8eaf0' : '#8892a4',
+              color: trades.length > 0 ? '#EEF0F6' : '#8E97AC',
               fontSize: 12,
               cursor: trades.length > 0 ? 'pointer' : 'not-allowed',
             }}
@@ -244,10 +244,10 @@ export default function Settings() {
               onClick={() => fileRef.current?.click()}
               style={{
                 padding: '7px 16px',
-                backgroundColor: '#22263a',
-                border: '1px solid #2d3148',
+                backgroundColor: '#141823',
+                border: '1px solid #252D3F',
                 borderRadius: 5,
-                color: '#e8eaf0',
+                color: '#EEF0F6',
                 fontSize: 12,
                 cursor: 'pointer',
               }}
@@ -255,7 +255,7 @@ export default function Settings() {
               📂 Import from Backup
             </button>
             {importMsg && (
-              <div style={{ marginTop: 6, fontSize: 11, color: importMsg.startsWith('Error') ? '#ff4d4d' : '#00d17a' }}>
+              <div style={{ marginTop: 6, fontSize: 11, color: importMsg.startsWith('Error') ? '#F04848' : '#00C47A' }}>
                 {importMsg}
               </div>
             )}
@@ -274,9 +274,9 @@ export default function Settings() {
                 style={{
                   padding: '7px 16px',
                   backgroundColor: 'rgba(255,77,77,0.1)',
-                  border: '1px solid #ff4d4d',
+                  border: '1px solid #F04848',
                   borderRadius: 5,
-                  color: '#ff4d4d',
+                  color: '#F04848',
                   fontSize: 12,
                   cursor: 'pointer',
                   fontWeight: 600,
@@ -286,7 +286,7 @@ export default function Settings() {
               </button>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
-                <div style={{ fontSize: 11, color: '#ff4d4d' }}>Type <strong>RESET</strong> to confirm:</div>
+                <div style={{ fontSize: 11, color: '#F04848' }}>Type <strong>RESET</strong> to confirm:</div>
                 <input
                   type="text"
                   value={resetInput}
@@ -295,13 +295,13 @@ export default function Settings() {
                   style={{
                     ...inputStyle,
                     width: 120,
-                    borderColor: resetInput === 'RESET' ? '#ff4d4d' : '#2d3148',
+                    borderColor: resetInput === 'RESET' ? '#F04848' : '#252D3F',
                   }}
                 />
                 <div style={{ display: 'flex', gap: 6 }}>
                   <button
                     onClick={() => { setShowResetConfirm(false); setResetInput(''); }}
-                    style={{ padding: '5px 12px', backgroundColor: 'transparent', border: '1px solid #2d3148', borderRadius: 4, color: '#8892a4', fontSize: 11, cursor: 'pointer' }}
+                    style={{ padding: '5px 12px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 4, color: '#8E97AC', fontSize: 11, cursor: 'pointer' }}
                   >
                     Cancel
                   </button>
@@ -310,10 +310,10 @@ export default function Settings() {
                     disabled={resetInput !== 'RESET'}
                     style={{
                       padding: '5px 12px',
-                      backgroundColor: resetInput === 'RESET' ? '#ff4d4d' : '#22263a',
+                      backgroundColor: resetInput === 'RESET' ? '#F04848' : '#141823',
                       border: 'none',
                       borderRadius: 4,
-                      color: resetInput === 'RESET' ? '#0f1117' : '#8892a4',
+                      color: resetInput === 'RESET' ? '#080B12' : '#8E97AC',
                       fontSize: 11,
                       fontWeight: 700,
                       cursor: resetInput === 'RESET' ? 'pointer' : 'not-allowed',
@@ -330,8 +330,8 @@ export default function Settings() {
 
       {/* About */}
       <Section title="About">
-        <div style={{ fontSize: 12, color: '#8892a4', lineHeight: 1.8 }}>
-          <div><strong style={{ color: '#e8eaf0' }}>Trading Journal</strong> v1.0.0</div>
+        <div style={{ fontSize: 12, color: '#8E97AC', lineHeight: 1.8 }}>
+          <div><strong style={{ color: '#EEF0F6' }}>Trading Journal</strong> v1.0.0</div>
           <div>Local-first trading performance tracker. All data stored in your browser (IndexedDB).</div>
           <div style={{ marginTop: 8, fontFamily: '"JetBrains Mono", monospace', fontSize: 11 }}>
             Stack: React 18 + TypeScript + Dexie + Zustand + Chart.js

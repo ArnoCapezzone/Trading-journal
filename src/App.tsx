@@ -43,7 +43,7 @@ function LoadingScreen() {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#0f1117',
+      backgroundColor: '#080B12',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -52,13 +52,13 @@ function LoadingScreen() {
     }}>
       <div style={{
         width: 52, height: 52,
-        backgroundColor: '#4d9eff',
+        backgroundColor: '#3D8EF0',
         borderRadius: 12,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 22, fontWeight: 800, color: '#0f1117',
+        fontSize: 22, fontWeight: 800, color: '#080B12',
         fontFamily: '"JetBrains Mono", monospace',
       }}>TJ</div>
-      <div style={{ color: '#8892a4', fontSize: 13 }}>Loading…</div>
+      <div style={{ color: '#8E97AC', fontSize: 13 }}>Loading…</div>
     </div>
   );
 }

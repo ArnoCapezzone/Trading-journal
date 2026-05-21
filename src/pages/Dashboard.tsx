@@ -1,0 +1,190 @@
+import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+import { useTradesStore } from '../store/tradesStore';
+import { useSettingsStore } from '../store/settingsStore';
+import {
+  calculateDashboardKPIs,
+  calculateEquityCurve,
+  calculateByInstrument,
+  calculateBySetup,
+  calculateHeatmap,
+  calculateCalendar,
+  calculateTrade,
+} from '../utils/calculations';
+import KPICards from '../components/dashboard/KPICards';
+import EquityCurve from '../components/dashboard/EquityCurve';
+import PerformanceCharts from '../components/dashboard/PerformanceCharts';
+import HeatmapHour from '../components/dashboard/HeatmapHour';
+import CalendarView from '../components/dashboard/CalendarView';
+import { format } from 'date-fns';
+
+type Period = 'today' | 'week' | 'month' | '3months' | 'all';
+
+const PERIODS: { value: Period; label: string }[] = [
+  { value: 'today', label: 'Today' },
+  { value: 'week', label: 'This Week' },
+  { value: 'month', label: 'This Month' },
+  { value: '3months', label: '3 Months' },
+  { value: 'all', label: 'All Time' },
+];
+
+export default function Dashboard() {
+  const { selectedPeriod, setSelectedPeriod, getPeriodTrades, trades } = useTradesStore();
+  const { accountBalance, currency } = useSettingsStore();
+  const c = currency === 'EUR' ? '€' : '$';
+
+  const [calYear, setCalYear] = useState(new Date().getFullYear());
+  const [calMonth, setCalMonth] = useState(new Date().getMonth());
+
+  const periodTrades = getPeriodTrades();
+  const pendingCount = trades.filter((t) => t.status === 'PENDING_REVIEW').length;
+
+  const kpis = useMemo(
+    () => calculateDashboardKPIs(periodTrades, accountBalance),
+    [periodTrades, accountBalance]
+  );
+  const equityCurve = useMemo(() => calculateEquityCurve(periodTrades), [periodTrades]);
+  const byInstrument = useMemo(() => calculateByInstrument(periodTrades), [periodTrades]);
+  const bySetup = useMemo(() => calculateBySetup(periodTrades), [periodTrades]);
+  const heatmap = useMemo(() => calculateHeatmap(periodTrades), [periodTrades]);
+  const calendar = useMemo(() => calculateCalendar(trades, calYear, calMonth), [trades, calYear, calMonth]);
+
+  const last10 = useMemo(
+    () =>
+      [...periodTrades]
+        .sort((a, b) => new Date(b.exitTime).getTime() - new Date(a.exitTime).getTime())
+        .slice(0, 10),
+    [periodTrades]
+  );
+
+  return (
+    <div style={{ padding: 24, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Pending alert */}
+      {pendingCount > 0 && (
+        <Link
+          to="/journal?filter=pending"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            padding: '10px 16px',
+            backgroundColor: 'rgba(255, 154, 60, 0.1)',
+            border: '1px solid rgba(255, 154, 60, 0.35)',
+            borderRadius: 7,
+            textDecoration: 'none',
+            color: '#ff9a3c',
+            fontSize: 13,
+            fontWeight: 500,
+          }}
+        >
+          <span style={{ fontSize: 16 }}>⚠</span>
+          <span>
+            <strong>{pendingCount} trade{pendingCount !== 1 ? 's' : ''}</strong> pending review — click to complete them
+          </span>
+          <span style={{ marginLeft: 'auto', fontSize: 11, opacity: 0.8 }}>View →</span>
+        </Link>
+      )}
+
+      {/* Period selector */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div style={{ fontSize: 12, color: '#8892a4' }}>
+          {periodTrades.length} trade{periodTrades.length !== 1 ? 's' : ''} in period
+        </div>
+        <div style={{ display: 'flex', gap: 6 }}>
+          {PERIODS.map((p) => (
+            <button
+              key={p.value}
+              onClick={() => setSelectedPeriod(p.value)}
+              style={{
+                padding: '5px 12px',
+                borderRadius: 5,
+                border: `1px solid ${selectedPeriod === p.value ? '#4d9eff' : '#2d3148'}`,
+                backgroundColor: selectedPeriod === p.value ? 'rgba(77,158,255,0.15)' : 'transparent',
+                color: selectedPeriod === p.value ? '#4d9eff' : '#8892a4',
+                fontSize: 12,
+                fontWeight: selectedPeriod === p.value ? 600 : 400,
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+              }}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* KPIs */}
+      <KPICards kpis={kpis} currency={currency} />
+
+      {/* Equity Curve */}
+      <EquityCurve data={equityCurve} currency={currency} />
+
+      {/* Performance Charts */}
+      <PerformanceCharts byInstrument={byInstrument} bySetup={bySetup} currency={currency} />
+
+      {/* Bottom row: Heatmap + Calendar */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+        <HeatmapHour data={heatmap} currency={currency} />
+        <CalendarView
+          data={calendar}
+          year={calYear}
+          month={calMonth}
+          onMonthChange={(y, m) => { setCalYear(y); setCalMonth(m); }}
+          currency={currency}
+        />
+      </div>
+
+      {/* Last 10 trades */}
+      <div style={{ backgroundColor: '#1a1d27', border: '1px solid #2d3148', borderRadius: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid #2d3148' }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: '#8892a4', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Recent Trades
+          </div>
+          <Link to="/journal" style={{ fontSize: 11, color: '#4d9eff', textDecoration: 'none' }}>See all →</Link>
+        </div>
+        {last10.length === 0 ? (
+          <div style={{ padding: '24px', textAlign: 'center', color: '#8892a4', fontSize: 13 }}>
+            No trades in selected period. <Link to="/journal/new" style={{ color: '#4d9eff' }}>Add your first trade</Link>
+          </div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+            <thead>
+              <tr>
+                {['Date', 'Instrument', 'L/S', 'Entry', 'Exit', 'P&L $', 'Setup', 'Status'].map((h) => (
+                  <th key={h} style={{ padding: '7px 12px', textAlign: 'left', fontSize: 10, color: '#8892a4', textTransform: 'uppercase', borderBottom: '1px solid #2d3148' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {last10.map((trade) => {
+                const calc = calculateTrade(trade, accountBalance);
+                return (
+                  <tr key={trade.id} style={{ borderBottom: '1px solid #1a1d27', backgroundColor: calc.isWin ? 'rgba(0,209,122,0.03)' : 'rgba(255,77,77,0.03)' }}>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#8892a4' }}>
+                      {format(new Date(trade.exitTime), 'dd/MM/yy HH:mm')}
+                    </td>
+                    <td style={{ padding: '6px 12px', fontWeight: 600, fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0' }}>{trade.instrument}</td>
+                    <td style={{ padding: '6px 12px' }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: trade.direction === 'LONG' ? '#00d17a' : '#ff4d4d' }}>
+                        {trade.direction === 'LONG' ? '▲' : '▼'} {trade.direction === 'LONG' ? 'L' : 'S'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0', fontSize: 11 }}>{trade.entryPrice.toFixed(5)}</td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#e8eaf0', fontSize: 11 }}>{trade.exitPrice.toFixed(5)}</td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600, color: calc.isWin ? '#00d17a' : '#ff4d4d' }}>
+                      {calc.pnlDollar >= 0 ? '+' : ''}{c}{calc.pnlDollar.toFixed(2)}
+                    </td>
+                    <td style={{ padding: '6px 12px', color: '#8892a4', fontSize: 11 }}>{trade.setup ?? '—'}</td>
+                    <td style={{ padding: '6px 12px', fontSize: 10, color: trade.status === 'COMPLETE' ? '#00d17a' : '#ff9a3c' }}>
+                      {trade.status === 'COMPLETE' ? '✓' : '⚠'}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}

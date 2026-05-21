@@ -5,6 +5,7 @@ import type { Trade } from '../types/trade';
 import TradeFilters from '../components/journal/TradeFilters';
 import TradeTable from '../components/journal/TradeTable';
 import TradeDetail from '../components/journal/TradeDetail';
+import VoiceTradeInput from '../components/journal/VoiceTradeInput';
 
 export default function Journal() {
   const [searchParams] = useSearchParams();
@@ -40,6 +41,24 @@ export default function Journal() {
         <div style={{ fontSize: 12, color: '#8892a4' }}>
           {filteredTrades.length} trade{filteredTrades.length !== 1 ? 's' : ''}
           {filteredTrades.length !== trades.length && ` (filtered from ${trades.length})`}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <VoiceTradeInput />
+          <button
+            onClick={() => navigate('/journal/new')}
+            style={{
+              padding: '7px 16px',
+              backgroundColor: '#4d9eff',
+              border: 'none',
+              borderRadius: 6,
+              color: '#0f1117',
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: 'pointer',
+            }}
+          >
+            + New Trade
+          </button>
         </div>
       </div>
 

@@ -6,6 +6,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/journal': 'Journal',
   '/journal/new': 'New Trade',
   '/import': 'Import',
+  '/mentor': 'AI Mentor',
   '/analysis': 'AI Analysis',
   '/settings': 'Settings',
 };

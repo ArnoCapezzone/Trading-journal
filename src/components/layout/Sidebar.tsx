@@ -40,6 +40,18 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/mentor',
+    end: false,
+    label: 'AI Mentor',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 5.5a2 2 0 012-2h6a2 2 0 012 2v4a2 2 0 01-2 2H7l-3 2.5v-2.5H5a2 2 0 01-2-2v-4z" />
+        <circle cx="6" cy="7.5" r="0.6" fill="currentColor" />
+        <circle cx="10" cy="7.5" r="0.6" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
     to: '/analysis',
     end: false,
     label: 'AI Analysis',

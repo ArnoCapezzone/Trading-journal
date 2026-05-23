@@ -16,6 +16,7 @@ import EquityCurve from '../components/dashboard/EquityCurve';
 import PerformanceCharts from '../components/dashboard/PerformanceCharts';
 import HeatmapHour from '../components/dashboard/HeatmapHour';
 import CalendarView from '../components/dashboard/CalendarView';
+import BehavioralInsights from '../components/dashboard/BehavioralInsights';
 import { format } from 'date-fns';
 
 type Period = 'today' | 'week' | 'month' | '3months' | 'all';
@@ -130,6 +131,9 @@ export default function Dashboard() {
 
       {/* KPIs */}
       <KPICards kpis={kpis} currency={currency} />
+
+      {/* Behavioral Insights — Phase 7 */}
+      <BehavioralInsights trades={periodTrades} accountBalance={accountBalance} currency={currency} />
 
       {/* Equity Curve */}
       <EquityCurve data={equityCurve} currency={currency} />

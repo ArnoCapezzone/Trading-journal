@@ -6,6 +6,12 @@ import {
   calculateBySetup,
   calculateTrade,
 } from '../utils/calculations';
+import {
+  calculateRevengeTradingImpact,
+  calculateDisciplineScore,
+  calculateByHour,
+  calculateByDayOfWeek,
+} from './../utils/advancedMetrics';
 import { format } from 'date-fns';
 
 const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY as string | undefined;
@@ -55,6 +61,16 @@ Your role:
   // Behavioral pattern detection
   const issues = detectIssues(trades, accountBalance);
 
+  // Advanced behavioral metrics
+  const revenge = calculateRevengeTradingImpact(trades, accountBalance);
+  const discipline = calculateDisciplineScore(trades, accountBalance);
+  const byHour = calculateByHour(trades, accountBalance).filter((h) => h.trades >= 2);
+  const byDay = calculateByDayOfWeek(trades, accountBalance).filter((d) => d.trades >= 2);
+  const bestHour = byHour.length > 0 ? byHour.reduce((a, b) => (a.avgPnl > b.avgPnl ? a : b)) : null;
+  const worstHour = byHour.length > 0 ? byHour.reduce((a, b) => (a.avgPnl < b.avgPnl ? a : b)) : null;
+  const bestDay = byDay.length > 0 ? byDay.reduce((a, b) => (a.avgPnl > b.avgPnl ? a : b)) : null;
+  const worstDay = byDay.length > 0 ? byDay.reduce((a, b) => (a.avgPnl < b.avgPnl ? a : b)) : null;
+
   return `You are an elite trading mentor and behavioral coach with deep expertise in psychology, risk management, and statistical edge analysis. You have FULL access to the trader's journal data below. Be direct, specific, and reference actual data — no generic advice.
 
 ═══════════════════════════════════════════
@@ -93,6 +109,16 @@ ${bySetup.map((s) => `${s.setup.padEnd(22)} | ${String(s.count).padStart(3)} tra
 LAST 30 TRADES
 ═══════════════════════════════════════════
 ${tradeLines.join('\n')}
+
+═══════════════════════════════════════════
+BEHAVIORAL METRICS
+═══════════════════════════════════════════
+Discipline Score: ${discipline.score}/100 (${discipline.withNotes}/${discipline.totalTrades} with notes, ${discipline.withSetup}/${discipline.totalTrades} tagged setup)
+Revenge Trading: ${revenge.count} trades (net ${revenge.netPnl >= 0 ? '+' : ''}${revenge.netPnl.toFixed(2)} ${currency}, WR ${(revenge.winRate * 100).toFixed(0)}%, avg gap ${revenge.avgGap.toFixed(0)}min)
+Best hour: ${bestHour ? `${String(bestHour.hour).padStart(2, '0')}:00 (avg ${bestHour.avgPnl >= 0 ? '+' : ''}${bestHour.avgPnl.toFixed(2)} ${currency} over ${bestHour.trades} trades)` : 'insufficient data'}
+Worst hour: ${worstHour ? `${String(worstHour.hour).padStart(2, '0')}:00 (avg ${worstHour.avgPnl.toFixed(2)} ${currency} over ${worstHour.trades} trades)` : 'insufficient data'}
+Best day: ${bestDay ? `${bestDay.dayName} (avg ${bestDay.avgPnl >= 0 ? '+' : ''}${bestDay.avgPnl.toFixed(2)} ${currency})` : 'insufficient data'}
+Worst day: ${worstDay ? `${worstDay.dayName} (avg ${worstDay.avgPnl.toFixed(2)} ${currency})` : 'insufficient data'}
 
 ${issues.length > 0 ? `═══════════════════════════════════════════
 AUTO-DETECTED BEHAVIORAL PATTERNS

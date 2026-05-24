@@ -17,6 +17,7 @@ import PerformanceCharts from '../components/dashboard/PerformanceCharts';
 import HeatmapHour from '../components/dashboard/HeatmapHour';
 import CalendarView from '../components/dashboard/CalendarView';
 import BehavioralInsights from '../components/dashboard/BehavioralInsights';
+import ActiveGoals from '../components/dashboard/ActiveGoals';
 import { format } from 'date-fns';
 
 type Period = 'today' | 'week' | 'month' | '3months' | 'all';
@@ -131,6 +132,9 @@ export default function Dashboard() {
 
       {/* KPIs */}
       <KPICards kpis={kpis} currency={currency} />
+
+      {/* Goals & Milestones — Phase 4 */}
+      <ActiveGoals trades={trades} accountBalance={accountBalance} currency={currency} />
 
       {/* Behavioral Insights — Phase 7 */}
       <BehavioralInsights trades={periodTrades} accountBalance={accountBalance} currency={currency} />

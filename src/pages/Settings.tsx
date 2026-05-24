@@ -4,6 +4,7 @@ import { useTradesStore } from '../store/tradesStore';
 import { useAuthStore } from '../store/authStore';
 import { exportToJSON, importFromJSON } from '../utils/exportUtils';
 import { supabase } from '../lib/supabase';
+import { downloadBackup, restoreLocalData, getLocalDataSummary } from '../lib/localBackup';
 
 const INSTRUMENTS = ['EURUSD', 'GBPUSD', 'NZDUSD', 'AUDUSD', 'USDCAD', 'USDCHF', 'USDJPY', 'GBPJPY', 'EURJPY', 'NAS100', 'US500', 'XAUUSD'];
 
@@ -46,7 +47,34 @@ export default function Settings() {
   const [resetInput, setResetInput] = useState('');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importMsg, setImportMsg] = useState('');
+  const [localBackupMsg, setLocalBackupMsg] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const localBackupFileRef = useRef<HTMLInputElement>(null);
+
+  const localSummary = getLocalDataSummary();
+  const totalLocalSize = localSummary.reduce((s, x) => s + x.size, 0);
+
+  async function handleLocalRestore(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!confirm('This will OVERWRITE your current playbooks, goals, plans, and mentor chats with the backup file. Continue?')) {
+      if (localBackupFileRef.current) localBackupFileRef.current.value = '';
+      return;
+    }
+    try {
+      const text = await file.text();
+      const result = restoreLocalData(text);
+      if (result.ok) {
+        setLocalBackupMsg(`✓ Restored ${result.keysRestored.length} data sections. Reload to see changes.`);
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setLocalBackupMsg(`Error: ${result.errors.join('; ')}`);
+      }
+    } catch (err) {
+      setLocalBackupMsg(`Error: ${String(err)}`);
+    }
+    if (localBackupFileRef.current) localBackupFileRef.current.value = '';
+  }
 
   function handleBalanceSave() {
     const val = parseFloat(localBalance);
@@ -326,6 +354,70 @@ export default function Settings() {
             )}
           </div>
         </Row>
+      </Section>
+
+      {/* Local Data Backup */}
+      <Section title="Local Data Backup">
+        <Row
+          label="Backup Playbooks, Goals, Plans, Mentor chats"
+          sublabel="These are stored only in your browser. Export regularly to avoid loss if you clear cache or switch devices."
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
+            <button
+              onClick={downloadBackup}
+              disabled={localSummary.length === 0}
+              style={{
+                padding: '7px 16px',
+                backgroundColor: '#141823',
+                border: '1px solid #252D3F',
+                borderRadius: 5,
+                color: localSummary.length > 0 ? '#EEF0F6' : '#8E97AC',
+                fontSize: 12,
+                cursor: localSummary.length > 0 ? 'pointer' : 'not-allowed',
+              }}
+            >
+              ⬇ Download local backup ({(totalLocalSize / 1024).toFixed(1)} KB)
+            </button>
+            <button
+              onClick={() => localBackupFileRef.current?.click()}
+              style={{
+                padding: '7px 16px',
+                backgroundColor: 'transparent',
+                border: '1px solid #252D3F',
+                borderRadius: 5,
+                color: '#EEF0F6',
+                fontSize: 12,
+                cursor: 'pointer',
+              }}
+            >
+              ⬆ Restore from backup
+            </button>
+            <input ref={localBackupFileRef} type="file" accept=".json" onChange={handleLocalRestore} style={{ display: 'none' }} />
+            {localBackupMsg && (
+              <div style={{ fontSize: 11, color: localBackupMsg.startsWith('Error') ? '#F04848' : '#00C47A' }}>
+                {localBackupMsg}
+              </div>
+            )}
+          </div>
+        </Row>
+
+        {localSummary.length > 0 && (
+          <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: '#080B12', border: '1px solid #181E2C', borderRadius: 6 }}>
+            <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+              Currently stored locally
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {localSummary.map((item) => (
+                <div key={item.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontFamily: '"JetBrains Mono", monospace' }}>
+                  <span style={{ color: '#8E97AC' }}>{item.label}</span>
+                  <span style={{ color: '#C8CDD8' }}>
+                    {item.count} item{item.count !== 1 ? 's' : ''} · {(item.size / 1024).toFixed(2)} KB
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Section>
 
       {/* About */}

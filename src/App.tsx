@@ -11,6 +11,7 @@ import TradeFormPage from './pages/TradeFormPage';
 import Analysis from './pages/Analysis';
 import Mentor from './pages/Mentor';
 import PropFirm from './pages/PropFirm';
+import DailyPlanPage from './pages/DailyPlan';
 import { useTradesStore } from './store/tradesStore';
 import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
@@ -88,6 +89,7 @@ export default function App() {
           <Route path="/mentor" element={<Mentor />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/prop-firm" element={<PropFirm />} />
+          <Route path="/daily-plan" element={<DailyPlanPage />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

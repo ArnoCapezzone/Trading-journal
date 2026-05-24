@@ -28,6 +28,20 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/playbooks',
+    end: false,
+    label: 'Playbooks',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2.5" width="12" height="11" rx="1.5" />
+        <line x1="6" y1="2.5" x2="6" y2="13.5" />
+        <line x1="8" y1="5" x2="12" y2="5" />
+        <line x1="8" y1="8" x2="12" y2="8" />
+        <line x1="8" y1="11" x2="10.5" y2="11" />
+      </svg>
+    ),
+  },
+  {
     to: '/daily-plan',
     end: false,
     label: 'Daily Plan',

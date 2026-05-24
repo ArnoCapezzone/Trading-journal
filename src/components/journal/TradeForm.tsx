@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Trade, TradeDirection, SetupType, Timeframe } from '../../types/trade';
 import { calculateTrade } from '../../utils/calculations';
 import { useSettingsStore } from '../../store/settingsStore';
+import { listPlaybooks, getTradePlaybookId, assignPlaybook, type Playbook } from '../../lib/playbooksStore';
 
 interface Props {
   initialData?: Trade;
@@ -90,6 +91,21 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
   const [status, setStatus] = useState<'COMPLETE' | 'PENDING_REVIEW'>(initialData?.status ?? 'COMPLETE');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Playbooks
+  const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
+  const [playbookId, setPlaybookId] = useState<string>('');
+  const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    setPlaybooks(listPlaybooks());
+    if (initialData?.id) {
+      const pid = getTradePlaybookId(initialData.id);
+      if (pid) setPlaybookId(pid);
+    }
+  }, [initialData?.id]);
+
+  const activePlaybook = playbooks.find((p) => p.id === playbookId) ?? null;
+
   // Live preview
   const previewTrade: Partial<Trade> = {
     instrument,
@@ -122,6 +138,19 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
 
   function handleSubmit() {
     if (!validate()) return;
+    // Persist playbook assignment if trade has an id (edit mode)
+    // For new trades, we'll need to assign post-creation; we save the
+    // pending playbookId to a session map and the parent handles it via onSubmit completion.
+    // Simplest: store under tradeId once we have it. For now, assign after create
+    // by relying on the fact that initialData.id exists on edit.
+    if (initialData?.id) {
+      assignPlaybook(initialData.id, playbookId || null);
+    } else {
+      // For new trades, stash the chosen playbook in sessionStorage so the
+      // submit handler can pick it up after Supabase returns the new id.
+      if (playbookId) sessionStorage.setItem('tj_pending_playbook', playbookId);
+      else sessionStorage.removeItem('tj_pending_playbook');
+    }
     onSubmit({
       source: initialData?.source ?? 'MANUAL',
       status,
@@ -345,6 +374,61 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
               </select>
             </div>
           </FormRow>
+
+          {/* Playbook selector */}
+          {playbooks.length > 0 && (
+            <div style={{ marginBottom: 12 }}>
+              <label style={labelStyle()}>Strategy Playbook</label>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <select
+                  value={playbookId}
+                  onChange={(e) => { setPlaybookId(e.target.value); setCheckedItems(new Set()); }}
+                  style={{ ...inputStyle(), cursor: 'pointer', flex: 1 }}
+                >
+                  <option value="">— None —</option>
+                  {playbooks.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+                {activePlaybook && (
+                  <div style={{ width: 14, height: 14, borderRadius: 4, backgroundColor: activePlaybook.color, flexShrink: 0 }} />
+                )}
+              </div>
+
+              {/* Inline checklist */}
+              {activePlaybook && activePlaybook.checklist.length > 0 && (
+                <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: '#080B12', border: '1px solid #181E2C', borderRadius: 6 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <div style={{ fontSize: 10, color: '#8E97AC', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      Pre-trade checklist
+                    </div>
+                    <div style={{ fontSize: 10, color: checkedItems.size === activePlaybook.checklist.length ? '#00C47A' : '#F0A030', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600 }}>
+                      {checkedItems.size}/{activePlaybook.checklist.length}
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+                    {activePlaybook.checklist.map((item, idx) => {
+                      const checked = checkedItems.has(idx);
+                      return (
+                        <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: checked ? '#8E97AC' : '#EEF0F6', textDecoration: checked ? 'line-through' : 'none' }}>
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => {
+                              const next = new Set(checkedItems);
+                              if (next.has(idx)) next.delete(idx);
+                              else next.add(idx);
+                              setCheckedItems(next);
+                            }}
+                            style={{ accentColor: activePlaybook.color, cursor: 'pointer' }}
+                          />
+                          {item}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div style={{ marginBottom: 12 }}>
             <label style={labelStyle()}>Notes <span style={{ color: '#4d3148', textTransform: 'none', letterSpacing: 0 }}>{notes.length}/500</span></label>

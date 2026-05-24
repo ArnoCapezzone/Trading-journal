@@ -10,6 +10,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/analysis': 'AI Analysis',
   '/prop-firm': 'Prop Firm Tools',
   '/daily-plan': 'Daily Plan',
+  '/playbooks': 'Strategy Playbooks',
   '/settings': 'Settings',
 };
 

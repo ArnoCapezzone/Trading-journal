@@ -14,6 +14,7 @@ import {
 } from './../utils/advancedMetrics';
 import { listGoals, computeGoalProgress, getGoalTypeLabel } from './goalsStore';
 import { getTodayPlan, computePlanStats } from './dailyPlanStore';
+import { listPlaybooks, computePlaybookStats } from './playbooksStore';
 import { format } from 'date-fns';
 
 const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY as string | undefined;
@@ -83,6 +84,10 @@ Your role:
   const todayPlan = getTodayPlan();
   const planStats = computePlanStats();
 
+  // Playbooks performance
+  const playbooks = listPlaybooks();
+  const playbookStats = computePlaybookStats(trades, accountBalance);
+
   return `You are an elite trading mentor and behavioral coach with deep expertise in psychology, risk management, and statistical edge analysis. You have FULL access to the trader's journal data below. Be direct, specific, and reference actual data — no generic advice.
 
 ═══════════════════════════════════════════
@@ -132,7 +137,16 @@ Worst hour: ${worstHour ? `${String(worstHour.hour).padStart(2, '0')}:00 (avg ${
 Best day: ${bestDay ? `${bestDay.dayName} (avg ${bestDay.avgPnl >= 0 ? '+' : ''}${bestDay.avgPnl.toFixed(2)} ${currency})` : 'insufficient data'}
 Worst day: ${worstDay ? `${worstDay.dayName} (avg ${worstDay.avgPnl.toFixed(2)} ${currency})` : 'insufficient data'}
 
-${todayPlan ? `═══════════════════════════════════════════
+${playbooks.length > 0 ? `═══════════════════════════════════════════
+STRATEGY PLAYBOOKS
+═══════════════════════════════════════════
+${playbooks.map((p) => {
+  const s = playbookStats[p.id];
+  if (!s || s.count === 0) return `○ ${p.name} (${p.description || 'no description'}) — no trades assigned yet`;
+  return `• ${p.name} — ${s.count} trades, WR ${(s.winRate * 100).toFixed(0)}%, PF ${s.profitFactor !== null ? s.profitFactor.toFixed(2) : 'N/A'}, Expectancy ${s.expectancy >= 0 ? '+' : ''}${s.expectancy.toFixed(2)}, Net ${s.totalPnl >= 0 ? '+' : ''}${s.totalPnl.toFixed(2)} ${currency}${p.description ? ` [${p.description}]` : ''}`;
+}).join('\n')}
+
+` : ''}${todayPlan ? `═══════════════════════════════════════════
 TODAY'S PLAN (${todayPlan.date})
 ═══════════════════════════════════════════
 Bias: ${todayPlan.bias} · Max trades: ${todayPlan.maxTrades} · Max risk: ${todayPlan.maxRiskPct}%

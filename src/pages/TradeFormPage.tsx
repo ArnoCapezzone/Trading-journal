@@ -2,6 +2,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTradesStore } from '../store/tradesStore';
 import TradeForm from '../components/journal/TradeForm';
 import type { Trade } from '../types/trade';
+import { assignPlaybook } from '../lib/playbooksStore';
 
 export default function TradeFormPage() {
   const { id } = useParams<{ id?: string }>();
@@ -19,7 +20,13 @@ export default function TradeFormPage() {
     if (isEdit && editTrade) {
       await updateTrade(editTrade.id, data);
     } else {
-      await addTrade(data);
+      const newTrade = await addTrade(data);
+      // Apply pending playbook (set by TradeForm.handleSubmit when creating)
+      const pending = sessionStorage.getItem('tj_pending_playbook');
+      sessionStorage.removeItem('tj_pending_playbook');
+      if (pending && newTrade?.id) {
+        assignPlaybook(newTrade.id, pending);
+      }
     }
     navigate('/journal');
   }

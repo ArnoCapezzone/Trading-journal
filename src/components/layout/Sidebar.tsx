@@ -63,6 +63,20 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/prop-firm',
+    end: false,
+    label: 'Prop Firm',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 14h12M3 14V8M6 14V5M9 14V9M12 14V3" />
+        <circle cx="3" cy="8" r="0.8" fill="currentColor" />
+        <circle cx="6" cy="5" r="0.8" fill="currentColor" />
+        <circle cx="9" cy="9" r="0.8" fill="currentColor" />
+        <circle cx="12" cy="3" r="0.8" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
     to: '/settings',
     end: false,
     label: 'Settings',

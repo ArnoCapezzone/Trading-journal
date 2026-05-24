@@ -8,6 +8,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/import': 'Import',
   '/mentor': 'AI Mentor',
   '/analysis': 'AI Analysis',
+  '/prop-firm': 'Prop Firm Tools',
   '/settings': 'Settings',
 };
 

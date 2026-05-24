@@ -8,6 +8,7 @@ const LOCAL_KEYS = [
   'tj_trade_playbooks_v1',
   'tj_daily_plans_v1',
   'tj_mentor_conversations',
+  'tj_economic_cal_cache',
 ] as const;
 
 export interface LocalBackup {
@@ -98,6 +99,7 @@ export function getLocalDataSummary(): { key: string; label: string; size: numbe
     tj_trade_playbooks_v1: 'Trade ↔ Playbook map',
     tj_daily_plans_v1: 'Daily Plans',
     tj_mentor_conversations: 'AI Mentor conversations',
+    tj_economic_cal_cache: 'Economic Calendar cache',
   };
 
   const summary: { key: string; label: string; size: number; count: number }[] = [];

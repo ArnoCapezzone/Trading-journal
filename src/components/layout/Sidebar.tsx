@@ -48,6 +48,20 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/calendar',
+    end: false,
+    label: 'News Calendar',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="12" height="11" rx="1.5" />
+        <line x1="2" y1="6.5" x2="14" y2="6.5" />
+        <line x1="5" y1="1.5" x2="5" y2="4" />
+        <line x1="11" y1="1.5" x2="11" y2="4" />
+        <path d="M5 9l1.5 1.5L9 8" />
+      </svg>
+    ),
+  },
+  {
     to: '/daily-plan',
     end: false,
     label: 'Daily Plan',

@@ -15,6 +15,7 @@ import {
 import { listGoals, computeGoalProgress, getGoalTypeLabel } from './goalsStore';
 import { getTodayPlan, computePlanStats } from './dailyPlanStore';
 import { listPlaybooks, computePlaybookStats } from './playbooksStore';
+import { getUpcomingHighImpact, type EconomicEvent } from './economicCalendar';
 import { format } from 'date-fns';
 
 const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY as string | undefined;
@@ -88,6 +89,17 @@ Your role:
   const playbooks = listPlaybooks();
   const playbookStats = computePlaybookStats(trades, accountBalance);
 
+  // Upcoming high-impact news events (read from cache only, no network call)
+  let upcomingNews: EconomicEvent[] = [];
+  try {
+    const raw = localStorage.getItem('tj_economic_cal_cache');
+    if (raw) {
+      const cache = JSON.parse(raw) as { thisWeek?: EconomicEvent[]; nextWeek?: EconomicEvent[] };
+      const all = [...(cache.thisWeek ?? []), ...(cache.nextWeek ?? [])];
+      upcomingNews = getUpcomingHighImpact(all, 5);
+    }
+  } catch { /* ignore */ }
+
   return `You are an elite trading mentor and behavioral coach with deep expertise in psychology, risk management, and statistical edge analysis. You have FULL access to the trader's journal data below. Be direct, specific, and reference actual data — no generic advice.
 
 ═══════════════════════════════════════════
@@ -137,7 +149,12 @@ Worst hour: ${worstHour ? `${String(worstHour.hour).padStart(2, '0')}:00 (avg ${
 Best day: ${bestDay ? `${bestDay.dayName} (avg ${bestDay.avgPnl >= 0 ? '+' : ''}${bestDay.avgPnl.toFixed(2)} ${currency})` : 'insufficient data'}
 Worst day: ${worstDay ? `${worstDay.dayName} (avg ${worstDay.avgPnl.toFixed(2)} ${currency})` : 'insufficient data'}
 
-${playbooks.length > 0 ? `═══════════════════════════════════════════
+${upcomingNews.length > 0 ? `═══════════════════════════════════════════
+UPCOMING HIGH-IMPACT NEWS (next 5)
+═══════════════════════════════════════════
+${upcomingNews.map((e) => `${new Date(e.date).toISOString().slice(0, 16).replace('T', ' ')} · ${e.country} · ${e.title}${e.forecast ? ` (forecast: ${e.forecast})` : ''}`).join('\n')}
+
+` : ''}${playbooks.length > 0 ? `═══════════════════════════════════════════
 STRATEGY PLAYBOOKS
 ═══════════════════════════════════════════
 ${playbooks.map((p) => {

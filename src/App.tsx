@@ -14,6 +14,7 @@ import Mentor from './pages/Mentor';
 import PropFirm from './pages/PropFirm';
 import DailyPlanPage from './pages/DailyPlan';
 import Playbooks from './pages/Playbooks';
+import EconomicCalendarPage from './pages/EconomicCalendar';
 import { useTradesStore } from './store/tradesStore';
 import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
@@ -110,6 +111,7 @@ export default function App() {
           <Route path="/prop-firm" element={<PropFirm />} />
           <Route path="/daily-plan" element={<DailyPlanPage />} />
           <Route path="/playbooks" element={<Playbooks />} />
+          <Route path="/calendar" element={<EconomicCalendarPage />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

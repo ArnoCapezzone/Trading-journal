@@ -15,8 +15,16 @@ export interface EconomicEvent {
   url?: string;
 }
 
-const FF_THIS_WEEK = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const FF_NEXT_WEEK = 'https://nfs.faireconomy.media/ff_calendar_nextweek.json';
+// Source feeds (no CORS — must go through a proxy)
+const FF_THIS_WEEK_RAW = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+const FF_NEXT_WEEK_RAW = 'https://nfs.faireconomy.media/ff_calendar_nextweek.json';
+
+// CORS proxies (tried in order). First success wins.
+const PROXIES = [
+  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+];
 
 const CACHE_KEY = 'tj_economic_cal_cache';
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
@@ -78,11 +86,41 @@ function parseEvents(raw: unknown): EconomicEvent[] {
     .filter((e): e is EconomicEvent => e !== null);
 }
 
-async function fetchFeed(url: string): Promise<EconomicEvent[]> {
-  const res = await fetch(url, { cache: 'no-store' });
-  if (!res.ok) throw new Error(`Calendar fetch ${res.status}`);
-  const json = await res.json();
-  return parseEvents(json);
+async function fetchFeed(rawUrl: string): Promise<EconomicEvent[]> {
+  const errors: string[] = [];
+
+  // Try direct first (in case CORS gets added someday)
+  try {
+    const res = await fetch(rawUrl, { cache: 'no-store' });
+    if (res.ok) {
+      const json = await res.json();
+      const parsed = parseEvents(json);
+      if (parsed.length > 0) return parsed;
+    }
+    errors.push(`direct: ${res.status}`);
+  } catch (e) {
+    errors.push(`direct: ${(e as Error).message}`);
+  }
+
+  // Fallback through CORS proxies
+  for (const buildUrl of PROXIES) {
+    const url = buildUrl(rawUrl);
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) {
+        errors.push(`${new URL(url).hostname}: ${res.status}`);
+        continue;
+      }
+      const json = await res.json();
+      const parsed = parseEvents(json);
+      if (parsed.length > 0) return parsed;
+      errors.push(`${new URL(url).hostname}: empty response`);
+    } catch (e) {
+      errors.push(`${new URL(url).hostname}: ${(e as Error).message}`);
+    }
+  }
+
+  throw new Error(`All sources failed: ${errors.join(' · ')}`);
 }
 
 export interface CalendarLoadResult {
@@ -108,8 +146,8 @@ export async function loadCalendar(forceRefresh = false): Promise<CalendarLoadRe
 
   try {
     const [thisWeek, nextWeek] = await Promise.all([
-      fetchFeed(FF_THIS_WEEK),
-      fetchFeed(FF_NEXT_WEEK).catch(() => [] as EconomicEvent[]),
+      fetchFeed(FF_THIS_WEEK_RAW),
+      fetchFeed(FF_NEXT_WEEK_RAW).catch(() => [] as EconomicEvent[]),
     ]);
     const entry: CacheEntry = { fetchedAt: Date.now(), thisWeek, nextWeek };
     writeCache(entry);

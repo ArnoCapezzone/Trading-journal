@@ -146,7 +146,7 @@ export default function Dashboard() {
       <PerformanceCharts byInstrument={byInstrument} bySetup={bySetup} currency={currency} />
 
       {/* Bottom row: Heatmap + Calendar */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 12 }}>
         <HeatmapHour data={heatmap} currency={currency} />
         <CalendarView
           data={calendar}

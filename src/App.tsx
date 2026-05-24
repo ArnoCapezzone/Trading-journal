@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import Sidebar from './components/layout/Sidebar';
 import TopBar from './components/layout/TopBar';
+import { useIsMobile } from './hooks/useMediaQuery';
 import AuthPage from './components/auth/AuthPage';
 import Dashboard from './pages/Dashboard';
 import Journal from './pages/Journal';
@@ -18,11 +19,28 @@ import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
 
 function AppLayout() {
+  const isMobile = useIsMobile();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // Close drawer when switching from mobile to desktop
+  useEffect(() => {
+    if (!isMobile) setSidebarOpen(false);
+  }, [isMobile]);
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
-      <Sidebar />
-      <div style={{ marginLeft: 220, flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-        <TopBar />
+      <Sidebar open={!isMobile || sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <div
+        style={{
+          marginLeft: isMobile ? 0 : 220,
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          minWidth: 0,
+        }}
+      >
+        <TopBar onMenuClick={() => setSidebarOpen(true)} />
         <main style={{ flex: 1, backgroundColor: '#080B12', overflowY: 'auto' }}>
           <Outlet />
         </main>

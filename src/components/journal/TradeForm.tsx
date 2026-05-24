@@ -3,6 +3,7 @@ import type { Trade, TradeDirection, SetupType, Timeframe } from '../../types/tr
 import { calculateTrade } from '../../utils/calculations';
 import { useSettingsStore } from '../../store/settingsStore';
 import { listPlaybooks, getTradePlaybookId, assignPlaybook, type Playbook } from '../../lib/playbooksStore';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface Props {
   initialData?: Trade;
@@ -69,6 +70,7 @@ function FormRow({ children, cols = 2 }: { children: React.ReactNode; cols?: num
 
 export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
   const accountBalance = useSettingsStore((s) => s.accountBalance);
+  const isMobile = useIsMobile();
 
   // Form state
   const [instrument, setInstrument] = useState(initialData?.instrument ?? 'EURUSD');
@@ -197,7 +199,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
   const monoInput: React.CSSProperties = { ...inputStyle(), fontFamily: '"JetBrains Mono", monospace' };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: 20 }}>
+    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 220px', gap: 20 }}>
       {/* Main form */}
       <div>
         <Section title="A — Trade Data">

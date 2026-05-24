@@ -11,6 +11,7 @@ import {
   type Conversation,
 } from '../lib/conversationStore';
 import MessageBubble from '../components/mentor/MessageBubble';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 const SUGGESTED_FR = [
   'Quels sont mes principaux défauts comportementaux ?',
@@ -37,6 +38,7 @@ function detectLang(): 'fr' | 'en' {
 export default function Mentor() {
   const { trades } = useTradesStore();
   const { accountBalance, currency } = useSettingsStore();
+  const isMobile = useIsMobile();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -207,7 +209,8 @@ export default function Mentor() {
 
   return (
     <div style={{ display: 'flex', height: 'calc(100vh - 52px)', backgroundColor: '#080B12' }}>
-      {/* Conversations sidebar */}
+      {/* Conversations sidebar (hidden on mobile) */}
+      {!isMobile && (
       <aside
         style={{
           width: 240,
@@ -313,12 +316,53 @@ export default function Mentor() {
           {trades.length} trades · llama-3.3-70b
         </div>
       </aside>
+      )}
 
       {/* Main chat */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+        {/* Mobile-only: conversation switcher + new chat */}
+        {isMobile && (
+          <div style={{ display: 'flex', gap: 6, padding: '10px 14px', borderBottom: '1px solid #181E2C', backgroundColor: '#0A0D14' }}>
+            <select
+              value={activeId ?? ''}
+              onChange={(e) => setActiveId(e.target.value)}
+              style={{
+                flex: 1,
+                padding: '7px 10px',
+                backgroundColor: '#0D1017',
+                border: '1px solid #252D3F',
+                borderRadius: 5,
+                color: '#EEF0F6',
+                fontSize: 12,
+                fontFamily: 'inherit',
+                outline: 'none',
+              }}
+            >
+              {conversations.map((c) => (
+                <option key={c.id} value={c.id}>{c.title}</option>
+              ))}
+            </select>
+            <button
+              onClick={handleNewChat}
+              style={{
+                padding: '7px 12px',
+                backgroundColor: '#3D8EF0',
+                border: 'none',
+                borderRadius: 5,
+                color: '#fff',
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              + New
+            </button>
+          </div>
+        )}
+
         {/* Messages */}
         <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto' }}>
-          <div style={{ maxWidth: 780, margin: '0 auto', padding: '24px 28px 16px' }}>
+          <div style={{ maxWidth: 780, margin: '0 auto', padding: isMobile ? '16px 14px 16px' : '24px 28px 16px' }}>
             {showEmpty && (
               <div style={{ textAlign: 'center', padding: '40px 0 24px' }}>
                 <div style={{ width: 52, height: 52, margin: '0 auto 18px', background: 'linear-gradient(135deg, #3D8EF0, #8B6CF0)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 24px rgba(61,142,240,0.3)', fontFamily: '"JetBrains Mono", monospace', fontWeight: 700, fontSize: 18, color: '#fff' }}>
@@ -333,7 +377,7 @@ export default function Mentor() {
                     : `24/7 coach with full access to your ${trades.length} trades. Ask anything or pick a suggestion below.`}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, maxWidth: 580, margin: '0 auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 8, maxWidth: 580, margin: '0 auto' }}>
                   {suggested.map((q) => (
                     <button
                       key={q}
@@ -395,7 +439,7 @@ export default function Mentor() {
         </div>
 
         {/* Input */}
-        <div style={{ borderTop: '1px solid #181E2C', backgroundColor: '#080B12', padding: '14px 28px 18px' }}>
+        <div style={{ borderTop: '1px solid #181E2C', backgroundColor: '#080B12', padding: isMobile ? '10px 14px 14px' : '14px 28px 18px' }}>
           <form onSubmit={handleSubmit} style={{ maxWidth: 780, margin: '0 auto' }}>
             <div
               style={{

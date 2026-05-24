@@ -12,6 +12,7 @@ import {
   type DailyPlan,
   type Bias,
 } from '../lib/dailyPlanStore';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 // ── Style helpers ─────────────────────────────────────────────
 function labelStyle(): React.CSSProperties {
@@ -155,6 +156,7 @@ function BiasButtons({ value, onChange }: { value: Bias; onChange: (b: Bias) => 
 
 // ── Main page ─────────────────────────────────────────────────
 export default function DailyPlanPage() {
+  const isMobile = useIsMobile();
   const [selectedDate, setSelectedDate] = useState(todayKey());
   const [plan, setPlan] = useState<DailyPlan | null>(null);
   const [savedFlash, setSavedFlash] = useState(false);
@@ -202,7 +204,7 @@ export default function DailyPlanPage() {
   const isPast = plan.date < todayKey();
 
   return (
-    <div style={{ padding: 24, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+    <div style={{ padding: isMobile ? 14 : 24, display: 'flex', flexDirection: isMobile ? 'column' : 'row', gap: 16, alignItems: 'flex-start' }}>
       {/* Main content */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 14, minWidth: 0 }}>
         {/* Header */}
@@ -434,7 +436,7 @@ export default function DailyPlanPage() {
       </div>
 
       {/* Right column: stats + history */}
-      <div style={{ width: 280, flexShrink: 0, position: 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ width: isMobile ? '100%' : 280, flexShrink: 0, position: isMobile ? 'static' : 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* Stats card */}
         <div style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 9, padding: '16px 18px' }}>
           <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>

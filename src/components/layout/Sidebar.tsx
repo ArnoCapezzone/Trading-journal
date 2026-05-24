@@ -1,4 +1,10 @@
 import { NavLink } from 'react-router-dom';
+import { useIsMobile } from '../../hooks/useMediaQuery';
+
+interface SidebarProps {
+  open?: boolean;
+  onClose?: () => void;
+}
 
 const NAV_ITEMS = [
   {
@@ -119,8 +125,26 @@ const NAV_ITEMS = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ open = true, onClose }: SidebarProps) {
+  const isMobile = useIsMobile();
+  const visible = !isMobile || open;
+
   return (
+    <>
+      {/* Backdrop for mobile drawer */}
+      {isMobile && open && (
+        <div
+          onClick={onClose}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(8,11,18,0.7)',
+            backdropFilter: 'blur(2px)',
+            zIndex: 49,
+          }}
+        />
+      )}
+
     <aside
       style={{
         width: 220,
@@ -134,6 +158,9 @@ export default function Sidebar() {
         left: 0,
         height: '100vh',
         zIndex: 50,
+        transform: visible ? 'translateX(0)' : 'translateX(-100%)',
+        transition: 'transform 0.25s cubic-bezier(0.32, 0.72, 0, 1)',
+        boxShadow: isMobile && open ? '4px 0 24px rgba(0,0,0,0.5)' : 'none',
       }}
     >
       {/* Logo */}
@@ -185,6 +212,7 @@ export default function Sidebar() {
             key={item.to}
             to={item.to}
             end={item.end}
+            onClick={() => { if (isMobile && onClose) onClose(); }}
             style={({ isActive }) => ({
               display: 'flex',
               alignItems: 'center',
@@ -239,5 +267,6 @@ export default function Sidebar() {
         </div>
       </div>
     </aside>
+    </>
   );
 }

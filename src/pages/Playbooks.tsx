@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useTradesStore } from '../store/tradesStore';
 import { useSettingsStore } from '../store/settingsStore';
+import { useIsMobile } from '../hooks/useMediaQuery';
 import {
   listPlaybooks,
   savePlaybook,
@@ -225,6 +226,7 @@ function StatPill({ label, value, color }: { label: string; value: string; color
 export default function Playbooks() {
   const { trades } = useTradesStore();
   const { accountBalance, currency } = useSettingsStore();
+  const isMobile = useIsMobile();
   const c = currency === 'EUR' ? '€' : '$';
 
   const [playbooks, setPlaybooks] = useState<Playbook[]>([]);
@@ -311,7 +313,8 @@ export default function Playbooks() {
 
   return (
     <div style={{ display: 'flex', height: 'calc(100vh - 52px)', backgroundColor: '#080B12' }}>
-      {/* Sidebar list */}
+      {/* Sidebar list (hidden on mobile) */}
+      {!isMobile && (
       <aside
         style={{
           width: 260,
@@ -364,11 +367,28 @@ export default function Playbooks() {
           ))}
         </div>
       </aside>
+      )}
 
       {/* Editor */}
       {active && (
-        <main style={{ flex: 1, overflowY: 'auto' }}>
-          <div style={{ maxWidth: 820, margin: '0 auto', padding: '24px 28px' }}>
+        <main style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
+          {/* Mobile-only: playbook switcher + new button */}
+          {isMobile && (
+            <div style={{ display: 'flex', gap: 6, padding: '10px 14px', borderBottom: '1px solid #181E2C', backgroundColor: '#0A0D14' }}>
+              <select
+                value={activeId ?? ''}
+                onChange={(e) => setActiveId(e.target.value)}
+                style={{ flex: 1, padding: '7px 10px', backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 5, color: '#EEF0F6', fontSize: 12, fontFamily: 'inherit', outline: 'none' }}
+              >
+                {playbooks.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+              <button
+                onClick={handleNew}
+                style={{ padding: '7px 12px', background: 'linear-gradient(135deg, #00C47A, #00A867)', border: 'none', borderRadius: 5, color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+              >+ New</button>
+            </div>
+          )}
+          <div style={{ maxWidth: 820, margin: '0 auto', padding: isMobile ? '16px 14px 24px' : '24px 28px' }}>
             {/* Top: name + color + actions */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 4 }}>
               <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: active.color, flexShrink: 0, boxShadow: `0 2px 12px ${active.color}40` }} />

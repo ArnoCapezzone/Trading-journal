@@ -1,5 +1,10 @@
 import { useLocation, Link } from 'react-router-dom';
 import { useTradesStore } from '../../store/tradesStore';
+import { useIsMobile } from '../../hooks/useMediaQuery';
+
+interface TopBarProps {
+  onMenuClick?: () => void;
+}
 
 const ROUTE_TITLES: Record<string, string> = {
   '/': 'Dashboard',
@@ -21,11 +26,12 @@ function getTitle(pathname: string): string {
   return 'Trading Journal';
 }
 
-export default function TopBar() {
+export default function TopBar({ onMenuClick }: TopBarProps) {
   const location = useLocation();
   const title = getTitle(location.pathname);
   const trades = useTradesStore((s) => s.trades);
   const pendingCount = trades.filter((t) => t.status === 'PENDING_REVIEW').length;
+  const isMobile = useIsMobile();
 
   return (
     <header
@@ -43,6 +49,27 @@ export default function TopBar() {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        {isMobile && (
+          <button
+            onClick={onMenuClick}
+            aria-label="Open menu"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#EEF0F6',
+              padding: '6px 4px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <line x1="4" y1="7" x2="20" y2="7" />
+              <line x1="4" y1="12" x2="20" y2="12" />
+              <line x1="4" y1="17" x2="20" y2="17" />
+            </svg>
+          </button>
+        )}
         <h1
           style={{
             margin: 0,
@@ -128,7 +155,7 @@ export default function TopBar() {
             <line x1="6" y1="1" x2="6" y2="11" />
             <line x1="1" y1="6" x2="11" y2="6" />
           </svg>
-          Add Trade
+          {isMobile ? '' : 'Add Trade'}
         </Link>
       </div>
     </header>

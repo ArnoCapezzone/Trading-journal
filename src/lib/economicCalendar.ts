@@ -15,15 +15,15 @@ export interface EconomicEvent {
   url?: string;
 }
 
-// Source feeds (no CORS — must go through a proxy)
-const FF_THIS_WEEK_RAW = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json';
-const FF_NEXT_WEEK_RAW = 'https://nfs.faireconomy.media/ff_calendar_nextweek.json';
+// Our own Vercel Edge Function proxy (same-origin, no CORS issue)
+const API_BASE = '/api/calendar';
 
-// CORS proxies (tried in order). First success wins.
-const PROXIES = [
-  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  (url: string) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+// Public CORS proxies (used as fallback if our edge function is down)
+const PUBLIC_PROXIES = [
+  (week: 'thisweek' | 'nextweek') =>
+    `https://corsproxy.io/?${encodeURIComponent(`https://nfs.faireconomy.media/ff_calendar_${week}.json`)}`,
+  (week: 'thisweek' | 'nextweek') =>
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://nfs.faireconomy.media/ff_calendar_${week}.json`)}`,
 ];
 
 const CACHE_KEY = 'tj_economic_cal_cache';
@@ -86,25 +86,27 @@ function parseEvents(raw: unknown): EconomicEvent[] {
     .filter((e): e is EconomicEvent => e !== null);
 }
 
-async function fetchFeed(rawUrl: string): Promise<EconomicEvent[]> {
+async function fetchFeed(week: 'thisweek' | 'nextweek'): Promise<EconomicEvent[]> {
   const errors: string[] = [];
 
-  // Try direct first (in case CORS gets added someday)
+  // 1) Our own Vercel Edge Function (same-origin, no CORS)
   try {
-    const res = await fetch(rawUrl, { cache: 'no-store' });
+    const res = await fetch(`${API_BASE}?week=${week}`, { cache: 'no-store' });
     if (res.ok) {
       const json = await res.json();
       const parsed = parseEvents(json);
       if (parsed.length > 0) return parsed;
+      errors.push(`edge: empty payload`);
+    } else {
+      errors.push(`edge: ${res.status}`);
     }
-    errors.push(`direct: ${res.status}`);
   } catch (e) {
-    errors.push(`direct: ${(e as Error).message}`);
+    errors.push(`edge: ${(e as Error).message}`);
   }
 
-  // Fallback through CORS proxies
-  for (const buildUrl of PROXIES) {
-    const url = buildUrl(rawUrl);
+  // 2) Public CORS proxies as fallback
+  for (const buildUrl of PUBLIC_PROXIES) {
+    const url = buildUrl(week);
     try {
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) {
@@ -114,13 +116,13 @@ async function fetchFeed(rawUrl: string): Promise<EconomicEvent[]> {
       const json = await res.json();
       const parsed = parseEvents(json);
       if (parsed.length > 0) return parsed;
-      errors.push(`${new URL(url).hostname}: empty response`);
+      errors.push(`${new URL(url).hostname}: empty`);
     } catch (e) {
       errors.push(`${new URL(url).hostname}: ${(e as Error).message}`);
     }
   }
 
-  throw new Error(`All sources failed: ${errors.join(' · ')}`);
+  throw new Error(`All sources failed — ${errors.join(' · ')}`);
 }
 
 export interface CalendarLoadResult {
@@ -146,8 +148,8 @@ export async function loadCalendar(forceRefresh = false): Promise<CalendarLoadRe
 
   try {
     const [thisWeek, nextWeek] = await Promise.all([
-      fetchFeed(FF_THIS_WEEK_RAW),
-      fetchFeed(FF_NEXT_WEEK_RAW).catch(() => [] as EconomicEvent[]),
+      fetchFeed('thisweek'),
+      fetchFeed('nextweek').catch(() => [] as EconomicEvent[]),
     ]);
     const entry: CacheEntry = { fetchedAt: Date.now(), thisWeek, nextWeek };
     writeCache(entry);

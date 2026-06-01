@@ -45,7 +45,7 @@ const EMPTY_MSG_STYLE: React.CSSProperties = {
   alignItems: 'center',
   justifyContent: 'center',
   height: 180,
-  color: '#8E97AC',
+  color: 'var(--text-tertiary)',
   fontSize: 13,
 };
 
@@ -73,11 +73,11 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#141823',
-        borderColor: '#252D3F',
+        backgroundColor: 'var(--bg-surface-2)',
+        borderColor: 'var(--border-default)',
         borderWidth: 1,
-        titleColor: '#8E97AC',
-        bodyColor: '#EEF0F6',
+        titleColor: 'var(--text-tertiary)',
+        bodyColor: 'var(--text-primary)',
         padding: 10,
         callbacks: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -90,9 +90,9 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
     },
     scales: {
       x: {
-        grid: { color: '#252D3F' },
+        grid: { color: 'var(--border-default)' },
         ticks: {
-          color: '#8E97AC',
+          color: 'var(--text-tertiary)',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           callback: (val: any) => `${c}${Number(val).toFixed(0)}`,
@@ -101,7 +101,7 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       y: {
         grid: { display: false },
         ticks: {
-          color: '#EEF0F6',
+          color: 'var(--text-primary)',
           font: { size: 11, family: '"JetBrains Mono", monospace' },
         },
       },
@@ -129,18 +129,18 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       legend: {
         position: 'bottom' as const,
         labels: {
-          color: '#8E97AC',
+          color: 'var(--text-tertiary)',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           padding: 8,
           boxWidth: 10,
         },
       },
       tooltip: {
-        backgroundColor: '#141823',
-        borderColor: '#252D3F',
+        backgroundColor: 'var(--bg-surface-2)',
+        borderColor: 'var(--border-default)',
         borderWidth: 1,
-        titleColor: '#8E97AC',
-        bodyColor: '#EEF0F6',
+        titleColor: 'var(--text-tertiary)',
+        bodyColor: 'var(--text-primary)',
         padding: 10,
         callbacks: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -158,13 +158,13 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       {/* By Instrument */}
       <div
         style={{
-          backgroundColor: '#0D1017',
-          border: '1px solid #252D3F',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-default)',
           borderRadius: 8,
           padding: '16px 16px 12px',
         }}
       >
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           P&L by Instrument
         </div>
         {byInstrument.length === 0 ? (
@@ -179,13 +179,13 @@ export default function PerformanceCharts({ byInstrument, bySetup, currency = 'U
       {/* By Setup */}
       <div
         style={{
-          backgroundColor: '#0D1017',
-          border: '1px solid #252D3F',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-default)',
           borderRadius: 8,
           padding: '16px 16px 12px',
         }}
       >
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Trades by Setup
         </div>
         {bySetup.length === 0 ? (

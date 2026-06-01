@@ -38,8 +38,8 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
     <header
       style={{
         height: 52,
-        backgroundColor: '#0D1017',
-        borderBottom: '1px solid #1A2235',
+        backgroundColor: 'var(--bg-surface)',
+        borderBottom: '1px solid var(--border-soft)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -57,7 +57,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#EEF0F6',
+              color: 'var(--text-primary)',
               padding: '6px 4px',
               cursor: 'pointer',
               display: 'flex',
@@ -76,7 +76,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
             margin: 0,
             fontSize: 14,
             fontWeight: 600,
-            color: '#EEF0F6',
+            color: 'var(--text-primary)',
             letterSpacing: '0.01em',
           }}
         >
@@ -111,7 +111,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
                 width: 17,
                 height: 17,
                 backgroundColor: '#F0A030',
-                color: '#080B12',
+                color: 'var(--text-on-accent)',
                 borderRadius: '50%',
                 fontSize: 9,
                 fontWeight: 700,

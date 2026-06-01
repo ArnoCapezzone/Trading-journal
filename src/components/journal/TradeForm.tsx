@@ -26,10 +26,10 @@ function inputStyle(hasError = false): React.CSSProperties {
   return {
     width: '100%',
     padding: '7px 10px',
-    backgroundColor: '#080B12',
-    border: `1px solid ${hasError ? '#F04848' : '#252D3F'}`,
+    backgroundColor: 'var(--bg-app)',
+    border: `1px solid ${hasError ? '#F04848' : 'var(--border-default)'}`,
     borderRadius: 5,
-    color: '#EEF0F6',
+    color: 'var(--text-primary)',
     fontSize: 12,
     fontFamily: 'inherit',
     outline: 'none',
@@ -41,7 +41,7 @@ function labelStyle(): React.CSSProperties {
   return {
     display: 'block',
     fontSize: 11,
-    color: '#8E97AC',
+    color: 'var(--text-tertiary)',
     fontWeight: 500,
     marginBottom: 4,
     textTransform: 'uppercase',
@@ -52,7 +52,7 @@ function labelStyle(): React.CSSProperties {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 24 }}>
-      <div style={{ fontSize: 11, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12, paddingBottom: 6, borderBottom: '1px solid #252D3F' }}>
+      <div style={{ fontSize: 11, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12, paddingBottom: 6, borderBottom: '1px solid var(--border-default)' }}>
         {title}
       </div>
       {children}
@@ -211,7 +211,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                   list="instruments-list"
                   value={instrument}
                   onChange={(e) => setInstrument(e.target.value.toUpperCase())}
-                  style={{ ...monoInput, borderColor: errors.instrument ? '#F04848' : '#252D3F' }}
+                  style={{ ...monoInput, borderColor: errors.instrument ? '#F04848' : 'var(--border-default)' }}
                   placeholder="e.g. EURUSD"
                 />
                 <datalist id="instruments-list">
@@ -232,9 +232,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                       flex: 1,
                       padding: '7px',
                       borderRadius: 5,
-                      border: `1px solid ${direction === d ? (d === 'LONG' ? '#00C47A' : '#F04848') : '#252D3F'}`,
-                      backgroundColor: direction === d ? (d === 'LONG' ? 'rgba(0,209,122,0.15)' : 'rgba(255,77,77,0.15)') : '#080B12',
-                      color: direction === d ? (d === 'LONG' ? '#00C47A' : '#F04848') : '#8E97AC',
+                      border: `1px solid ${direction === d ? (d === 'LONG' ? '#00C47A' : '#F04848') : 'var(--border-default)'}`,
+                      backgroundColor: direction === d ? (d === 'LONG' ? 'rgba(0,209,122,0.15)' : 'rgba(255,77,77,0.15)') : 'var(--bg-app)',
+                      color: direction === d ? (d === 'LONG' ? '#00C47A' : '#F04848') : 'var(--text-tertiary)',
                       fontWeight: 700,
                       fontSize: 12,
                       cursor: 'pointer',
@@ -279,7 +279,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 step="any"
                 value={entryPrice}
                 onChange={(e) => setEntryPrice(e.target.value)}
-                style={{ ...monoInput, borderColor: errors.entryPrice ? '#F04848' : '#252D3F' }}
+                style={{ ...monoInput, borderColor: errors.entryPrice ? '#F04848' : 'var(--border-default)' }}
                 placeholder="1.08500"
               />
               {errors.entryPrice && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.entryPrice}</div>}
@@ -291,7 +291,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 step="any"
                 value={exitPrice}
                 onChange={(e) => setExitPrice(e.target.value)}
-                style={{ ...monoInput, borderColor: errors.exitPrice ? '#F04848' : '#252D3F' }}
+                style={{ ...monoInput, borderColor: errors.exitPrice ? '#F04848' : 'var(--border-default)' }}
                 placeholder="1.09200"
               />
               {errors.exitPrice && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.exitPrice}</div>}
@@ -304,7 +304,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 min="0"
                 value={lotSize}
                 onChange={(e) => setLotSize(e.target.value)}
-                style={{ ...monoInput, borderColor: errors.lotSize ? '#F04848' : '#252D3F' }}
+                style={{ ...monoInput, borderColor: errors.lotSize ? '#F04848' : 'var(--border-default)' }}
                 placeholder="0.10"
               />
               {errors.lotSize && <div style={{ fontSize: 10, color: '#F04848', marginTop: 3 }}>{errors.lotSize}</div>}
@@ -343,9 +343,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                       flex: 1,
                       padding: '7px',
                       borderRadius: 5,
-                      border: `1px solid ${status === s ? (s === 'COMPLETE' ? '#00C47A' : '#F0A030') : '#252D3F'}`,
-                      backgroundColor: status === s ? (s === 'COMPLETE' ? 'rgba(0,209,122,0.12)' : 'rgba(255,154,60,0.12)') : '#080B12',
-                      color: status === s ? (s === 'COMPLETE' ? '#00C47A' : '#F0A030') : '#8E97AC',
+                      border: `1px solid ${status === s ? (s === 'COMPLETE' ? '#00C47A' : '#F0A030') : 'var(--border-default)'}`,
+                      backgroundColor: status === s ? (s === 'COMPLETE' ? 'rgba(0,209,122,0.12)' : 'rgba(255,154,60,0.12)') : 'var(--bg-app)',
+                      color: status === s ? (s === 'COMPLETE' ? '#00C47A' : '#F0A030') : 'var(--text-tertiary)',
                       fontWeight: 600,
                       fontSize: 11,
                       cursor: 'pointer',
@@ -397,9 +397,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
 
               {/* Inline checklist */}
               {activePlaybook && activePlaybook.checklist.length > 0 && (
-                <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: '#080B12', border: '1px solid #181E2C', borderRadius: 6 }}>
+                <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: 'var(--bg-app)', border: '1px solid var(--border-faint)', borderRadius: 6 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                    <div style={{ fontSize: 10, color: '#8E97AC', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    <div style={{ fontSize: 10, color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                       Pre-trade checklist
                     </div>
                     <div style={{ fontSize: 10, color: checkedItems.size === activePlaybook.checklist.length ? '#00C47A' : '#F0A030', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600 }}>
@@ -410,7 +410,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                     {activePlaybook.checklist.map((item, idx) => {
                       const checked = checkedItems.has(idx);
                       return (
-                        <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: checked ? '#8E97AC' : '#EEF0F6', textDecoration: checked ? 'line-through' : 'none' }}>
+                        <label key={idx} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 12, color: checked ? 'var(--text-tertiary)' : 'var(--text-primary)', textDecoration: checked ? 'line-through' : 'none' }}>
                           <input
                             type="checkbox"
                             checked={checked}
@@ -433,7 +433,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
           )}
 
           <div style={{ marginBottom: 12 }}>
-            <label style={labelStyle()}>Notes <span style={{ color: '#4d3148', textTransform: 'none', letterSpacing: 0 }}>{notes.length}/500</span></label>
+            <label style={labelStyle()}>Notes <span style={{ color: 'var(--text-muted)', textTransform: 'none', letterSpacing: 0 }}>{notes.length}/500</span></label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value.slice(0, 500))}
@@ -495,7 +495,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                 if (file) handleImageUpload(file);
               }}
               style={{
-                border: '2px dashed #252D3F',
+                border: '2px dashed var(--border-default)',
                 borderRadius: 6,
                 padding: chartImage ? 0 : '20px',
                 textAlign: 'center',
@@ -536,7 +536,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
                   </button>
                 </div>
               ) : (
-                <div style={{ color: '#8E97AC', fontSize: 12 }}>
+                <div style={{ color: 'var(--text-tertiary)', fontSize: 12 }}>
                   <div style={{ fontSize: 24, marginBottom: 6 }}>📷</div>
                   <div>Drag & drop or click to upload</div>
                   <div style={{ fontSize: 10, marginTop: 4 }}>PNG, JPG, WEBP — max 2MB</div>
@@ -554,9 +554,9 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
             style={{
               padding: '9px 20px',
               backgroundColor: 'transparent',
-              border: '1px solid #252D3F',
+              border: '1px solid var(--border-default)',
               borderRadius: 6,
-              color: '#8E97AC',
+              color: 'var(--text-tertiary)',
               fontSize: 13,
               cursor: 'pointer',
             }}
@@ -571,7 +571,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
               backgroundColor: '#3D8EF0',
               border: 'none',
               borderRadius: 6,
-              color: '#080B12',
+              color: 'var(--text-on-accent)',
               fontSize: 13,
               fontWeight: 700,
               cursor: 'pointer',
@@ -586,8 +586,8 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
       <div>
         <div
           style={{
-            backgroundColor: '#080B12',
-            border: '1px solid #252D3F',
+            backgroundColor: 'var(--bg-app)',
+            border: '1px solid var(--border-default)',
             borderRadius: 8,
             padding: 16,
             position: 'sticky',
@@ -599,7 +599,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
           </div>
 
           {!canPreview ? (
-            <div style={{ color: '#8E97AC', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
+            <div style={{ color: 'var(--text-tertiary)', fontSize: 11, textAlign: 'center', padding: '20px 0' }}>
               Fill in prices and lot size
             </div>
           ) : preview ? (
@@ -635,7 +635,7 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
 function PreviewRow({ label, value, color, large }: { label: string; value: string; color: string; large?: boolean }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div style={{ fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
+      <div style={{ fontSize: 10, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
       <div style={{ fontSize: large ? 18 : 13, fontWeight: large ? 700 : 600, color, fontFamily: '"JetBrains Mono", monospace' }}>{value}</div>
     </div>
   );

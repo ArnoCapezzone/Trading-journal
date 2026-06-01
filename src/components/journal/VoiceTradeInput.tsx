@@ -216,7 +216,7 @@ export default function VoiceTradeInput() {
           <button
             onClick={() => setLang((l) => (l === 'fr-FR' ? 'en-US' : 'fr-FR'))}
             title="Switch language"
-            style={{ padding: '6px 10px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#8E97AC', fontSize: 11, cursor: 'pointer' }}
+            style={{ padding: '6px 10px', backgroundColor: 'transparent', border: '1px solid var(--border-default)', borderRadius: 5, color: 'var(--text-tertiary)', fontSize: 11, cursor: 'pointer' }}
           >
             {lang === 'fr-FR' ? '🇫🇷' : '🇬🇧'}
           </button>
@@ -232,7 +232,7 @@ export default function VoiceTradeInput() {
       {/* ── Modal overlay ── */}
       {(uiState === 'recording' || uiState === 'processing') && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,17,23,0.88)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, backdropFilter: 'blur(4px)' }}>
-          <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 12, padding: '36px 40px', maxWidth: 500, width: '90vw', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}>
+          <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 12, padding: '36px 40px', maxWidth: 500, width: '90vw', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}>
 
             {/* Animated icon */}
             <div style={{ position: 'relative' }}>
@@ -252,10 +252,10 @@ export default function VoiceTradeInput() {
 
             {/* Status */}
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#EEF0F6', marginBottom: 4 }}>
+              <div style={{ fontSize: 15, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
                 {uiState === 'recording' ? `Recording… ${fmtTime(elapsed)}` : statusMsg}
               </div>
-              <div style={{ fontSize: 11, color: '#8E97AC' }}>
+              <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>
                 {uiState === 'recording'
                   ? `Speaking in ${lang === 'fr-FR' ? 'French' : 'English'} — click Stop when done`
                   : 'Please wait'}
@@ -264,7 +264,7 @@ export default function VoiceTradeInput() {
 
             {/* Transcript preview after processing */}
             {transcript && uiState === 'processing' && (
-              <div style={{ width: '100%', backgroundColor: '#080B12', border: '1px solid #252D3F', borderRadius: 7, padding: '10px 14px', fontSize: 12, color: '#8E97AC', fontStyle: 'italic', lineHeight: 1.6, maxHeight: 100, overflowY: 'auto' }}>
+              <div style={{ width: '100%', backgroundColor: 'var(--bg-app)', border: '1px solid var(--border-default)', borderRadius: 7, padding: '10px 14px', fontSize: 12, color: 'var(--text-tertiary)', fontStyle: 'italic', lineHeight: 1.6, maxHeight: 100, overflowY: 'auto' }}>
                 "{transcript}"
               </div>
             )}
@@ -272,7 +272,7 @@ export default function VoiceTradeInput() {
             {uiState === 'recording' && (
               <button
                 onClick={stopAndProcess}
-                style={{ padding: '10px 32px', backgroundColor: '#F04848', border: 'none', borderRadius: 6, color: '#080B12', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                style={{ padding: '10px 32px', backgroundColor: '#F04848', border: 'none', borderRadius: 6, color: 'var(--text-on-accent)', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
               >
                 Stop & Analyze
               </button>
@@ -284,11 +284,11 @@ export default function VoiceTradeInput() {
       {/* ── Error overlay ── */}
       {uiState === 'error' && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(15,17,23,0.88)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200 }}>
-          <div style={{ backgroundColor: '#0D1017', border: '1px solid #F04848', borderRadius: 12, padding: '28px 32px', maxWidth: 440, width: '90vw', textAlign: 'center' }}>
+          <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid #F04848', borderRadius: 12, padding: '28px 32px', maxWidth: 440, width: '90vw', textAlign: 'center' }}>
             <div style={{ fontSize: 28, marginBottom: 12 }}>⚠️</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#F04848', marginBottom: 8 }}>Error</div>
-            <div style={{ fontSize: 12, color: '#8E97AC', marginBottom: 20, lineHeight: 1.6 }}>{error}</div>
-            <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#EEF0F6', fontSize: 12, cursor: 'pointer' }}>
+            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 20, lineHeight: 1.6 }}>{error}</div>
+            <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: 'transparent', border: '1px solid var(--border-default)', borderRadius: 5, color: 'var(--text-primary)', fontSize: 12, cursor: 'pointer' }}>
               Close
             </button>
           </div>

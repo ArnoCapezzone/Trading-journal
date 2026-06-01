@@ -6,7 +6,7 @@ function labelStyle(): React.CSSProperties {
   return {
     display: 'block',
     fontSize: 10,
-    color: '#8E97AC',
+    color: 'var(--text-tertiary)',
     fontWeight: 600,
     marginBottom: 5,
     textTransform: 'uppercase',
@@ -17,10 +17,10 @@ function inputStyle(): React.CSSProperties {
   return {
     width: '100%',
     padding: '8px 11px',
-    backgroundColor: '#080B12',
-    border: '1px solid #252D3F',
+    backgroundColor: 'var(--bg-app)',
+    border: '1px solid var(--border-default)',
     borderRadius: 5,
-    color: '#EEF0F6',
+    color: 'var(--text-primary)',
     fontSize: 13,
     fontFamily: '"JetBrains Mono", monospace',
     outline: 'none',
@@ -61,12 +61,12 @@ function NumberField({
           style={{ ...inputStyle(), paddingRight: suffix ? 28 : 11 }}
         />
         {suffix && (
-          <span style={{ position: 'absolute', right: 10, fontSize: 11, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace', pointerEvents: 'none' }}>
+          <span style={{ position: 'absolute', right: 10, fontSize: 11, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace', pointerEvents: 'none' }}>
             {suffix}
           </span>
         )}
       </div>
-      {hint && <div style={{ fontSize: 10, color: '#4A5368', marginTop: 4 }}>{hint}</div>}
+      {hint && <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 4 }}>{hint}</div>}
     </div>
   );
 }
@@ -74,12 +74,12 @@ function NumberField({
 // ── Section wrapper ──────────────────────────────────────────────
 function Card({ title, accent, children, sub }: { title: string; accent: string; sub?: string; children: React.ReactNode }) {
   return (
-    <div style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderTop: `2px solid ${accent}`, borderRadius: 9, padding: '18px 20px 20px' }}>
+    <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderTop: `2px solid ${accent}`, borderRadius: 9, padding: '18px 20px 20px' }}>
       <div style={{ marginBottom: 16 }}>
         <div style={{ fontSize: 10, color: accent, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 4 }}>
           {title}
         </div>
-        {sub && <div style={{ fontSize: 12, color: '#8E97AC', lineHeight: 1.5 }}>{sub}</div>}
+        {sub && <div style={{ fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.5 }}>{sub}</div>}
       </div>
       {children}
     </div>
@@ -88,10 +88,10 @@ function Card({ title, accent, children, sub }: { title: string; accent: string;
 
 function Stat({ label, value, color, sub }: { label: string; value: string; color: string; sub?: string }) {
   return (
-    <div style={{ padding: '10px 12px', backgroundColor: '#080B12', borderRadius: 6, border: '1px solid #181E2C' }}>
-      <div style={{ fontSize: 9, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{label}</div>
+    <div style={{ padding: '10px 12px', backgroundColor: 'var(--bg-app)', borderRadius: 6, border: '1px solid var(--border-faint)' }}>
+      <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>{label}</div>
       <div style={{ fontSize: 17, fontWeight: 700, color, fontFamily: '"JetBrains Mono", monospace', lineHeight: 1, letterSpacing: '-0.01em' }}>{value}</div>
-      {sub && <div style={{ fontSize: 10, color: '#8E97AC', marginTop: 4, fontFamily: '"JetBrains Mono", monospace' }}>{sub}</div>}
+      {sub && <div style={{ fontSize: 10, color: 'var(--text-tertiary)', marginTop: 4, fontFamily: '"JetBrains Mono", monospace' }}>{sub}</div>}
     </div>
   );
 }
@@ -172,14 +172,14 @@ function MonteCarloSection() {
       {/* Distribution histogram */}
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-          <div style={{ fontSize: 10, color: '#8E97AC', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ fontSize: 10, color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
             Final Return Distribution (1000 runs)
           </div>
-          <div style={{ fontSize: 10, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>
             x = % return · y = frequency
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 110, padding: '8px 4px 0', borderTop: '1px solid #181E2C', borderBottom: '1px solid #181E2C' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 110, padding: '8px 4px 0', borderTop: '1px solid var(--border-faint)', borderBottom: '1px solid var(--border-faint)' }}>
           {result.distribution.map((d, i) => {
             const isNeg = d.bin.startsWith('-');
             const color = isNeg ? '#F04848' : '#00C47A';
@@ -202,9 +202,9 @@ function MonteCarloSection() {
             );
           })}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace', marginTop: 5 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace', marginTop: 5 }}>
           <span>{result.worstReturn.toFixed(0)}%</span>
-          <span style={{ color: '#8E97AC' }}>break-even</span>
+          <span style={{ color: 'var(--text-tertiary)' }}>break-even</span>
           <span>+{result.bestReturn.toFixed(0)}%</span>
         </div>
       </div>
@@ -237,8 +237,8 @@ function PayoutSection() {
       </div>
 
       {/* Breakdown waterfall */}
-      <div style={{ backgroundColor: '#080B12', border: '1px solid #181E2C', borderRadius: 8, padding: '12px 16px' }}>
-        <div style={{ fontSize: 10, color: '#8E97AC', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
+      <div style={{ backgroundColor: 'var(--bg-app)', border: '1px solid var(--border-faint)', borderRadius: 8, padding: '12px 16px' }}>
+        <div style={{ fontSize: 10, color: 'var(--text-tertiary)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>
           Payout Breakdown
         </div>
 
@@ -248,18 +248,18 @@ function PayoutSection() {
         <PayoutRow label={`Tax (${taxRate}%)`} value={netUSD} delta={-tax} color="#EEF0F6" />
 
         {/* Net result */}
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #181E2C', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid var(--border-faint)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
           <div>
-            <div style={{ fontSize: 11, color: '#8E97AC', fontWeight: 500, marginBottom: 2 }}>Net Take-Home</div>
-            <div style={{ fontSize: 10, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>≈ {netEUR.toFixed(0)} €</div>
+            <div style={{ fontSize: 11, color: 'var(--text-tertiary)', fontWeight: 500, marginBottom: 2 }}>Net Take-Home</div>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>≈ {netEUR.toFixed(0)} €</div>
           </div>
           <div style={{ fontSize: 24, fontWeight: 700, color: netUSD >= 0 ? '#00C47A' : '#F04848', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '-0.02em' }}>
             {netUSD >= 0 ? '+' : ''}{netUSD.toFixed(2)} $
           </div>
         </div>
 
-        <div style={{ marginTop: 12, fontSize: 10, color: '#4A5368', lineHeight: 1.5 }}>
-          Effective net rate: <strong style={{ color: '#8E97AC' }}>{((netUSD / grossProfit) * 100).toFixed(1)}%</strong> of gross profit
+        <div style={{ marginTop: 12, fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.5 }}>
+          Effective net rate: <strong style={{ color: 'var(--text-tertiary)' }}>{((netUSD / grossProfit) * 100).toFixed(1)}%</strong> of gross profit
         </div>
       </div>
     </Card>
@@ -269,7 +269,7 @@ function PayoutSection() {
 function PayoutRow({ label, value, delta, color }: { label: string; value: number; delta?: number; color: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', fontSize: 12 }}>
-      <div style={{ color: '#8E97AC' }}>{label}</div>
+      <div style={{ color: 'var(--text-tertiary)' }}>{label}</div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
         {delta !== undefined && (
           <span style={{ fontSize: 10, color: delta < 0 ? '#F04848' : '#00C47A', fontFamily: '"JetBrains Mono", monospace' }}>
@@ -293,8 +293,8 @@ export default function PropFirm() {
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', backgroundColor: 'rgba(139,108,240,0.10)', border: '1px solid rgba(139,108,240,0.3)', borderRadius: 4, fontSize: 10, color: '#8B6CF0', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 10 }}>
           PROP FIRM TOOLS
         </div>
-        <div style={{ fontSize: 14, color: '#8E97AC', lineHeight: 1.6, maxWidth: 720 }}>
-          Evaluate challenge math, variance, drawdown risk, and net payouts <strong style={{ color: '#EEF0F6' }}>before</strong> emotions or false expectations distort decisions.
+        <div style={{ fontSize: 14, color: 'var(--text-tertiary)', lineHeight: 1.6, maxWidth: 720 }}>
+          Evaluate challenge math, variance, drawdown risk, and net payouts <strong style={{ color: 'var(--text-primary)' }}>before</strong> emotions or false expectations distort decisions.
         </div>
       </div>
 

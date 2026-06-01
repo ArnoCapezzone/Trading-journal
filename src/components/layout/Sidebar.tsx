@@ -163,8 +163,8 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
       style={{
         width: 220,
         minWidth: 220,
-        backgroundColor: '#070A11',
-        borderRight: '1px solid #1A2235',
+        backgroundColor: 'var(--bg-sidebar)',
+        borderRight: '1px solid var(--border-soft)',
         display: 'flex',
         flexDirection: 'column',
         position: 'fixed',
@@ -181,7 +181,7 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
       <div
         style={{
           padding: '18px 20px',
-          borderBottom: '1px solid #1A2235',
+          borderBottom: '1px solid var(--border-soft)',
           display: 'flex',
           alignItems: 'center',
           gap: 12,
@@ -207,15 +207,15 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
           TJ
         </div>
         <div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: '#EEF0F6', lineHeight: 1.2, letterSpacing: '0.01em' }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', lineHeight: 1.2, letterSpacing: '0.01em' }}>
             Trading
           </div>
-          <div style={{ fontSize: 10, color: '#4A5368', lineHeight: 1.2, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Journal</div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', lineHeight: 1.2, letterSpacing: '0.04em', textTransform: 'uppercase' }}>Journal</div>
         </div>
       </div>
 
       {/* Section label */}
-      <div style={{ padding: '16px 20px 6px', fontSize: 9, fontWeight: 600, color: '#2E3A52', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+      <div style={{ padding: '16px 20px 6px', fontSize: 9, fontWeight: 600, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
         Navigation
       </div>
 
@@ -235,7 +235,7 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
               fontSize: 13,
               fontWeight: isActive ? 600 : 400,
               textDecoration: 'none',
-              color: isActive ? '#EEF0F6' : '#8E97AC',
+              color: isActive ? 'var(--text-primary)' : 'var(--text-tertiary)',
               backgroundColor: isActive ? 'rgba(61,142,240,0.12)' : 'transparent',
               borderRadius: 7,
               borderLeft: isActive ? '2px solid #3D8EF0' : '2px solid transparent',
@@ -246,14 +246,14 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
               const el = e.currentTarget;
               if (!el.classList.contains('active')) {
                 el.style.backgroundColor = 'rgba(255,255,255,0.04)';
-                el.style.color = '#C8CDD8';
+                el.style.color = 'var(--text-secondary)';
               }
             }}
             onMouseLeave={(e) => {
               const el = e.currentTarget;
               if (!el.classList.contains('active')) {
                 el.style.backgroundColor = 'transparent';
-                el.style.color = '#8E97AC';
+                el.style.color = 'var(--text-tertiary)';
               }
             }}
           >
@@ -267,13 +267,13 @@ export default function Sidebar({ open = true, onClose }: SidebarProps) {
       <div
         style={{
           padding: '12px 20px',
-          borderTop: '1px solid #1A2235',
+          borderTop: '1px solid var(--border-soft)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
         }}
       >
-        <div style={{ fontSize: 10, color: '#2E3A52', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
+        <div style={{ fontSize: 10, color: 'var(--text-faint)', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
           v1.0.0
         </div>
         <div style={{ display: 'flex', gap: 4 }}>

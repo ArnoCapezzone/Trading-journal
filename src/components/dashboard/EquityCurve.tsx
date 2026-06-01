@@ -31,15 +31,15 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
     return (
       <div
         style={{
-          backgroundColor: '#0D1017',
-          border: '1px solid #252D3F',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-default)',
           borderRadius: 8,
           padding: 24,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           height: 220,
-          color: '#8E97AC',
+          color: 'var(--text-tertiary)',
           fontSize: 13,
         }}
       >
@@ -97,11 +97,11 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: '#141823',
-        borderColor: '#252D3F',
+        backgroundColor: 'var(--bg-surface-2)',
+        borderColor: 'var(--border-default)',
         borderWidth: 1,
-        titleColor: '#8E97AC',
-        bodyColor: '#EEF0F6',
+        titleColor: 'var(--text-tertiary)',
+        bodyColor: 'var(--text-primary)',
         padding: 10,
         callbacks: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -114,17 +114,17 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
     },
     scales: {
       x: {
-        grid: { color: '#252D3F' },
+        grid: { color: 'var(--border-default)' },
         ticks: {
-          color: '#8E97AC',
+          color: 'var(--text-tertiary)',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           maxTicksLimit: 12,
         },
       },
       y: {
-        grid: { color: '#252D3F' },
+        grid: { color: 'var(--border-default)' },
         ticks: {
-          color: '#8E97AC',
+          color: 'var(--text-tertiary)',
           font: { size: 10, family: '"JetBrains Mono", monospace' },
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           callback: (val: any) => `${c}${Number(val).toFixed(0)}`,
@@ -139,13 +139,13 @@ export default function EquityCurve({ data, currency = 'USD' }: Props) {
   return (
     <div
       style={{
-        backgroundColor: '#0D1017',
-        border: '1px solid #252D3F',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
         borderRadius: 8,
         padding: '16px 16px 12px',
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
         Equity Curve
       </div>
       <div style={{ height: 200 }}>

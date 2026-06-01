@@ -70,8 +70,8 @@ export default function BehavioralInsights({ trades, accountBalance, currency }:
         <div style={{ fontSize: 10, fontWeight: 700, color: '#8B6CF0', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
           Behavioral Insights
         </div>
-        <div style={{ flex: 1, height: 1, backgroundColor: '#181E2C' }} />
-        <div style={{ fontSize: 9, color: '#2E3A52', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
+        <div style={{ flex: 1, height: 1, backgroundColor: 'var(--border-faint)' }} />
+        <div style={{ fontSize: 9, color: 'var(--text-faint)', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
           AUTO-DETECTED
         </div>
       </div>
@@ -83,7 +83,7 @@ export default function BehavioralInsights({ trades, accountBalance, currency }:
           title="Revenge-Trading Impact"
           subtitle={revenge.count === 0 ? 'No revenge trades detected' : `${revenge.count} revenge trades · ${revenge.avgGap.toFixed(0)}min avg gap`}
           value={revenge.count === 0 ? '—' : fmtMoney(revenge.netPnl, c)}
-          valueColor={revenge.count === 0 ? '#EEF0F6' : revenge.netPnl >= 0 ? '#F0A030' : '#F04848'}
+          valueColor={revenge.count === 0 ? 'var(--text-primary)' : revenge.netPnl >= 0 ? '#F0A030' : '#F04848'}
           accentColor={revenge.count === 0 ? '#00C47A' : '#F04848'}
           tooltip="Trades opened within 15min of a loss"
         />
@@ -127,21 +127,21 @@ export default function BehavioralInsights({ trades, accountBalance, currency }:
         {/* High Tilt Days */}
         <div
           style={{
-            backgroundColor: '#0D1017',
-            border: '1px solid #1E2839',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-mid)',
             borderRadius: 8,
             padding: '14px 16px',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
               High-Tilt Days
             </div>
-            <div style={{ fontSize: 9, color: '#2E3A52' }}>Top 5 by tilt score</div>
+            <div style={{ fontSize: 9, color: 'var(--text-faint)' }}>Top 5 by tilt score</div>
           </div>
 
           {tiltDays.length === 0 ? (
-            <div style={{ fontSize: 12, color: '#8E97AC', textAlign: 'center', padding: '12px 0' }}>
+            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', textAlign: 'center', padding: '12px 0' }}>
               No significant tilt detected. Keep this up.
             </div>
           ) : (
@@ -158,12 +158,12 @@ export default function BehavioralInsights({ trades, accountBalance, currency }:
                     fontFamily: '"JetBrains Mono", monospace',
                     padding: '5px 8px',
                     borderRadius: 5,
-                    backgroundColor: '#080B12',
+                    backgroundColor: 'var(--bg-app)',
                   }}
                 >
-                  <span style={{ color: '#C8CDD8' }}>{d.date}</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>{d.date}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <div style={{ flex: 1, height: 4, backgroundColor: '#181E2C', borderRadius: 2, overflow: 'hidden' }}>
+                    <div style={{ flex: 1, height: 4, backgroundColor: 'var(--border-faint)', borderRadius: 2, overflow: 'hidden' }}>
                       <div
                         style={{
                           width: `${d.tiltScore}%`,
@@ -177,8 +177,8 @@ export default function BehavioralInsights({ trades, accountBalance, currency }:
                       {d.tiltScore}
                     </span>
                   </div>
-                  <span style={{ color: '#8E97AC', textAlign: 'right' }}>{d.trades} trades</span>
-                  <span style={{ color: '#8E97AC', textAlign: 'right' }}>{d.consecutiveLosses} L streak</span>
+                  <span style={{ color: 'var(--text-tertiary)', textAlign: 'right' }}>{d.trades} trades</span>
+                  <span style={{ color: 'var(--text-tertiary)', textAlign: 'right' }}>{d.consecutiveLosses} L streak</span>
                   <span style={{ color: d.netPnl >= 0 ? '#00C47A' : '#F04848', textAlign: 'right', fontWeight: 600 }}>
                     {fmtMoney(d.netPnl, c).replace(' ' + c, '')}
                   </span>
@@ -224,8 +224,8 @@ function ScoreCard({ title, subtitle, value, subValue, valueColor, accentColor, 
     <div
       title={tooltip}
       style={{
-        backgroundColor: '#0D1017',
-        border: '1px solid #1E2839',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-mid)',
         borderTop: `2px solid ${accentColor}`,
         borderRadius: 8,
         padding: '14px 16px 13px',
@@ -234,7 +234,7 @@ function ScoreCard({ title, subtitle, value, subValue, valueColor, accentColor, 
         gap: 6,
       }}
     >
-      <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+      <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
         {title}
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
@@ -257,11 +257,11 @@ function ScoreCard({ title, subtitle, value, subValue, valueColor, accentColor, 
         )}
       </div>
       {progress !== undefined && (
-        <div style={{ height: 3, backgroundColor: '#181E2C', borderRadius: 2, overflow: 'hidden', marginTop: 2 }}>
+        <div style={{ height: 3, backgroundColor: 'var(--border-faint)', borderRadius: 2, overflow: 'hidden', marginTop: 2 }}>
           <div style={{ width: `${progress}%`, height: '100%', backgroundColor: accentColor, transition: 'width 0.4s' }} />
         </div>
       )}
-      <div style={{ fontSize: 10, color: '#8E97AC', lineHeight: 1.5 }}>{subtitle}</div>
+      <div style={{ fontSize: 10, color: 'var(--text-tertiary)', lineHeight: 1.5 }}>{subtitle}</div>
     </div>
   );
 }
@@ -270,20 +270,20 @@ function CompactCard({ title, value, sub, color }: { title: string; value: strin
   return (
     <div
       style={{
-        backgroundColor: '#0D1017',
-        border: '1px solid #1E2839',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-mid)',
         borderLeft: `2px solid ${color}`,
         borderRadius: 7,
         padding: '10px 12px',
       }}
     >
-      <div style={{ fontSize: 9, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
+      <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
         {title}
       </div>
       <div style={{ fontSize: 16, fontWeight: 700, color, fontFamily: '"JetBrains Mono", monospace', lineHeight: 1, marginBottom: 4 }}>
         {value}
       </div>
-      <div style={{ fontSize: 10, color: '#8E97AC', lineHeight: 1.4 }}>{sub}</div>
+      <div style={{ fontSize: 10, color: 'var(--text-tertiary)', lineHeight: 1.4 }}>{sub}</div>
     </div>
   );
 }

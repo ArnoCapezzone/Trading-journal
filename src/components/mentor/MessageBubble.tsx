@@ -35,7 +35,7 @@ export default function MessageBubble({ message, streaming }: Props) {
           background: isUser
             ? 'linear-gradient(135deg, #252D3F, #1A2235)'
             : 'linear-gradient(135deg, #3D8EF0, #5AA0F5)',
-          color: isUser ? '#8E97AC' : '#fff',
+          color: isUser ? 'var(--text-tertiary)' : '#fff',
           boxShadow: isUser ? 'none' : '0 1px 6px rgba(61,142,240,0.35)',
         }}
       >
@@ -47,7 +47,7 @@ export default function MessageBubble({ message, streaming }: Props) {
         <div
           style={{
             fontSize: 10,
-            color: '#4A5368',
+            color: 'var(--text-muted)',
             fontWeight: 600,
             textTransform: 'uppercase',
             letterSpacing: '0.08em',
@@ -58,7 +58,7 @@ export default function MessageBubble({ message, streaming }: Props) {
         </div>
 
         {isUser ? (
-          <div style={{ fontSize: 13, color: '#EEF0F6', lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-primary)', lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
             {message.content}
           </div>
         ) : (
@@ -66,7 +66,7 @@ export default function MessageBubble({ message, streaming }: Props) {
             className="tj-md"
             style={{
               fontSize: 13,
-              color: '#EEF0F6',
+              color: 'var(--text-primary)',
               lineHeight: 1.7,
             }}
           >
@@ -116,7 +116,7 @@ export default function MessageBubble({ message, streaming }: Props) {
         }
         .tj-md pre {
           background: #0A0D14;
-          border: 1px solid #1A2235;
+          border: 1px solid var(--border-soft);
           border-radius: 7px;
           padding: 12px 14px;
           overflow-x: auto;
@@ -135,7 +135,7 @@ export default function MessageBubble({ message, streaming }: Props) {
           font-size: 12px;
         }
         .tj-md th, .tj-md td {
-          border: 1px solid #252D3F;
+          border: 1px solid var(--border-default);
           padding: 6px 10px;
           text-align: left;
         }
@@ -147,7 +147,7 @@ export default function MessageBubble({ message, streaming }: Props) {
           color: #8E97AC;
           font-style: italic;
         }
-        .tj-md hr { border: none; border-top: 1px solid #252D3F; margin: 16px 0; }
+        .tj-md hr { border: none; border-top: 1px solid var(--border-default); margin: 16px 0; }
         .tj-md a { color: #3D8EF0; text-decoration: none; }
         .tj-md a:hover { text-decoration: underline; }
       `}</style>

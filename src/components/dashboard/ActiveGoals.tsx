@@ -106,7 +106,7 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
         <div style={{ fontSize: 10, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
           Goals & Milestones
         </div>
-        <div style={{ flex: 1, height: 1, backgroundColor: '#181E2C' }} />
+        <div style={{ flex: 1, height: 1, backgroundColor: 'var(--border-faint)' }} />
         <button
           onClick={handleNew}
           style={{
@@ -136,13 +136,13 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
       {sorted.length === 0 ? (
         <div
           style={{
-            backgroundColor: '#0D1017',
-            border: '1px dashed #252D3F',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px dashed var(--border-default)',
             borderRadius: 8,
             padding: '20px 16px',
             textAlign: 'center',
             fontSize: 12,
-            color: '#8E97AC',
+            color: 'var(--text-tertiary)',
             lineHeight: 1.6,
           }}
         >
@@ -159,14 +159,14 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                 ? '#00C47A'
                 : p.percent >= 75 ? '#3D8EF0'
                 : p.percent >= 40 ? '#F0A030'
-                : '#252D3F';
+                : 'var(--border-default)';
 
               return (
                 <div
                   key={g.id}
                   style={{
-                    backgroundColor: '#0D1017',
-                    border: '1px solid #1E2839',
+                    backgroundColor: 'var(--bg-surface)',
+                    border: '1px solid var(--border-mid)',
                     borderLeft: `3px solid ${p.achieved ? '#00C47A' : '#3D8EF0'}`,
                     borderRadius: 8,
                     padding: '12px 14px',
@@ -176,7 +176,7 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                 >
                   {/* Top row: type + actions */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <div style={{ fontSize: 9, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+                    <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                       {getGoalTypeLabel(g.type)}
                     </div>
                     <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -189,7 +189,7 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                         <span
                           style={{
                             fontSize: 9,
-                            color: deadline.expired ? '#F04848' : deadline.urgent ? '#F0A030' : '#4A5368',
+                            color: deadline.expired ? '#F04848' : deadline.urgent ? '#F0A030' : 'var(--text-muted)',
                             fontFamily: '"JetBrains Mono", monospace',
                             fontWeight: 600,
                             marginRight: 4,
@@ -200,10 +200,10 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                       )}
                       <button
                         onClick={() => handleEdit(g)}
-                        style={{ background: 'none', border: 'none', color: '#4A5368', cursor: 'pointer', padding: 3, fontSize: 11 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 3, fontSize: 11 }}
                         title="Edit"
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#8E97AC')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#4A5368')}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
                       >
                         <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                           <path d="M8.5 1.5l2 2-7 7H1.5v-2l7-7z" />
@@ -211,10 +211,10 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                       </button>
                       <button
                         onClick={() => handleDelete(g.id)}
-                        style={{ background: 'none', border: 'none', color: '#4A5368', cursor: 'pointer', padding: 3, fontSize: 11 }}
+                        style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 3, fontSize: 11 }}
                         title="Delete"
                         onMouseEnter={(e) => (e.currentTarget.style.color = '#F04848')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#4A5368')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
                       >
                         <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                           <path d="M2 3h8M4.5 3V2a1 1 0 011-1h1a1 1 0 011 1v1M3 3v7a1 1 0 001 1h4a1 1 0 001-1V3" />
@@ -224,22 +224,22 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                   </div>
 
                   {/* Title */}
-                  <div style={{ fontSize: 12, color: '#EEF0F6', fontWeight: 500, marginBottom: 10, lineHeight: 1.4 }}>
+                  <div style={{ fontSize: 12, color: 'var(--text-primary)', fontWeight: 500, marginBottom: 10, lineHeight: 1.4 }}>
                     {g.title}
                   </div>
 
                   {/* Progress numbers */}
                   <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <div style={{ fontSize: 15, fontWeight: 700, color: p.achieved ? '#00C47A' : '#EEF0F6', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '-0.01em' }}>
+                    <div style={{ fontSize: 15, fontWeight: 700, color: p.achieved ? '#00C47A' : 'var(--text-primary)', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '-0.01em' }}>
                       {p.formatted.current}
                     </div>
-                    <div style={{ fontSize: 11, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>
                       / {p.formatted.target}
                     </div>
                   </div>
 
                   {/* Bar */}
-                  <div style={{ height: 5, backgroundColor: '#181E2C', borderRadius: 3, overflow: 'hidden', marginBottom: 4 }}>
+                  <div style={{ height: 5, backgroundColor: 'var(--border-faint)', borderRadius: 3, overflow: 'hidden', marginBottom: 4 }}>
                     <div
                       style={{
                         width: `${p.percent}%`,
@@ -249,7 +249,7 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                       }}
                     />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 9, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>
                     <span>{p.percent.toFixed(0)}%</span>
                     <span>{g.scope === 'period' ? 'since goal set' : 'all-time'}</span>
                   </div>
@@ -265,7 +265,7 @@ export default function ActiveGoals({ trades, accountBalance, currency }: Props)
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#8E97AC',
+                  color: 'var(--text-tertiary)',
                   fontSize: 11,
                   cursor: 'pointer',
                   padding: '4px 10px',

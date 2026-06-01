@@ -78,11 +78,11 @@ export default function CSVImporter() {
       <div style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
         <div style={{ fontSize: 18, fontWeight: 700, color: '#00C47A', marginBottom: 8 }}>Import Complete</div>
-        <div style={{ color: '#8E97AC', fontSize: 14, marginBottom: 24 }}>
+        <div style={{ color: 'var(--text-tertiary)', fontSize: 14, marginBottom: 24 }}>
           {importResult.imported} trade{importResult.imported !== 1 ? 's' : ''} imported
           {importResult.duplicates > 0 && `, ${importResult.duplicates} duplicate${importResult.duplicates !== 1 ? 's' : ''} skipped`}
         </div>
-        <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: '#3D8EF0', border: 'none', borderRadius: 6, color: '#080B12', fontWeight: 600, cursor: 'pointer' }}>
+        <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: '#3D8EF0', border: 'none', borderRadius: 6, color: 'var(--text-on-accent)', fontWeight: 600, cursor: 'pointer' }}>
           Import Another File
         </button>
       </div>
@@ -94,8 +94,8 @@ export default function CSVImporter() {
       <div style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>❌</div>
         <div style={{ fontSize: 16, fontWeight: 700, color: '#F04848', marginBottom: 8 }}>Error</div>
-        <div style={{ color: '#8E97AC', fontSize: 13, marginBottom: 24 }}>{errorMsg}</div>
-        <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: '#141823', border: '1px solid #252D3F', borderRadius: 6, color: '#EEF0F6', cursor: 'pointer' }}>
+        <div style={{ color: 'var(--text-tertiary)', fontSize: 13, marginBottom: 24 }}>{errorMsg}</div>
+        <button onClick={reset} style={{ padding: '8px 20px', backgroundColor: 'var(--bg-surface-2)', border: '1px solid var(--border-default)', borderRadius: 6, color: 'var(--text-primary)', cursor: 'pointer' }}>
           Try Again
         </button>
       </div>
@@ -107,18 +107,18 @@ export default function CSVImporter() {
       <div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 600, color: '#EEF0F6' }}>Preview — {fileName}</div>
-            <div style={{ fontSize: 12, color: '#8E97AC', marginTop: 4 }}>
+            <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>Preview — {fileName}</div>
+            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginTop: 4 }}>
               {toImport.length} new trade{toImport.length !== 1 ? 's' : ''}
               {dupCount > 0 && <span style={{ color: '#F0A030', marginLeft: 8 }}>⚠ {dupCount} duplicates skipped</span>}
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={reset} style={{ padding: '7px 16px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#8E97AC', cursor: 'pointer', fontSize: 12 }}>Cancel</button>
+            <button onClick={reset} style={{ padding: '7px 16px', backgroundColor: 'transparent', border: '1px solid var(--border-default)', borderRadius: 5, color: 'var(--text-tertiary)', cursor: 'pointer', fontSize: 12 }}>Cancel</button>
             <button
               onClick={handleImport}
               disabled={toImport.length === 0}
-              style={{ padding: '7px 20px', backgroundColor: toImport.length > 0 ? '#3D8EF0' : '#252D3F', border: 'none', borderRadius: 5, color: toImport.length > 0 ? '#080B12' : '#8E97AC', fontWeight: 600, fontSize: 12, cursor: toImport.length > 0 ? 'pointer' : 'not-allowed' }}
+              style={{ padding: '7px 20px', backgroundColor: toImport.length > 0 ? '#3D8EF0' : 'var(--border-default)', border: 'none', borderRadius: 5, color: toImport.length > 0 ? 'var(--bg-app)' : 'var(--text-tertiary)', fontWeight: 600, fontSize: 12, cursor: toImport.length > 0 ? 'pointer' : 'not-allowed' }}
             >
               Import {toImport.length} Trade{toImport.length !== 1 ? 's' : ''}
             </button>
@@ -127,9 +127,9 @@ export default function CSVImporter() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11 }}>
             <thead>
-              <tr style={{ backgroundColor: '#080B12' }}>
+              <tr style={{ backgroundColor: 'var(--bg-app)' }}>
                 {['Date', 'Symbol', 'Dir', 'Entry', 'Exit', 'Lots', 'Est. P&L', 'Setup'].map((h) => (
-                  <th key={h} style={{ padding: '7px 10px', textAlign: 'left', color: '#8E97AC', fontSize: 10, textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>{h}</th>
+                  <th key={h} style={{ padding: '7px 10px', textAlign: 'left', color: 'var(--text-tertiary)', fontSize: 10, textTransform: 'uppercase', borderBottom: '1px solid var(--border-default)' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -137,19 +137,19 @@ export default function CSVImporter() {
               {toImport.slice(0, 50).map((t, i) => {
                 const calc = t.entryPrice && t.exitPrice && t.lotSize ? calculateTrade(t as Trade) : null;
                 return (
-                  <tr key={i} style={{ borderBottom: '1px solid #252D3F' }}>
-                    <td style={{ padding: '6px 10px', color: '#8E97AC', fontFamily: '"JetBrains Mono", monospace' }}>
+                  <tr key={i} style={{ borderBottom: '1px solid var(--border-default)' }}>
+                    <td style={{ padding: '6px 10px', color: 'var(--text-tertiary)', fontFamily: '"JetBrains Mono", monospace' }}>
                       {t.exitTime ? format(new Date(t.exitTime), 'dd/MM/yy') : '—'}
                     </td>
-                    <td style={{ padding: '6px 10px', fontWeight: 600, color: '#EEF0F6', fontFamily: '"JetBrains Mono", monospace' }}>{t.instrument}</td>
+                    <td style={{ padding: '6px 10px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", monospace' }}>{t.instrument}</td>
                     <td style={{ padding: '6px 10px', color: t.direction === 'LONG' ? '#00C47A' : '#F04848', fontWeight: 700 }}>{t.direction === 'LONG' ? 'L' : 'S'}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{t.entryPrice?.toFixed(5)}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{t.exitPrice?.toFixed(5)}</td>
-                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{t.lotSize}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: 'var(--text-primary)' }}>{t.entryPrice?.toFixed(5)}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: 'var(--text-primary)' }}>{t.exitPrice?.toFixed(5)}</td>
+                    <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: 'var(--text-primary)' }}>{t.lotSize}</td>
                     <td style={{ padding: '6px 10px', fontFamily: '"JetBrains Mono", monospace', color: calc?.isWin ? '#00C47A' : '#F04848' }}>
                       {calc ? `${calc.pnlDollar >= 0 ? '+' : ''}$${calc.pnlDollar.toFixed(2)}` : '—'}
                     </td>
-                    <td style={{ padding: '6px 10px', color: '#8E97AC' }}>{t.setup ?? '—'}</td>
+                    <td style={{ padding: '6px 10px', color: 'var(--text-tertiary)' }}>{t.setup ?? '—'}</td>
                   </tr>
                 );
               })}
@@ -163,15 +163,15 @@ export default function CSVImporter() {
   return (
     <div>
       <div style={{ marginBottom: 20, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 13, color: '#8E97AC', lineHeight: 1.6 }}>
+        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', lineHeight: 1.6 }}>
           Import trades from a custom CSV file. Download the template to see the expected format.
         </div>
         <button
           onClick={generateCSVTemplate}
           style={{
             padding: '8px 16px',
-            backgroundColor: '#141823',
-            border: '1px solid #252D3F',
+            backgroundColor: 'var(--bg-surface-2)',
+            border: '1px solid var(--border-default)',
             borderRadius: 6,
             color: '#3D8EF0',
             fontSize: 12,
@@ -187,7 +187,7 @@ export default function CSVImporter() {
 
       <div
         style={{
-          border: `2px dashed ${dragging ? '#3D8EF0' : '#252D3F'}`,
+          border: `2px dashed ${dragging ? '#3D8EF0' : 'var(--border-default)'}`,
           borderRadius: 10,
           padding: '48px 24px',
           textAlign: 'center',
@@ -207,8 +207,8 @@ export default function CSVImporter() {
         }}
       >
         <div style={{ fontSize: 36, marginBottom: 12 }}>📄</div>
-        <div style={{ fontSize: 14, fontWeight: 600, color: '#EEF0F6', marginBottom: 6 }}>Drop your CSV file here</div>
-        <div style={{ fontSize: 12, color: '#8E97AC' }}>or <span style={{ color: '#3D8EF0' }}>browse files</span></div>
+        <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', marginBottom: 6 }}>Drop your CSV file here</div>
+        <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>or <span style={{ color: '#3D8EF0' }}>browse files</span></div>
       </div>
     </div>
   );

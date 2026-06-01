@@ -64,30 +64,30 @@ export default function CalendarView({ data, year, month, onMonthChange, currenc
   return (
     <div
       style={{
-        backgroundColor: '#0D1017',
-        border: '1px solid #252D3F',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-default)',
         borderRadius: 8,
         padding: '16px',
       }}
     >
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-        <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
           Calendar
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
             onClick={handlePrev}
-            style={{ background: 'none', border: 'none', color: '#8E97AC', cursor: 'pointer', fontSize: 14, padding: '2px 6px' }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer', fontSize: 14, padding: '2px 6px' }}
           >
             ‹
           </button>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#EEF0F6', fontFamily: '"JetBrains Mono", monospace', minWidth: 100, textAlign: 'center' }}>
+          <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", monospace', minWidth: 100, textAlign: 'center' }}>
             {format(new Date(year, month, 1), 'MMMM yyyy')}
           </span>
           <button
             onClick={handleNext}
-            style={{ background: 'none', border: 'none', color: '#8E97AC', cursor: 'pointer', fontSize: 14, padding: '2px 6px' }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-tertiary)', cursor: 'pointer', fontSize: 14, padding: '2px 6px' }}
           >
             ›
           </button>
@@ -97,7 +97,7 @@ export default function CalendarView({ data, year, month, onMonthChange, currenc
       {/* Weekday headers */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 4 }}>
         {WEEKDAYS.map((d) => (
-          <div key={d} style={{ textAlign: 'center', fontSize: 10, color: '#8E97AC', fontWeight: 600, padding: '2px 0' }}>
+          <div key={d} style={{ textAlign: 'center', fontSize: 10, color: 'var(--text-tertiary)', fontWeight: 600, padding: '2px 0' }}>
             {d}
           </div>
         ))}
@@ -116,7 +116,7 @@ export default function CalendarView({ data, year, month, onMonthChange, currenc
               style={{
                 position: 'relative',
                 backgroundColor: getDayBg(day),
-                border: `1px solid ${dayData ? getDayBorder(day) : '#252D3F'}`,
+                border: `1px solid ${dayData ? getDayBorder(day) : 'var(--border-default)'}`,
                 borderRadius: 5,
                 padding: '5px 4px',
                 minHeight: 42,
@@ -127,7 +127,7 @@ export default function CalendarView({ data, year, month, onMonthChange, currenc
               onMouseEnter={() => dayData && setHoveredDay(day)}
               onMouseLeave={() => setHoveredDay(null)}
             >
-              <div style={{ fontSize: 10, color: '#8E97AC', fontFamily: '"JetBrains Mono", monospace' }}>
+              <div style={{ fontSize: 10, color: 'var(--text-tertiary)', fontFamily: '"JetBrains Mono", monospace' }}>
                 {day}
               </div>
               {dayData && (
@@ -152,12 +152,12 @@ export default function CalendarView({ data, year, month, onMonthChange, currenc
                     bottom: '110%',
                     left: '50%',
                     transform: 'translateX(-50%)',
-                    backgroundColor: '#141823',
-                    border: '1px solid #252D3F',
+                    backgroundColor: 'var(--bg-surface-2)',
+                    border: '1px solid var(--border-default)',
                     borderRadius: 6,
                     padding: '8px 10px',
                     fontSize: 11,
-                    color: '#EEF0F6',
+                    color: 'var(--text-primary)',
                     whiteSpace: 'nowrap',
                     zIndex: 200,
                     fontFamily: '"JetBrains Mono", monospace',
@@ -173,7 +173,7 @@ export default function CalendarView({ data, year, month, onMonthChange, currenc
                       {dayData.pnl >= 0 ? '+' : ''}{c}{dayData.pnl.toFixed(2)}
                     </span>
                   </div>
-                  <div style={{ color: '#8E97AC' }}>{dayData.count} trade{dayData.count !== 1 ? 's' : ''}</div>
+                  <div style={{ color: 'var(--text-tertiary)' }}>{dayData.count} trade{dayData.count !== 1 ? 's' : ''}</div>
                 </div>
               )}
             </div>

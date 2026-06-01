@@ -97,10 +97,10 @@ export default function Dashboard() {
 
       {/* Period selector */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 11, color: '#4A5368', fontWeight: 500 }}>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 500 }}>
           {periodTrades.length} trade{periodTrades.length !== 1 ? 's' : ''} in period
         </div>
-        <div style={{ display: 'flex', gap: 2, backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 7, padding: 3 }}>
+        <div style={{ display: 'flex', gap: 2, backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderRadius: 7, padding: 3 }}>
           {PERIODS.map((p) => (
             <button
               key={p.value}
@@ -109,8 +109,8 @@ export default function Dashboard() {
                 padding: '4px 12px',
                 borderRadius: 5,
                 border: 'none',
-                backgroundColor: selectedPeriod === p.value ? '#19202F' : 'transparent',
-                color: selectedPeriod === p.value ? '#EEF0F6' : '#4A5368',
+                backgroundColor: selectedPeriod === p.value ? 'var(--bg-surface-3)' : 'transparent',
+                color: selectedPeriod === p.value ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontSize: 11,
                 fontWeight: selectedPeriod === p.value ? 600 : 400,
                 cursor: 'pointer',
@@ -118,10 +118,10 @@ export default function Dashboard() {
                 boxShadow: selectedPeriod === p.value ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
               }}
               onMouseEnter={(e) => {
-                if (selectedPeriod !== p.value) e.currentTarget.style.color = '#8E97AC';
+                if (selectedPeriod !== p.value) e.currentTarget.style.color = 'var(--text-tertiary)';
               }}
               onMouseLeave={(e) => {
-                if (selectedPeriod !== p.value) e.currentTarget.style.color = '#4A5368';
+                if (selectedPeriod !== p.value) e.currentTarget.style.color = 'var(--text-muted)';
               }}
             >
               {p.label}
@@ -158,15 +158,15 @@ export default function Dashboard() {
       </div>
 
       {/* Last 10 trades */}
-      <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid #252D3F' }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: '#8E97AC', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+      <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 16px', borderBottom: '1px solid var(--border-default)' }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
             Recent Trades
           </div>
           <Link to="/journal" style={{ fontSize: 11, color: '#3D8EF0', textDecoration: 'none' }}>See all →</Link>
         </div>
         {last10.length === 0 ? (
-          <div style={{ padding: '24px', textAlign: 'center', color: '#8E97AC', fontSize: 13 }}>
+          <div style={{ padding: '24px', textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 13 }}>
             No trades in selected period. <Link to="/journal/new" style={{ color: '#3D8EF0' }}>Add your first trade</Link>
           </div>
         ) : (
@@ -174,7 +174,7 @@ export default function Dashboard() {
             <thead>
               <tr>
                 {['Date', 'Instrument', 'L/S', 'Entry', 'Exit', 'P&L $', 'Setup', 'Status'].map((h) => (
-                  <th key={h} style={{ padding: '7px 12px', textAlign: 'left', fontSize: 10, color: '#8E97AC', textTransform: 'uppercase', borderBottom: '1px solid #252D3F' }}>{h}</th>
+                  <th key={h} style={{ padding: '7px 12px', textAlign: 'left', fontSize: 10, color: 'var(--text-tertiary)', textTransform: 'uppercase', borderBottom: '1px solid var(--border-default)' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -182,22 +182,22 @@ export default function Dashboard() {
               {last10.map((trade) => {
                 const calc = calculateTrade(trade, accountBalance);
                 return (
-                  <tr key={trade.id} style={{ borderBottom: '1px solid #0D1017', backgroundColor: calc.isWin ? 'rgba(0,209,122,0.03)' : 'rgba(255,77,77,0.03)' }}>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: '#8E97AC' }}>
+                  <tr key={trade.id} style={{ borderBottom: '1px solid var(--bg-surface)', backgroundColor: calc.isWin ? 'rgba(0,209,122,0.03)' : 'rgba(255,77,77,0.03)' }}>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontSize: 10, color: 'var(--text-tertiary)' }}>
                       {format(new Date(trade.exitTime), 'dd/MM/yy HH:mm')}
                     </td>
-                    <td style={{ padding: '6px 12px', fontWeight: 600, fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6' }}>{trade.instrument}</td>
+                    <td style={{ padding: '6px 12px', fontWeight: 600, fontFamily: '"JetBrains Mono", monospace', color: 'var(--text-primary)' }}>{trade.instrument}</td>
                     <td style={{ padding: '6px 12px' }}>
                       <span style={{ fontSize: 10, fontWeight: 700, color: trade.direction === 'LONG' ? '#00C47A' : '#F04848' }}>
                         {trade.direction === 'LONG' ? '▲' : '▼'} {trade.direction === 'LONG' ? 'L' : 'S'}
                       </span>
                     </td>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6', fontSize: 11 }}>{trade.entryPrice.toFixed(5)}</td>
-                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: '#EEF0F6', fontSize: 11 }}>{trade.exitPrice.toFixed(5)}</td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: 'var(--text-primary)', fontSize: 11 }}>{trade.entryPrice.toFixed(5)}</td>
+                    <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', color: 'var(--text-primary)', fontSize: 11 }}>{trade.exitPrice.toFixed(5)}</td>
                     <td style={{ padding: '6px 12px', fontFamily: '"JetBrains Mono", monospace', fontWeight: 600, color: calc.isWin ? '#00C47A' : '#F04848' }}>
                       {calc.pnlDollar >= 0 ? '+' : ''}{c}{calc.pnlDollar.toFixed(2)}
                     </td>
-                    <td style={{ padding: '6px 12px', color: '#8E97AC', fontSize: 11 }}>{trade.setup ?? '—'}</td>
+                    <td style={{ padding: '6px 12px', color: 'var(--text-tertiary)', fontSize: 11 }}>{trade.setup ?? '—'}</td>
                     <td style={{ padding: '6px 12px', fontSize: 10, color: trade.status === 'COMPLETE' ? '#00C47A' : '#F0A030' }}>
                       {trade.status === 'COMPLETE' ? '✓' : '⚠'}
                     </td>

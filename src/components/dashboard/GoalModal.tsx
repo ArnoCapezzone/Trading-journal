@@ -36,10 +36,10 @@ function inputStyle(): React.CSSProperties {
   return {
     width: '100%',
     padding: '8px 11px',
-    backgroundColor: '#080B12',
-    border: '1px solid #252D3F',
+    backgroundColor: 'var(--bg-app)',
+    border: '1px solid var(--border-default)',
     borderRadius: 5,
-    color: '#EEF0F6',
+    color: 'var(--text-primary)',
     fontSize: 13,
     fontFamily: 'inherit',
     outline: 'none',
@@ -51,7 +51,7 @@ function labelStyle(): React.CSSProperties {
   return {
     display: 'block',
     fontSize: 10,
-    color: '#8E97AC',
+    color: 'var(--text-tertiary)',
     fontWeight: 600,
     marginBottom: 5,
     textTransform: 'uppercase',
@@ -140,8 +140,8 @@ export default function GoalModal({ open, goal, currency, onClose, onSave }: Pro
     >
       <div
         style={{
-          backgroundColor: '#0D1017',
-          border: '1px solid #252D3F',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-default)',
           borderRadius: 12,
           padding: '24px 28px',
           width: 'min(92vw, 480px)',
@@ -154,13 +154,13 @@ export default function GoalModal({ open, goal, currency, onClose, onSave }: Pro
             <div style={{ fontSize: 10, color: '#8B6CF0', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 4 }}>
               {goal ? 'Edit goal' : 'New goal'}
             </div>
-            <div style={{ fontSize: 15, fontWeight: 600, color: '#EEF0F6' }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
               Set a measurable target
             </div>
           </div>
           <button
             onClick={onClose}
-            style={{ background: 'none', border: 'none', color: '#4A5368', fontSize: 18, cursor: 'pointer', padding: 4 }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: 18, cursor: 'pointer', padding: 4 }}
             title="Close"
           >
             ✕
@@ -220,9 +220,9 @@ export default function GoalModal({ open, goal, currency, onClose, onSave }: Pro
                     flex: 1,
                     padding: '7px 8px',
                     borderRadius: 5,
-                    border: `1px solid ${scope === s.v ? '#3D8EF0' : '#252D3F'}`,
+                    border: `1px solid ${scope === s.v ? '#3D8EF0' : 'var(--border-default)'}`,
                     backgroundColor: scope === s.v ? 'rgba(61,142,240,0.12)' : 'transparent',
-                    color: scope === s.v ? '#3D8EF0' : '#8E97AC',
+                    color: scope === s.v ? '#3D8EF0' : 'var(--text-tertiary)',
                     fontSize: 11,
                     fontWeight: scope === s.v ? 600 : 400,
                     cursor: 'pointer',
@@ -251,9 +251,9 @@ export default function GoalModal({ open, goal, currency, onClose, onSave }: Pro
             style={{
               padding: '8px 18px',
               backgroundColor: 'transparent',
-              border: '1px solid #252D3F',
+              border: '1px solid var(--border-default)',
               borderRadius: 6,
-              color: '#8E97AC',
+              color: 'var(--text-tertiary)',
               fontSize: 12,
               cursor: 'pointer',
             }}

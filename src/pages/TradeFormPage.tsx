@@ -34,7 +34,7 @@ export default function TradeFormPage() {
   return (
     <div style={{ padding: 24, maxWidth: 1000 }}>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 13, color: '#8E97AC' }}>
+        <div style={{ fontSize: 13, color: 'var(--text-tertiary)' }}>
           {isEdit
             ? `Editing trade — ${editTrade?.instrument} ${editTrade?.direction}`
             : voicePrefill

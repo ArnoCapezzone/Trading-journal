@@ -208,15 +208,15 @@ export default function Mentor() {
   const showEmpty = active && active.messages.length === 0 && !streamingContent;
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 52px)', backgroundColor: '#080B12' }}>
+    <div style={{ display: 'flex', height: 'calc(100vh - 52px)', backgroundColor: 'var(--bg-app)' }}>
       {/* Conversations sidebar (hidden on mobile) */}
       {!isMobile && (
       <aside
         style={{
           width: 240,
           flexShrink: 0,
-          backgroundColor: '#0A0D14',
-          borderRight: '1px solid #181E2C',
+          backgroundColor: 'var(--bg-sidebar-alt)',
+          borderRight: '1px solid var(--border-faint)',
           display: 'flex',
           flexDirection: 'column',
         }}
@@ -251,7 +251,7 @@ export default function Mentor() {
           </button>
         </div>
 
-        <div style={{ padding: '4px 14px 8px', fontSize: 9, fontWeight: 600, color: '#2E3A52', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+        <div style={{ padding: '4px 14px 8px', fontSize: 9, fontWeight: 600, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
           Conversations
         </div>
 
@@ -269,7 +269,7 @@ export default function Mentor() {
                 borderRadius: 6,
                 cursor: 'pointer',
                 backgroundColor: c.id === activeId ? 'rgba(61,142,240,0.10)' : 'transparent',
-                color: c.id === activeId ? '#EEF0F6' : '#8E97AC',
+                color: c.id === activeId ? 'var(--text-primary)' : 'var(--text-tertiary)',
                 fontSize: 12,
                 fontWeight: c.id === activeId ? 500 : 400,
                 transition: 'all 0.12s',
@@ -293,14 +293,14 @@ export default function Mentor() {
                 style={{
                   background: 'none',
                   border: 'none',
-                  color: '#4A5368',
+                  color: 'var(--text-muted)',
                   cursor: 'pointer',
                   padding: 2,
                   opacity: c.id === activeId ? 1 : 0.5,
                   transition: 'color 0.15s',
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = '#F04848')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4A5368')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
                 title="Delete"
               >
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
@@ -312,7 +312,7 @@ export default function Mentor() {
         </div>
 
         {/* Stats footer */}
-        <div style={{ padding: '10px 14px', borderTop: '1px solid #181E2C', fontSize: 10, color: '#2E3A52', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
+        <div style={{ padding: '10px 14px', borderTop: '1px solid var(--border-faint)', fontSize: 10, color: 'var(--text-faint)', fontFamily: '"JetBrains Mono", monospace', letterSpacing: '0.04em' }}>
           {trades.length} trades · llama-3.3-70b
         </div>
       </aside>
@@ -322,17 +322,17 @@ export default function Mentor() {
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
         {/* Mobile-only: conversation switcher + new chat */}
         {isMobile && (
-          <div style={{ display: 'flex', gap: 6, padding: '10px 14px', borderBottom: '1px solid #181E2C', backgroundColor: '#0A0D14' }}>
+          <div style={{ display: 'flex', gap: 6, padding: '10px 14px', borderBottom: '1px solid var(--border-faint)', backgroundColor: 'var(--bg-sidebar-alt)' }}>
             <select
               value={activeId ?? ''}
               onChange={(e) => setActiveId(e.target.value)}
               style={{
                 flex: 1,
                 padding: '7px 10px',
-                backgroundColor: '#0D1017',
-                border: '1px solid #252D3F',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-default)',
                 borderRadius: 5,
-                color: '#EEF0F6',
+                color: 'var(--text-primary)',
                 fontSize: 12,
                 fontFamily: 'inherit',
                 outline: 'none',
@@ -368,10 +368,10 @@ export default function Mentor() {
                 <div style={{ width: 52, height: 52, margin: '0 auto 18px', background: 'linear-gradient(135deg, #3D8EF0, #8B6CF0)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 24px rgba(61,142,240,0.3)', fontFamily: '"JetBrains Mono", monospace', fontWeight: 700, fontSize: 18, color: '#fff' }}>
                   AI
                 </div>
-                <div style={{ fontSize: 19, fontWeight: 700, color: '#EEF0F6', marginBottom: 6, letterSpacing: '-0.01em' }}>
+                <div style={{ fontSize: 19, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6, letterSpacing: '-0.01em' }}>
                   Your AI Trading Mentor
                 </div>
-                <div style={{ fontSize: 12, color: '#8E97AC', marginBottom: 28, maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.65 }}>
+                <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 28, maxWidth: 480, margin: '0 auto 28px', lineHeight: 1.65 }}>
                   {lang === 'fr'
                     ? `Coach 24/7 qui analyse tes ${trades.length} trades en temps réel. Pose une question ou choisis une suggestion ci-dessous.`
                     : `24/7 coach with full access to your ${trades.length} trades. Ask anything or pick a suggestion below.`}
@@ -386,10 +386,10 @@ export default function Mentor() {
                       style={{
                         textAlign: 'left',
                         padding: '11px 14px',
-                        backgroundColor: '#0D1017',
-                        border: '1px solid #1E2839',
+                        backgroundColor: 'var(--bg-surface)',
+                        border: '1px solid var(--border-mid)',
                         borderRadius: 7,
-                        color: '#C8CDD8',
+                        color: 'var(--text-secondary)',
                         fontSize: 12,
                         cursor: isStreaming ? 'not-allowed' : 'pointer',
                         lineHeight: 1.5,
@@ -398,13 +398,13 @@ export default function Mentor() {
                       }}
                       onMouseEnter={(e) => {
                         if (!isStreaming) {
-                          e.currentTarget.style.borderColor = '#3D5080';
+                          e.currentTarget.style.borderColor = 'var(--border-focus)';
                           e.currentTarget.style.backgroundColor = '#111520';
                         }
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = '#1E2839';
-                        e.currentTarget.style.backgroundColor = '#0D1017';
+                        e.currentTarget.style.borderColor = 'var(--border-mid)';
+                        e.currentTarget.style.backgroundColor = 'var(--bg-surface)';
                       }}
                     >
                       {q}
@@ -439,7 +439,7 @@ export default function Mentor() {
         </div>
 
         {/* Input */}
-        <div style={{ borderTop: '1px solid #181E2C', backgroundColor: '#080B12', padding: isMobile ? '10px 14px 14px' : '14px 28px 18px' }}>
+        <div style={{ borderTop: '1px solid var(--border-faint)', backgroundColor: 'var(--bg-app)', padding: isMobile ? '10px 14px 14px' : '14px 28px 18px' }}>
           <form onSubmit={handleSubmit} style={{ maxWidth: 780, margin: '0 auto' }}>
             <div
               style={{
@@ -447,8 +447,8 @@ export default function Mentor() {
                 alignItems: 'flex-end',
                 gap: 8,
                 padding: '8px 8px 8px 14px',
-                backgroundColor: '#0D1017',
-                border: '1px solid #252D3F',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border-default)',
                 borderRadius: 10,
                 transition: 'border-color 0.15s',
               }}
@@ -465,7 +465,7 @@ export default function Mentor() {
                   flex: 1,
                   border: 'none',
                   background: 'transparent',
-                  color: '#EEF0F6',
+                  color: 'var(--text-primary)',
                   fontSize: 13,
                   fontFamily: 'inherit',
                   outline: 'none',
@@ -506,10 +506,10 @@ export default function Mentor() {
                   disabled={!input.trim()}
                   style={{
                     padding: '8px 14px',
-                    backgroundColor: input.trim() ? '#3D8EF0' : '#19202F',
+                    backgroundColor: input.trim() ? '#3D8EF0' : 'var(--bg-surface-3)',
                     border: 'none',
                     borderRadius: 7,
-                    color: input.trim() ? '#fff' : '#4A5368',
+                    color: input.trim() ? '#fff' : 'var(--text-muted)',
                     cursor: input.trim() ? 'pointer' : 'not-allowed',
                     display: 'flex',
                     alignItems: 'center',
@@ -525,7 +525,7 @@ export default function Mentor() {
                 </button>
               )}
             </div>
-            <div style={{ marginTop: 6, fontSize: 10, color: '#2E3A52', textAlign: 'center', letterSpacing: '0.02em' }}>
+            <div style={{ marginTop: 6, fontSize: 10, color: 'var(--text-faint)', textAlign: 'center', letterSpacing: '0.02em' }}>
               Context auto-injected: {trades.length} trades · KPIs · last 30 trades · auto-detected issues
             </div>
           </form>

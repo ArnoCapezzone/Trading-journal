@@ -18,6 +18,7 @@ import EconomicCalendarPage from './pages/EconomicCalendar';
 import { useTradesStore } from './store/tradesStore';
 import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
+import { useThemeStore } from './store/themeStore';
 
 function AppLayout() {
   const isMobile = useIsMobile();
@@ -42,7 +43,7 @@ function AppLayout() {
         }}
       >
         <TopBar onMenuClick={() => setSidebarOpen(true)} />
-        <main style={{ flex: 1, backgroundColor: '#080B12', overflowY: 'auto' }}>
+        <main style={{ flex: 1, backgroundColor: 'var(--bg-app)', overflowY: 'auto' }}>
           <Outlet />
         </main>
       </div>
@@ -66,7 +67,7 @@ function LoadingScreen() {
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#080B12',
+      backgroundColor: 'var(--bg-app)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -78,18 +79,20 @@ function LoadingScreen() {
         backgroundColor: '#3D8EF0',
         borderRadius: 12,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 22, fontWeight: 800, color: '#080B12',
+        fontSize: 22, fontWeight: 800, color: 'var(--text-on-accent)',
         fontFamily: '"JetBrains Mono", monospace',
       }}>TJ</div>
-      <div style={{ color: '#8E97AC', fontSize: 13 }}>Loading…</div>
+      <div style={{ color: 'var(--text-tertiary)', fontSize: 13 }}>Loading…</div>
     </div>
   );
 }
 
 export default function App() {
   const { user, isLoading, initialize } = useAuthStore();
+  const initializeTheme = useThemeStore((s) => s.initialize);
 
   useEffect(() => {
+    initializeTheme();
     initialize();
   }, []);
 

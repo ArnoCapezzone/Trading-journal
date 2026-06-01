@@ -126,7 +126,7 @@ export default function EconomicCalendarPage() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', backgroundColor: 'rgba(240,72,72,0.10)', border: '1px solid rgba(240,72,72,0.3)', borderRadius: 4, fontSize: 10, color: '#F04848', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8 }}>
             ECONOMIC CALENDAR
           </div>
-          <div style={{ fontSize: 13, color: '#8E97AC', lineHeight: 1.6 }}>
+          <div style={{ fontSize: 13, color: 'var(--text-tertiary)', lineHeight: 1.6 }}>
             Macro events that move markets. Plan entries/exits around high-impact releases.
           </div>
         </div>
@@ -135,10 +135,10 @@ export default function EconomicCalendarPage() {
           disabled={loading}
           style={{
             padding: '7px 14px',
-            backgroundColor: '#141823',
-            border: '1px solid #252D3F',
+            backgroundColor: 'var(--bg-surface-2)',
+            border: '1px solid var(--border-default)',
             borderRadius: 5,
-            color: '#EEF0F6',
+            color: 'var(--text-primary)',
             fontSize: 12,
             cursor: loading ? 'wait' : 'pointer',
             opacity: loading ? 0.6 : 1,
@@ -153,7 +153,7 @@ export default function EconomicCalendarPage() {
 
       {/* Week selector + stats */}
       <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-        <div style={{ display: 'flex', gap: 2, backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 7, padding: 3 }}>
+        <div style={{ display: 'flex', gap: 2, backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderRadius: 7, padding: 3 }}>
           {[
             { v: 'this', label: 'This Week', count: thisWeek.length },
             { v: 'next', label: 'Next Week', count: nextWeek.length },
@@ -165,8 +165,8 @@ export default function EconomicCalendarPage() {
                 padding: '5px 14px',
                 borderRadius: 5,
                 border: 'none',
-                backgroundColor: view === w.v ? '#19202F' : 'transparent',
-                color: view === w.v ? '#EEF0F6' : '#4A5368',
+                backgroundColor: view === w.v ? 'var(--bg-surface-3)' : 'transparent',
+                color: view === w.v ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontSize: 12,
                 fontWeight: view === w.v ? 600 : 400,
                 cursor: 'pointer',
@@ -174,26 +174,26 @@ export default function EconomicCalendarPage() {
               }}
             >
               {w.label}
-              <span style={{ marginLeft: 6, fontSize: 10, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>{w.count}</span>
+              <span style={{ marginLeft: 6, fontSize: 10, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>{w.count}</span>
             </button>
           ))}
         </div>
 
-        <div style={{ fontSize: 11, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>
           {filtered.length} of {allEvents.length} events · <span style={{ color: '#F04848' }}>{highCount} high-impact</span>
         </div>
 
         {fetchedAt > 0 && (
-          <div style={{ marginLeft: 'auto', fontSize: 10, color: '#2E3A52', fontFamily: '"JetBrains Mono", monospace' }}>
+          <div style={{ marginLeft: 'auto', fontSize: 10, color: 'var(--text-faint)', fontFamily: '"JetBrains Mono", monospace' }}>
             {fromCache ? '(cached) ' : ''}updated {relativeTime(new Date(fetchedAt).toISOString())}
           </div>
         )}
       </div>
 
       {/* Filters */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '12px 14px', backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '12px 14px', backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderRadius: 8 }}>
         <div>
-          <div style={{ fontSize: 9, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>Impact</div>
+          <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>Impact</div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {ALL_IMPACTS.map((i) => {
               const active = impactFilter.has(i);
@@ -205,9 +205,9 @@ export default function EconomicCalendarPage() {
                   style={{
                     padding: '4px 12px',
                     borderRadius: 4,
-                    border: `1px solid ${active ? color : '#252D3F'}`,
+                    border: `1px solid ${active ? color : 'var(--border-default)'}`,
                     backgroundColor: active ? color + '15' : 'transparent',
-                    color: active ? color : '#8E97AC',
+                    color: active ? color : 'var(--text-tertiary)',
                     fontSize: 11,
                     fontWeight: active ? 600 : 400,
                     cursor: 'pointer',
@@ -223,7 +223,7 @@ export default function EconomicCalendarPage() {
 
         {availableCurrencies.length > 0 && (
           <div>
-            <div style={{ fontSize: 9, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>
+            <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 6 }}>
               Currency {currencyFilter.size > 0 && <span style={{ color: '#3D8EF0' }}>({currencyFilter.size} selected)</span>}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
@@ -236,9 +236,9 @@ export default function EconomicCalendarPage() {
                     style={{
                       padding: '3px 10px',
                       borderRadius: 4,
-                      border: `1px solid ${active ? '#3D8EF0' : '#252D3F'}`,
+                      border: `1px solid ${active ? '#3D8EF0' : 'var(--border-default)'}`,
                       backgroundColor: active ? 'rgba(61,142,240,0.12)' : 'transparent',
-                      color: active ? '#3D8EF0' : '#8E97AC',
+                      color: active ? '#3D8EF0' : 'var(--text-tertiary)',
                       fontSize: 11,
                       fontWeight: active ? 600 : 400,
                       cursor: 'pointer',
@@ -252,7 +252,7 @@ export default function EconomicCalendarPage() {
               {currencyFilter.size > 0 && (
                 <button
                   onClick={() => setCurrencyFilter(new Set())}
-                  style={{ padding: '3px 10px', borderRadius: 4, border: 'none', background: 'none', color: '#4A5368', fontSize: 11, cursor: 'pointer' }}
+                  style={{ padding: '3px 10px', borderRadius: 4, border: 'none', background: 'none', color: 'var(--text-muted)', fontSize: 11, cursor: 'pointer' }}
                 >
                   Clear
                 </button>
@@ -276,14 +276,14 @@ export default function EconomicCalendarPage() {
 
       {/* Loading skeleton */}
       {loading && grouped.length === 0 && (
-        <div style={{ padding: 40, textAlign: 'center', color: '#8E97AC', fontSize: 13 }}>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 13 }}>
           Loading economic events…
         </div>
       )}
 
       {/* Empty state */}
       {!loading && grouped.length === 0 && !error && (
-        <div style={{ padding: 40, textAlign: 'center', color: '#8E97AC', fontSize: 13, backgroundColor: '#0D1017', border: '1px dashed #252D3F', borderRadius: 8 }}>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-tertiary)', fontSize: 13, backgroundColor: 'var(--bg-surface)', border: '1px dashed var(--border-default)', borderRadius: 8 }}>
           No events match your filters. Try enabling more impact levels or clearing currency filter.
         </div>
       )}
@@ -292,7 +292,7 @@ export default function EconomicCalendarPage() {
       {grouped.map((day) => {
         const dayMeta = formatDay(day.date);
         return (
-          <div key={day.date} style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 9, overflow: 'hidden' }}>
+          <div key={day.date} style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderRadius: 9, overflow: 'hidden' }}>
             {/* Day header */}
             <div
               style={{
@@ -300,18 +300,18 @@ export default function EconomicCalendarPage() {
                 alignItems: 'center',
                 gap: 14,
                 padding: '12px 16px',
-                backgroundColor: dayMeta.isToday ? 'rgba(0,196,122,0.06)' : '#0A0D14',
-                borderBottom: '1px solid #1E2839',
+                backgroundColor: dayMeta.isToday ? 'rgba(0,196,122,0.06)' : 'var(--bg-sidebar-alt)',
+                borderBottom: '1px solid var(--border-mid)',
                 borderLeft: dayMeta.isToday ? '3px solid #00C47A' : undefined,
               }}
             >
               <div style={{ fontFamily: '"JetBrains Mono", monospace' }}>
-                <div style={{ fontSize: 10, color: dayMeta.isToday ? '#00C47A' : '#4A5368', fontWeight: 600, letterSpacing: '0.08em' }}>
+                <div style={{ fontSize: 10, color: dayMeta.isToday ? '#00C47A' : 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.08em' }}>
                   {dayMeta.dayName.toUpperCase()}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                  <span style={{ fontSize: 18, fontWeight: 700, color: dayMeta.isToday ? '#EEF0F6' : '#C8CDD8' }}>{dayMeta.dayNum}</span>
-                  <span style={{ fontSize: 11, color: '#8E97AC' }}>{dayMeta.month}</span>
+                  <span style={{ fontSize: 18, fontWeight: 700, color: dayMeta.isToday ? 'var(--text-primary)' : 'var(--text-secondary)' }}>{dayMeta.dayNum}</span>
+                  <span style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{dayMeta.month}</span>
                 </div>
               </div>
               {dayMeta.isToday && (
@@ -319,7 +319,7 @@ export default function EconomicCalendarPage() {
                   TODAY
                 </span>
               )}
-              <div style={{ marginLeft: 'auto', fontSize: 11, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace' }}>
+              <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace' }}>
                 {day.events.length} event{day.events.length !== 1 ? 's' : ''}
                 {' · '}
                 {day.events.filter((e) => e.impact === 'High').length} high
@@ -340,23 +340,23 @@ export default function EconomicCalendarPage() {
                       alignItems: 'center',
                       gap: isMobile ? 10 : 14,
                       padding: isMobile ? '10px 12px' : '10px 16px',
-                      borderBottom: '1px solid #181E2C',
+                      borderBottom: '1px solid var(--border-faint)',
                       opacity: past ? 0.55 : 1,
                     }}
                   >
                     {/* Time */}
-                    <div style={{ fontSize: 12, color: '#C8CDD8', fontFamily: '"JetBrains Mono", monospace', fontWeight: 500 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', fontFamily: '"JetBrains Mono", monospace', fontWeight: 500 }}>
                       {formatTime(e.date)}
                     </div>
 
                     {/* Currency + impact dot */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: color, flexShrink: 0, boxShadow: `0 0 6px ${color}80` }} />
-                      <span style={{ fontSize: 11, fontWeight: 600, color: '#EEF0F6', fontFamily: '"JetBrains Mono", monospace' }}>{e.country}</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)', fontFamily: '"JetBrains Mono", monospace' }}>{e.country}</span>
                     </div>
 
                     {/* Title */}
-                    <div style={{ fontSize: 12, color: '#EEF0F6', lineHeight: 1.4, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-primary)', lineHeight: 1.4, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {e.title}
                     </div>
 
@@ -369,12 +369,12 @@ export default function EconomicCalendarPage() {
                           </span>
                         )}
                         {e.forecast && (
-                          <span title="Forecast" style={{ color: '#8E97AC' }}>
+                          <span title="Forecast" style={{ color: 'var(--text-tertiary)' }}>
                             F {e.forecast}
                           </span>
                         )}
                         {e.previous && (
-                          <span title="Previous" style={{ color: '#4A5368' }}>
+                          <span title="Previous" style={{ color: 'var(--text-muted)' }}>
                             P {e.previous}
                           </span>
                         )}
@@ -389,7 +389,7 @@ export default function EconomicCalendarPage() {
       })}
 
       {/* Legend / source */}
-      <div style={{ marginTop: 4, padding: '8px 12px', fontSize: 10, color: '#2E3A52', textAlign: 'center', fontFamily: '"JetBrains Mono", monospace' }}>
+      <div style={{ marginTop: 4, padding: '8px 12px', fontSize: 10, color: 'var(--text-faint)', textAlign: 'center', fontFamily: '"JetBrains Mono", monospace' }}>
         A = Actual · F = Forecast · P = Previous · Source: Forex Factory · Auto-refresh every 1h
       </div>
     </div>

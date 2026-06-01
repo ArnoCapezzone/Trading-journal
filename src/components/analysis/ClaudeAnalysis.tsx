@@ -250,8 +250,8 @@ export default function ClaudeAnalysis() {
       {/* Header card */}
       <div
         style={{
-          backgroundColor: '#0D1017',
-          border: '1px solid #252D3F',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-default)',
           borderRadius: 10,
           padding: '24px 28px',
           marginBottom: 20,
@@ -260,10 +260,10 @@ export default function ClaudeAnalysis() {
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 20 }}>
           <div style={{ fontSize: 36 }}>🤖</div>
           <div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#EEF0F6', marginBottom: 6 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 6 }}>
               Claude AI Analysis Export
             </div>
-            <div style={{ fontSize: 12, color: '#8E97AC', lineHeight: 1.7 }}>
+            <div style={{ fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.7 }}>
               Generates a structured text export of your entire trading journal — optimized to be pasted
               directly into <strong style={{ color: '#3D8EF0' }}>claude.ai</strong> for a deep behavioral
               and statistical analysis.
@@ -284,9 +284,9 @@ export default function ClaudeAnalysis() {
               key={label}
               style={{
                 fontSize: 11,
-                color: '#8E97AC',
-                backgroundColor: '#080B12',
-                border: '1px solid #252D3F',
+                color: 'var(--text-tertiary)',
+                backgroundColor: 'var(--bg-app)',
+                border: '1px solid var(--border-default)',
                 borderRadius: 4,
                 padding: '3px 10px',
               }}
@@ -303,10 +303,10 @@ export default function ClaudeAnalysis() {
             disabled={noTrades}
             style={{
               padding: '10px 22px',
-              backgroundColor: noTrades ? '#141823' : '#3D8EF0',
+              backgroundColor: noTrades ? 'var(--bg-surface-2)' : '#3D8EF0',
               border: 'none',
               borderRadius: 6,
-              color: noTrades ? '#8E97AC' : '#080B12',
+              color: noTrades ? 'var(--text-tertiary)' : 'var(--bg-app)',
               fontSize: 13,
               fontWeight: 700,
               cursor: noTrades ? 'not-allowed' : 'pointer',
@@ -324,10 +324,10 @@ export default function ClaudeAnalysis() {
                 onClick={handleCopy}
                 style={{
                   padding: '10px 18px',
-                  backgroundColor: copied ? 'rgba(0,209,122,0.15)' : '#141823',
-                  border: `1px solid ${copied ? '#00C47A' : '#252D3F'}`,
+                  backgroundColor: copied ? 'rgba(0,209,122,0.15)' : 'var(--bg-surface-2)',
+                  border: `1px solid ${copied ? '#00C47A' : 'var(--border-default)'}`,
                   borderRadius: 6,
-                  color: copied ? '#00C47A' : '#EEF0F6',
+                  color: copied ? '#00C47A' : 'var(--text-primary)',
                   fontSize: 12,
                   fontWeight: 600,
                   cursor: 'pointer',
@@ -339,10 +339,10 @@ export default function ClaudeAnalysis() {
                 onClick={handleDownload}
                 style={{
                   padding: '10px 18px',
-                  backgroundColor: '#141823',
-                  border: '1px solid #252D3F',
+                  backgroundColor: 'var(--bg-surface-2)',
+                  border: '1px solid var(--border-default)',
                   borderRadius: 6,
-                  color: '#EEF0F6',
+                  color: 'var(--text-primary)',
                   fontSize: 12,
                   cursor: 'pointer',
                 }}
@@ -364,8 +364,8 @@ export default function ClaudeAnalysis() {
       {!preview && (
         <div
           style={{
-            backgroundColor: '#0D1017',
-            border: '1px solid #252D3F',
+            backgroundColor: 'var(--bg-surface)',
+            border: '1px solid var(--border-default)',
             borderRadius: 10,
             padding: '20px 24px',
           }}
@@ -380,7 +380,7 @@ export default function ClaudeAnalysis() {
               'Paste the export and hit Send — Claude will analyze your patterns, errors, and opportunities',
               'For deeper analysis, add a personal question after the export (e.g. "Why do I perform better on Tuesdays?")',
             ].map((step, i) => (
-              <li key={i} style={{ fontSize: 12, color: '#8E97AC', lineHeight: 1.6 }}>
+              <li key={i} style={{ fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.6 }}>
                 {step}
               </li>
             ))}
@@ -392,8 +392,8 @@ export default function ClaudeAnalysis() {
       {preview && (
         <div
           style={{
-            backgroundColor: '#080B12',
-            border: '1px solid #252D3F',
+            backgroundColor: 'var(--bg-app)',
+            border: '1px solid var(--border-default)',
             borderRadius: 10,
             overflow: 'hidden',
           }}
@@ -404,11 +404,11 @@ export default function ClaudeAnalysis() {
               justifyContent: 'space-between',
               alignItems: 'center',
               padding: '12px 16px',
-              borderBottom: '1px solid #252D3F',
-              backgroundColor: '#0D1017',
+              borderBottom: '1px solid var(--border-default)',
+              backgroundColor: 'var(--bg-surface)',
             }}
           >
-            <span style={{ fontSize: 11, fontWeight: 600, color: '#8E97AC', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Export Preview — {preview.length.toLocaleString()} characters
             </span>
             <button
@@ -416,7 +416,7 @@ export default function ClaudeAnalysis() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#8E97AC',
+                color: 'var(--text-tertiary)',
                 fontSize: 16,
                 cursor: 'pointer',
                 lineHeight: 1,
@@ -431,7 +431,7 @@ export default function ClaudeAnalysis() {
               padding: '16px',
               fontSize: 11,
               fontFamily: '"JetBrains Mono", monospace',
-              color: '#c8cdd8',
+              color: 'var(--text-secondary)',
               lineHeight: 1.65,
               overflowX: 'auto',
               maxHeight: 480,

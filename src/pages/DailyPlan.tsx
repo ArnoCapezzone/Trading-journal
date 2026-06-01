@@ -19,7 +19,7 @@ function labelStyle(): React.CSSProperties {
   return {
     display: 'block',
     fontSize: 10,
-    color: '#8E97AC',
+    color: 'var(--text-tertiary)',
     fontWeight: 600,
     marginBottom: 5,
     textTransform: 'uppercase',
@@ -30,10 +30,10 @@ function inputStyle(): React.CSSProperties {
   return {
     width: '100%',
     padding: '8px 11px',
-    backgroundColor: '#080B12',
-    border: '1px solid #252D3F',
+    backgroundColor: 'var(--bg-app)',
+    border: '1px solid var(--border-default)',
     borderRadius: 5,
-    color: '#EEF0F6',
+    color: 'var(--text-primary)',
     fontSize: 13,
     fontFamily: 'inherit',
     outline: 'none',
@@ -43,7 +43,7 @@ function inputStyle(): React.CSSProperties {
 
 function Section({ title, accent, children, action }: { title: string; accent: string; children: React.ReactNode; action?: React.ReactNode }) {
   return (
-    <div style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderTop: `2px solid ${accent}`, borderRadius: 9, padding: '18px 22px 22px' }}>
+    <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderTop: `2px solid ${accent}`, borderRadius: 9, padding: '18px 22px 22px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ fontSize: 10, color: accent, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em' }}>
           {title}
@@ -103,9 +103,9 @@ function MoodChips({ value, onChange, options, color }: { value: string[]; onCha
             style={{
               padding: '4px 10px',
               borderRadius: 4,
-              border: `1px solid ${active ? color : '#252D3F'}`,
+              border: `1px solid ${active ? color : 'var(--border-default)'}`,
               backgroundColor: active ? color + '15' : 'transparent',
-              color: active ? color : '#8E97AC',
+              color: active ? color : 'var(--text-tertiary)',
               fontSize: 11,
               fontWeight: active ? 600 : 400,
               cursor: 'pointer',
@@ -123,7 +123,7 @@ function MoodChips({ value, onChange, options, color }: { value: string[]; onCha
 function BiasButtons({ value, onChange }: { value: Bias; onChange: (b: Bias) => void }) {
   const opts: { v: Bias; label: string; color: string }[] = [
     { v: 'LONG', label: '▲ Long', color: '#00C47A' },
-    { v: 'NEUTRAL', label: '— Neutral', color: '#8E97AC' },
+    { v: 'NEUTRAL', label: '— Neutral', color: 'var(--text-tertiary)' },
     { v: 'SHORT', label: '▼ Short', color: '#F04848' },
   ];
   return (
@@ -137,9 +137,9 @@ function BiasButtons({ value, onChange }: { value: Bias; onChange: (b: Bias) => 
             flex: 1,
             padding: '8px 12px',
             borderRadius: 5,
-            border: `1px solid ${value === o.v ? o.color : '#252D3F'}`,
+            border: `1px solid ${value === o.v ? o.color : 'var(--border-default)'}`,
             backgroundColor: value === o.v ? o.color + '15' : 'transparent',
-            color: value === o.v ? o.color : '#8E97AC',
+            color: value === o.v ? o.color : 'var(--text-tertiary)',
             fontSize: 12,
             fontWeight: 700,
             cursor: 'pointer',
@@ -213,7 +213,7 @@ export default function DailyPlanPage() {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', backgroundColor: 'rgba(0,196,122,0.10)', border: '1px solid rgba(0,196,122,0.3)', borderRadius: 4, fontSize: 10, color: '#00C47A', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 8 }}>
               {isToday ? 'TODAY\'S PLAN' : isPast ? 'PAST PLAN' : 'FUTURE PLAN'}
             </div>
-            <div style={{ fontSize: 12, color: '#8E97AC' }}>
+            <div style={{ fontSize: 12, color: 'var(--text-tertiary)' }}>
               Pre-market plan + end-of-day review · auto-saved
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function DailyPlanPage() {
               onChange={(e) => setSelectedDate(e.target.value)}
               style={{ ...inputStyle(), width: 150, fontFamily: '"JetBrains Mono", monospace' }}
             />
-            <div style={{ fontSize: 10, color: savedFlash ? '#00C47A' : '#4A5368', transition: 'color 0.3s', minWidth: 50, textAlign: 'right' }}>
+            <div style={{ fontSize: 10, color: savedFlash ? '#00C47A' : 'var(--text-muted)', transition: 'color 0.3s', minWidth: 50, textAlign: 'right' }}>
               {savedFlash ? '✓ saved' : ''}
             </div>
           </div>
@@ -259,7 +259,7 @@ export default function DailyPlanPage() {
                   onChange={(e) => update('maxRiskPct', parseFloat(e.target.value) || 0)}
                   style={{ ...inputStyle(), fontFamily: '"JetBrains Mono", monospace', paddingRight: 28 }}
                 />
-                <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 11, color: '#4A5368' }}>%</span>
+                <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', fontSize: 11, color: 'var(--text-muted)' }}>%</span>
               </div>
             </div>
           </div>
@@ -334,7 +334,7 @@ export default function DailyPlanPage() {
           }
         >
           {!plan.reviewed ? (
-            <div style={{ padding: '14px 16px', backgroundColor: '#080B12', borderRadius: 7, fontSize: 12, color: '#8E97AC', textAlign: 'center', lineHeight: 1.6 }}>
+            <div style={{ padding: '14px 16px', backgroundColor: 'var(--bg-app)', borderRadius: 7, fontSize: 12, color: 'var(--text-tertiary)', textAlign: 'center', lineHeight: 1.6 }}>
               Review not started. Click <strong style={{ color: '#8B6CF0' }}>Start review</strong> at end of session.
             </div>
           ) : (
@@ -355,9 +355,9 @@ export default function DailyPlanPage() {
                         flex: 1,
                         padding: '7px',
                         borderRadius: 5,
-                        border: `1px solid ${plan.followedPlan === o.v ? o.color : '#252D3F'}`,
+                        border: `1px solid ${plan.followedPlan === o.v ? o.color : 'var(--border-default)'}`,
                         backgroundColor: plan.followedPlan === o.v ? o.color + '15' : 'transparent',
-                        color: plan.followedPlan === o.v ? o.color : '#8E97AC',
+                        color: plan.followedPlan === o.v ? o.color : 'var(--text-tertiary)',
                         fontSize: 12,
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -426,9 +426,9 @@ export default function DailyPlanPage() {
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <button
             onClick={handleDelete}
-            style={{ padding: '6px 14px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#8E97AC', fontSize: 11, cursor: 'pointer' }}
+            style={{ padding: '6px 14px', backgroundColor: 'transparent', border: '1px solid var(--border-default)', borderRadius: 5, color: 'var(--text-tertiary)', fontSize: 11, cursor: 'pointer' }}
             onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#F04848', e.currentTarget.style.color = '#F04848')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#252D3F', e.currentTarget.style.color = '#8E97AC')}
+            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border-default)', e.currentTarget.style.color = 'var(--text-tertiary)')}
           >
             Delete this plan
           </button>
@@ -438,8 +438,8 @@ export default function DailyPlanPage() {
       {/* Right column: stats + history */}
       <div style={{ width: isMobile ? '100%' : 280, flexShrink: 0, position: isMobile ? 'static' : 'sticky', top: 80, display: 'flex', flexDirection: 'column', gap: 12 }}>
         {/* Stats card */}
-        <div style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 9, padding: '16px 18px' }}>
-          <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>
+        <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderRadius: 9, padding: '16px 18px' }}>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>
             Discipline
           </div>
 
@@ -455,8 +455,8 @@ export default function DailyPlanPage() {
 
         {/* History */}
         {history.length > 0 && (
-          <div style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderRadius: 9, padding: '14px 16px' }}>
-            <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 10 }}>
+          <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderRadius: 9, padding: '14px 16px' }}>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 10 }}>
               Recent Plans
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 3, maxHeight: 320, overflowY: 'auto' }}>
@@ -468,7 +468,7 @@ export default function DailyPlanPage() {
                     padding: '6px 8px',
                     borderRadius: 5,
                     backgroundColor: p.date === plan.date ? 'rgba(61,142,240,0.10)' : 'transparent',
-                    color: p.date === plan.date ? '#EEF0F6' : '#8E97AC',
+                    color: p.date === plan.date ? 'var(--text-primary)' : 'var(--text-tertiary)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -488,7 +488,7 @@ export default function DailyPlanPage() {
                   <span style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
                     {p.bias === 'LONG' && <span style={{ color: '#00C47A' }}>▲</span>}
                     {p.bias === 'SHORT' && <span style={{ color: '#F04848' }}>▼</span>}
-                    {p.bias === 'NEUTRAL' && <span style={{ color: '#8E97AC' }}>—</span>}
+                    {p.bias === 'NEUTRAL' && <span style={{ color: 'var(--text-tertiary)' }}>—</span>}
                     {p.reviewed && (
                       <span style={{ fontSize: 9, color: p.followedPlan === 'yes' ? '#00C47A' : p.followedPlan === 'partial' ? '#F0A030' : '#F04848' }}>
                         ✓
@@ -508,7 +508,7 @@ export default function DailyPlanPage() {
 function StatRow({ label, value, color }: { label: string; value: string; color: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      <div style={{ fontSize: 11, color: '#8E97AC' }}>{label}</div>
+      <div style={{ fontSize: 11, color: 'var(--text-tertiary)' }}>{label}</div>
       <div style={{ fontSize: 13, fontWeight: 700, color, fontFamily: '"JetBrains Mono", monospace' }}>{value}</div>
     </div>
   );

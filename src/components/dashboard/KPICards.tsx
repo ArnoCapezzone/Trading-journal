@@ -20,7 +20,7 @@ function fmtDuration(minutes: number): string {
 }
 
 function pnlColor(val: number | null): string {
-  if (val === null || val === 0) return '#EEF0F6';
+  if (val === null || val === 0) return 'var(--text-primary)';
   return val > 0 ? '#00C47A' : '#F04848';
 }
 
@@ -33,13 +33,13 @@ interface KPICardProps {
   trend?: 'up' | 'down' | 'neutral';
 }
 
-function KPICard({ title, value, subValue, valueColor = '#EEF0F6', accentColor }: KPICardProps) {
+function KPICard({ title, value, subValue, valueColor = 'var(--text-primary)', accentColor }: KPICardProps) {
   return (
     <div
       style={{
-        backgroundColor: '#0D1017',
-        border: '1px solid #1E2839',
-        borderTop: accentColor ? `2px solid ${accentColor}` : '2px solid #252D3F',
+        backgroundColor: 'var(--bg-surface)',
+        border: '1px solid var(--border-mid)',
+        borderTop: accentColor ? `2px solid ${accentColor}` : '2px solid var(--border-default)',
         borderRadius: 8,
         padding: '14px 16px 12px',
         display: 'flex',
@@ -51,7 +51,7 @@ function KPICard({ title, value, subValue, valueColor = '#EEF0F6', accentColor }
       <div
         style={{
           fontSize: 10,
-          color: '#4A5368',
+          color: 'var(--text-muted)',
           fontWeight: 600,
           textTransform: 'uppercase',
           letterSpacing: '0.10em',
@@ -76,7 +76,7 @@ function KPICard({ title, value, subValue, valueColor = '#EEF0F6', accentColor }
         <div
           style={{
             fontSize: 10,
-            color: valueColor === '#EEF0F6' ? '#4A5368' : valueColor,
+            color: valueColor === 'var(--text-primary)' ? 'var(--text-muted)' : valueColor,
             fontFamily: '"JetBrains Mono", monospace',
             opacity: 0.8,
             marginTop: 1,
@@ -127,7 +127,7 @@ export default function KPICards({ kpis, currency = 'USD' }: Props) {
       <KPICard
         title="Profit Factor"
         value={fmt(kpis.profitFactor, 2)}
-        valueColor={kpis.profitFactor !== null ? (kpis.profitFactor >= 1.5 ? '#00C47A' : kpis.profitFactor >= 1 ? '#F0A030' : '#F04848') : '#EEF0F6'}
+        valueColor={kpis.profitFactor !== null ? (kpis.profitFactor >= 1.5 ? '#00C47A' : kpis.profitFactor >= 1 ? '#F0A030' : '#F04848') : 'var(--text-primary)'}
         accentColor={kpis.profitFactor !== null ? (kpis.profitFactor >= 1 ? '#00C47A' : '#F04848') : undefined}
       />
       <KPICard
@@ -139,7 +139,7 @@ export default function KPICards({ kpis, currency = 'USD' }: Props) {
         title="Max Drawdown"
         value={kpis.totalTrades > 0 ? fmt(kpis.maxDrawdown, 2, c) : '—'}
         subValue={kpis.maxDrawdownPercent !== null ? `${kpis.maxDrawdownPercent.toFixed(2)}%` : undefined}
-        valueColor={kpis.maxDrawdown > 0 ? '#F04848' : '#EEF0F6'}
+        valueColor={kpis.maxDrawdown > 0 ? '#F04848' : 'var(--text-primary)'}
         accentColor={kpis.maxDrawdown > 0 ? '#F04848' : undefined}
       />
       <KPICard
@@ -157,7 +157,7 @@ export default function KPICards({ kpis, currency = 'USD' }: Props) {
       <KPICard
         title="Avg R:R"
         value={fmt(kpis.avgRR, 2)}
-        valueColor={kpis.avgRR !== null ? (kpis.avgRR >= 1.5 ? '#00C47A' : kpis.avgRR >= 1 ? '#F0A030' : '#EEF0F6') : '#EEF0F6'}
+        valueColor={kpis.avgRR !== null ? (kpis.avgRR >= 1.5 ? '#00C47A' : kpis.avgRR >= 1 ? '#F0A030' : 'var(--text-primary)') : 'var(--text-primary)'}
       />
       <KPICard
         title="Avg Duration"

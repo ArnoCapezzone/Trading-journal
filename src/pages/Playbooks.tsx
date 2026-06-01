@@ -16,10 +16,10 @@ function inputStyle(): React.CSSProperties {
   return {
     width: '100%',
     padding: '8px 11px',
-    backgroundColor: '#080B12',
-    border: '1px solid #252D3F',
+    backgroundColor: 'var(--bg-app)',
+    border: '1px solid var(--border-default)',
     borderRadius: 5,
-    color: '#EEF0F6',
+    color: 'var(--text-primary)',
     fontSize: 13,
     fontFamily: 'inherit',
     outline: 'none',
@@ -31,7 +31,7 @@ function labelStyle(): React.CSSProperties {
   return {
     display: 'block',
     fontSize: 10,
-    color: '#8E97AC',
+    color: 'var(--text-tertiary)',
     fontWeight: 600,
     marginBottom: 5,
     textTransform: 'uppercase',
@@ -80,10 +80,10 @@ function ListItem({
     >
       <div style={{ width: 10, height: 10, borderRadius: 3, backgroundColor: playbook.color, flexShrink: 0 }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: 12, fontWeight: 500, color: active ? '#EEF0F6' : '#C8CDD8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div style={{ fontSize: 12, fontWeight: 500, color: active ? 'var(--text-primary)' : 'var(--text-secondary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {playbook.name}
         </div>
-        <div style={{ fontSize: 10, color: '#4A5368', fontFamily: '"JetBrains Mono", monospace', marginTop: 2 }}>
+        <div style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: '"JetBrains Mono", monospace', marginTop: 2 }}>
           {count} trade{count !== 1 ? 's' : ''} · {pnl >= 0 ? '+' : ''}{pnl.toFixed(0)} {c}
         </div>
       </div>
@@ -135,11 +135,11 @@ function StringListEditor({
                 alignItems: 'center',
                 gap: 8,
                 padding: '6px 10px',
-                backgroundColor: '#080B12',
-                border: '1px solid #181E2C',
+                backgroundColor: 'var(--bg-app)',
+                border: '1px solid var(--border-faint)',
                 borderRadius: 5,
                 fontSize: 12,
-                color: '#EEF0F6',
+                color: 'var(--text-primary)',
               }}
             >
               <span style={{
@@ -157,21 +157,21 @@ function StringListEditor({
               <button
                 onClick={() => move(idx, -1)}
                 disabled={idx === 0}
-                style={{ background: 'none', border: 'none', color: '#4A5368', cursor: idx === 0 ? 'not-allowed' : 'pointer', padding: 2, opacity: idx === 0 ? 0.3 : 1 }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: idx === 0 ? 'not-allowed' : 'pointer', padding: 2, opacity: idx === 0 ? 0.3 : 1 }}
                 title="Move up"
               >↑</button>
               <button
                 onClick={() => move(idx, 1)}
                 disabled={idx === items.length - 1}
-                style={{ background: 'none', border: 'none', color: '#4A5368', cursor: idx === items.length - 1 ? 'not-allowed' : 'pointer', padding: 2, opacity: idx === items.length - 1 ? 0.3 : 1 }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: idx === items.length - 1 ? 'not-allowed' : 'pointer', padding: 2, opacity: idx === items.length - 1 ? 0.3 : 1 }}
                 title="Move down"
               >↓</button>
               <button
                 onClick={() => remove(idx)}
-                style={{ background: 'none', border: 'none', color: '#4A5368', cursor: 'pointer', padding: 2 }}
+                style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 2 }}
                 title="Remove"
                 onMouseEnter={(e) => (e.currentTarget.style.color = '#F04848')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#4A5368')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
               >✕</button>
             </div>
           ))}
@@ -191,10 +191,10 @@ function StringListEditor({
           disabled={!adding.trim()}
           style={{
             padding: '6px 14px',
-            backgroundColor: adding.trim() ? accent : '#19202F',
+            backgroundColor: adding.trim() ? accent : 'var(--bg-surface-3)',
             border: 'none',
             borderRadius: 5,
-            color: adding.trim() ? '#fff' : '#4A5368',
+            color: adding.trim() ? '#fff' : 'var(--text-muted)',
             fontSize: 12,
             fontWeight: 600,
             cursor: adding.trim() ? 'pointer' : 'not-allowed',
@@ -211,11 +211,11 @@ function StringListEditor({
 // ── Stats panel ──────────────────────────────────────────────────
 function StatPill({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
-    <div style={{ padding: '8px 12px', backgroundColor: '#080B12', borderRadius: 6, border: '1px solid #181E2C', minWidth: 100 }}>
-      <div style={{ fontSize: 9, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
+    <div style={{ padding: '8px 12px', backgroundColor: 'var(--bg-app)', borderRadius: 6, border: '1px solid var(--border-faint)', minWidth: 100 }}>
+      <div style={{ fontSize: 9, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>
         {label}
       </div>
-      <div style={{ fontSize: 14, fontWeight: 700, color: color ?? '#EEF0F6', fontFamily: '"JetBrains Mono", monospace', lineHeight: 1 }}>
+      <div style={{ fontSize: 14, fontWeight: 700, color: color ?? 'var(--text-primary)', fontFamily: '"JetBrains Mono", monospace', lineHeight: 1 }}>
         {value}
       </div>
     </div>
@@ -278,10 +278,10 @@ export default function Playbooks() {
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 10px', backgroundColor: 'rgba(0,196,122,0.10)', border: '1px solid rgba(0,196,122,0.3)', borderRadius: 4, fontSize: 10, color: '#00C47A', fontWeight: 600, letterSpacing: '0.05em', marginBottom: 16 }}>
           STRATEGY PLAYBOOKS
         </div>
-        <div style={{ fontSize: 14, color: '#EEF0F6', marginBottom: 8, fontWeight: 600 }}>
+        <div style={{ fontSize: 14, color: 'var(--text-primary)', marginBottom: 8, fontWeight: 600 }}>
           Build your edge as a system, not gut feel
         </div>
-        <div style={{ fontSize: 13, color: '#8E97AC', lineHeight: 1.65, marginBottom: 24 }}>
+        <div style={{ fontSize: 13, color: 'var(--text-tertiary)', lineHeight: 1.65, marginBottom: 24 }}>
           A playbook is a documented strategy with entry rules, exit rules, and a pre-trade checklist.
           Assign trades to playbooks and measure each one's real performance — not what you think it does,
           what the data says.
@@ -312,15 +312,15 @@ export default function Playbooks() {
   const playbookStat = active ? stats[active.id] : null;
 
   return (
-    <div style={{ display: 'flex', height: 'calc(100vh - 52px)', backgroundColor: '#080B12' }}>
+    <div style={{ display: 'flex', height: 'calc(100vh - 52px)', backgroundColor: 'var(--bg-app)' }}>
       {/* Sidebar list (hidden on mobile) */}
       {!isMobile && (
       <aside
         style={{
           width: 260,
           flexShrink: 0,
-          backgroundColor: '#0A0D14',
-          borderRight: '1px solid #181E2C',
+          backgroundColor: 'var(--bg-sidebar-alt)',
+          borderRight: '1px solid var(--border-faint)',
           display: 'flex',
           flexDirection: 'column',
         }}
@@ -349,7 +349,7 @@ export default function Playbooks() {
           </button>
         </div>
 
-        <div style={{ padding: '4px 14px 8px', fontSize: 9, fontWeight: 600, color: '#2E3A52', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+        <div style={{ padding: '4px 14px 8px', fontSize: 9, fontWeight: 600, color: 'var(--text-faint)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
           {playbooks.length} playbook{playbooks.length !== 1 ? 's' : ''}
         </div>
 
@@ -374,11 +374,11 @@ export default function Playbooks() {
         <main style={{ flex: 1, overflowY: 'auto', minWidth: 0 }}>
           {/* Mobile-only: playbook switcher + new button */}
           {isMobile && (
-            <div style={{ display: 'flex', gap: 6, padding: '10px 14px', borderBottom: '1px solid #181E2C', backgroundColor: '#0A0D14' }}>
+            <div style={{ display: 'flex', gap: 6, padding: '10px 14px', borderBottom: '1px solid var(--border-faint)', backgroundColor: 'var(--bg-sidebar-alt)' }}>
               <select
                 value={activeId ?? ''}
                 onChange={(e) => setActiveId(e.target.value)}
-                style={{ flex: 1, padding: '7px 10px', backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 5, color: '#EEF0F6', fontSize: 12, fontFamily: 'inherit', outline: 'none' }}
+                style={{ flex: 1, padding: '7px 10px', backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 5, color: 'var(--text-primary)', fontSize: 12, fontFamily: 'inherit', outline: 'none' }}
               >
                 {playbooks.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
               </select>
@@ -400,7 +400,7 @@ export default function Playbooks() {
                   flex: 1,
                   background: 'transparent',
                   border: 'none',
-                  color: '#EEF0F6',
+                  color: 'var(--text-primary)',
                   fontSize: 22,
                   fontWeight: 700,
                   letterSpacing: '-0.01em',
@@ -409,14 +409,14 @@ export default function Playbooks() {
                 }}
                 placeholder="Untitled playbook"
               />
-              <div style={{ fontSize: 10, color: savedFlash ? '#00C47A' : '#4A5368', transition: 'color 0.3s', minWidth: 50, textAlign: 'right' }}>
+              <div style={{ fontSize: 10, color: savedFlash ? '#00C47A' : 'var(--text-muted)', transition: 'color 0.3s', minWidth: 50, textAlign: 'right' }}>
                 {savedFlash ? '✓ saved' : ''}
               </div>
               <button
                 onClick={handleDelete}
-                style={{ padding: '6px 12px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 5, color: '#8E97AC', fontSize: 11, cursor: 'pointer' }}
+                style={{ padding: '6px 12px', backgroundColor: 'transparent', border: '1px solid var(--border-default)', borderRadius: 5, color: 'var(--text-tertiary)', fontSize: 11, cursor: 'pointer' }}
                 onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#F04848', e.currentTarget.style.color = '#F04848')}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#252D3F', e.currentTarget.style.color = '#8E97AC')}
+                onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border-default)', e.currentTarget.style.color = 'var(--text-tertiary)')}
               >
                 Delete
               </button>
@@ -424,7 +424,7 @@ export default function Playbooks() {
 
             {/* Color picker */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, marginBottom: 24 }}>
-              <span style={{ fontSize: 10, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Color:</span>
+              <span style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Color:</span>
               {PLAYBOOK_COLORS.map((color) => (
                 <button
                   key={color}
@@ -457,7 +457,7 @@ export default function Playbooks() {
 
             {/* Stats card */}
             {playbookStat && playbookStat.count > 0 && (
-              <div style={{ backgroundColor: '#0D1017', border: '1px solid #1E2839', borderTop: `2px solid ${active.color}`, borderRadius: 9, padding: '14px 16px', marginBottom: 22 }}>
+              <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-mid)', borderTop: `2px solid ${active.color}`, borderRadius: 9, padding: '14px 16px', marginBottom: 22 }}>
                 <div style={{ fontSize: 10, color: active.color, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 12 }}>
                   Live Performance
                 </div>
@@ -473,7 +473,7 @@ export default function Playbooks() {
             )}
 
             {playbookStat && playbookStat.count === 0 && (
-              <div style={{ padding: '12px 16px', backgroundColor: '#0D1017', border: '1px dashed #252D3F', borderRadius: 8, fontSize: 12, color: '#8E97AC', marginBottom: 22, textAlign: 'center' }}>
+              <div style={{ padding: '12px 16px', backgroundColor: 'var(--bg-surface)', border: '1px dashed var(--border-default)', borderRadius: 8, fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 22, textAlign: 'center' }}>
                 No trades assigned yet. Assign this playbook from the trade form to track performance.
               </div>
             )}
@@ -503,7 +503,7 @@ export default function Playbooks() {
             {/* Pre-trade checklist */}
             <div style={{ marginBottom: 24 }}>
               <label style={labelStyle()}>Pre-Trade Checklist</label>
-              <div style={{ fontSize: 11, color: '#4A5368', marginBottom: 8 }}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8 }}>
                 Items to verify BEFORE entering. Use as a discipline gate.
               </div>
               <StringListEditor

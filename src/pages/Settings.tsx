@@ -5,13 +5,14 @@ import { useAuthStore } from '../store/authStore';
 import { exportToJSON, importFromJSON } from '../utils/exportUtils';
 import { supabase } from '../lib/supabase';
 import { downloadBackup, restoreLocalData, getLocalDataSummary } from '../lib/localBackup';
+import { useThemeStore, type ThemePreference } from '../store/themeStore';
 
 const INSTRUMENTS = ['EURUSD', 'GBPUSD', 'NZDUSD', 'AUDUSD', 'USDCAD', 'USDCHF', 'USDJPY', 'GBPJPY', 'EURJPY', 'NAS100', 'US500', 'XAUUSD'];
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ backgroundColor: '#0D1017', border: '1px solid #252D3F', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-      <div style={{ fontSize: 12, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16, paddingBottom: 10, borderBottom: '1px solid #252D3F' }}>
+    <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border-default)', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
+      <div style={{ fontSize: 12, fontWeight: 700, color: '#3D8EF0', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16, paddingBottom: 10, borderBottom: '1px solid var(--border-default)' }}>
         {title}
       </div>
       {children}
@@ -23,8 +24,8 @@ function Row({ label, sublabel, children }: { label: string; sublabel?: string; 
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 18, gap: 24 }}>
       <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 500, color: '#EEF0F6' }}>{label}</div>
-        {sublabel && <div style={{ fontSize: 11, color: '#8E97AC', marginTop: 3, lineHeight: 1.4 }}>{sublabel}</div>}
+        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>{label}</div>
+        {sublabel && <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginTop: 3, lineHeight: 1.4 }}>{sublabel}</div>}
       </div>
       <div style={{ flexShrink: 0 }}>{children}</div>
     </div>
@@ -42,6 +43,7 @@ export default function Settings() {
 
   const { trades, loadTrades } = useTradesStore();
   const { user, signOut } = useAuthStore();
+  const { preference: themePref, resolved: themeResolved, setPreference: setThemePref } = useThemeStore();
 
   const [localBalance, setLocalBalance] = useState(String(accountBalance));
   const [resetInput, setResetInput] = useState('');
@@ -119,10 +121,10 @@ export default function Settings() {
 
   const inputStyle: React.CSSProperties = {
     padding: '7px 10px',
-    backgroundColor: '#080B12',
-    border: '1px solid #252D3F',
+    backgroundColor: 'var(--bg-app)',
+    border: '1px solid var(--border-default)',
     borderRadius: 5,
-    color: '#EEF0F6',
+    color: 'var(--text-primary)',
     fontSize: 13,
     fontFamily: '"JetBrains Mono", monospace',
     outline: 'none',
@@ -138,9 +140,9 @@ export default function Settings() {
             style={{
               padding: '6px 14px',
               borderRadius: 5,
-              border: `1px solid ${value === o.v ? '#3D8EF0' : '#252D3F'}`,
+              border: `1px solid ${value === o.v ? '#3D8EF0' : 'var(--border-default)'}`,
               backgroundColor: value === o.v ? 'rgba(77,158,255,0.15)' : 'transparent',
-              color: value === o.v ? '#3D8EF0' : '#8E97AC',
+              color: value === o.v ? '#3D8EF0' : 'var(--text-tertiary)',
               fontSize: 12,
               fontWeight: value === o.v ? 600 : 400,
               cursor: 'pointer',
@@ -159,7 +161,7 @@ export default function Settings() {
       <Section title="Account">
         <Row label="Signed in as" sublabel="Your trades are synced to this account">
           <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-            <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: '#EEF0F6' }}>
+            <span style={{ fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: 'var(--text-primary)' }}>
               {user?.email}
             </span>
             <button
@@ -167,15 +169,52 @@ export default function Settings() {
               style={{
                 padding: '6px 14px',
                 backgroundColor: 'transparent',
-                border: '1px solid #252D3F',
+                border: '1px solid var(--border-default)',
                 borderRadius: 5,
-                color: '#8E97AC',
+                color: 'var(--text-tertiary)',
                 fontSize: 12,
                 cursor: 'pointer',
               }}
             >
               Sign Out
             </button>
+          </div>
+        </Row>
+      </Section>
+
+      {/* Appearance */}
+      <Section title="Appearance">
+        <Row
+          label="Theme"
+          sublabel={`Currently ${themeResolved === 'dark' ? 'dark' : 'light'} mode${themePref === 'system' ? ' (auto from system)' : ''}`}
+        >
+          <div style={{ display: 'flex', gap: 4, backgroundColor: 'var(--bg-app)', border: '1px solid var(--border-default)', borderRadius: 7, padding: 3 }}>
+            {([
+              { v: 'system', label: 'Auto' },
+              { v: 'light', label: 'Light' },
+              { v: 'dark', label: 'Dark' },
+            ] as { v: ThemePreference; label: string }[]).map((opt) => {
+              const active = themePref === opt.v;
+              return (
+                <button
+                  key={opt.v}
+                  onClick={() => setThemePref(opt.v)}
+                  style={{
+                    padding: '5px 14px',
+                    borderRadius: 5,
+                    border: 'none',
+                    backgroundColor: active ? 'var(--bg-surface-3)' : 'transparent',
+                    color: active ? 'var(--text-primary)' : 'var(--text-muted)',
+                    fontSize: 11,
+                    fontWeight: active ? 600 : 400,
+                    cursor: 'pointer',
+                    transition: 'all 0.12s',
+                  }}
+                >
+                  {opt.label}
+                </button>
+              );
+            })}
           </div>
         </Row>
       </Section>
@@ -217,7 +256,7 @@ export default function Settings() {
 
       {/* Instruments */}
       <Section title="Favorite Instruments">
-        <div style={{ fontSize: 12, color: '#8E97AC', marginBottom: 14 }}>
+        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', marginBottom: 14 }}>
           Quick-access instruments shown first in dropdowns
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -230,9 +269,9 @@ export default function Settings() {
                 style={{
                   padding: '5px 12px',
                   borderRadius: 4,
-                  border: `1px solid ${active ? '#3D8EF0' : '#252D3F'}`,
+                  border: `1px solid ${active ? '#3D8EF0' : 'var(--border-default)'}`,
                   backgroundColor: active ? 'rgba(77,158,255,0.12)' : 'transparent',
-                  color: active ? '#3D8EF0' : '#8E97AC',
+                  color: active ? '#3D8EF0' : 'var(--text-tertiary)',
                   fontSize: 11,
                   fontFamily: '"JetBrains Mono", monospace',
                   cursor: 'pointer',
@@ -254,10 +293,10 @@ export default function Settings() {
             disabled={trades.length === 0}
             style={{
               padding: '7px 16px',
-              backgroundColor: '#141823',
-              border: '1px solid #252D3F',
+              backgroundColor: 'var(--bg-surface-2)',
+              border: '1px solid var(--border-default)',
               borderRadius: 5,
-              color: trades.length > 0 ? '#EEF0F6' : '#8E97AC',
+              color: trades.length > 0 ? 'var(--text-primary)' : 'var(--text-tertiary)',
               fontSize: 12,
               cursor: trades.length > 0 ? 'pointer' : 'not-allowed',
             }}
@@ -272,10 +311,10 @@ export default function Settings() {
               onClick={() => fileRef.current?.click()}
               style={{
                 padding: '7px 16px',
-                backgroundColor: '#141823',
-                border: '1px solid #252D3F',
+                backgroundColor: 'var(--bg-surface-2)',
+                border: '1px solid var(--border-default)',
                 borderRadius: 5,
-                color: '#EEF0F6',
+                color: 'var(--text-primary)',
                 fontSize: 12,
                 cursor: 'pointer',
               }}
@@ -323,13 +362,13 @@ export default function Settings() {
                   style={{
                     ...inputStyle,
                     width: 120,
-                    borderColor: resetInput === 'RESET' ? '#F04848' : '#252D3F',
+                    borderColor: resetInput === 'RESET' ? '#F04848' : 'var(--border-default)',
                   }}
                 />
                 <div style={{ display: 'flex', gap: 6 }}>
                   <button
                     onClick={() => { setShowResetConfirm(false); setResetInput(''); }}
-                    style={{ padding: '5px 12px', backgroundColor: 'transparent', border: '1px solid #252D3F', borderRadius: 4, color: '#8E97AC', fontSize: 11, cursor: 'pointer' }}
+                    style={{ padding: '5px 12px', backgroundColor: 'transparent', border: '1px solid var(--border-default)', borderRadius: 4, color: 'var(--text-tertiary)', fontSize: 11, cursor: 'pointer' }}
                   >
                     Cancel
                   </button>
@@ -338,10 +377,10 @@ export default function Settings() {
                     disabled={resetInput !== 'RESET'}
                     style={{
                       padding: '5px 12px',
-                      backgroundColor: resetInput === 'RESET' ? '#F04848' : '#141823',
+                      backgroundColor: resetInput === 'RESET' ? '#F04848' : 'var(--bg-surface-2)',
                       border: 'none',
                       borderRadius: 4,
-                      color: resetInput === 'RESET' ? '#080B12' : '#8E97AC',
+                      color: resetInput === 'RESET' ? 'var(--bg-app)' : 'var(--text-tertiary)',
                       fontSize: 11,
                       fontWeight: 700,
                       cursor: resetInput === 'RESET' ? 'pointer' : 'not-allowed',
@@ -368,10 +407,10 @@ export default function Settings() {
               disabled={localSummary.length === 0}
               style={{
                 padding: '7px 16px',
-                backgroundColor: '#141823',
-                border: '1px solid #252D3F',
+                backgroundColor: 'var(--bg-surface-2)',
+                border: '1px solid var(--border-default)',
                 borderRadius: 5,
-                color: localSummary.length > 0 ? '#EEF0F6' : '#8E97AC',
+                color: localSummary.length > 0 ? 'var(--text-primary)' : 'var(--text-tertiary)',
                 fontSize: 12,
                 cursor: localSummary.length > 0 ? 'pointer' : 'not-allowed',
               }}
@@ -383,9 +422,9 @@ export default function Settings() {
               style={{
                 padding: '7px 16px',
                 backgroundColor: 'transparent',
-                border: '1px solid #252D3F',
+                border: '1px solid var(--border-default)',
                 borderRadius: 5,
-                color: '#EEF0F6',
+                color: 'var(--text-primary)',
                 fontSize: 12,
                 cursor: 'pointer',
               }}
@@ -402,15 +441,15 @@ export default function Settings() {
         </Row>
 
         {localSummary.length > 0 && (
-          <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: '#080B12', border: '1px solid #181E2C', borderRadius: 6 }}>
-            <div style={{ fontSize: 10, color: '#4A5368', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+          <div style={{ marginTop: 10, padding: '10px 12px', backgroundColor: 'var(--bg-app)', border: '1px solid var(--border-faint)', borderRadius: 6 }}>
+            <div style={{ fontSize: 10, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
               Currently stored locally
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               {localSummary.map((item) => (
                 <div key={item.key} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, fontFamily: '"JetBrains Mono", monospace' }}>
-                  <span style={{ color: '#8E97AC' }}>{item.label}</span>
-                  <span style={{ color: '#C8CDD8' }}>
+                  <span style={{ color: 'var(--text-tertiary)' }}>{item.label}</span>
+                  <span style={{ color: 'var(--text-secondary)' }}>
                     {item.count} item{item.count !== 1 ? 's' : ''} · {(item.size / 1024).toFixed(2)} KB
                   </span>
                 </div>
@@ -422,8 +461,8 @@ export default function Settings() {
 
       {/* About */}
       <Section title="About">
-        <div style={{ fontSize: 12, color: '#8E97AC', lineHeight: 1.8 }}>
-          <div><strong style={{ color: '#EEF0F6' }}>Trading Journal</strong> v1.0.0</div>
+        <div style={{ fontSize: 12, color: 'var(--text-tertiary)', lineHeight: 1.8 }}>
+          <div><strong style={{ color: 'var(--text-primary)' }}>Trading Journal</strong> v1.0.0</div>
           <div>Local-first trading performance tracker. All data stored in your browser (IndexedDB).</div>
           <div style={{ marginTop: 8, fontFamily: '"JetBrains Mono", monospace', fontSize: 11 }}>
             Stack: React 18 + TypeScript + Dexie + Zustand + Chart.js

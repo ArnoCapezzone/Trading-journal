@@ -1,6 +1,7 @@
 import { useLocation, Link } from 'react-router-dom';
 import { useTradesStore } from '../../store/tradesStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import AccountSelector from './AccountSelector';
 
 interface TopBarProps {
   onMenuClick?: () => void;
@@ -17,6 +18,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/daily-plan': 'Daily Plan',
   '/calendar': 'Economic Calendar',
   '/playbooks': 'Strategy Playbooks',
+  '/accounts': 'Accounts',
   '/settings': 'Settings',
 };
 
@@ -126,6 +128,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <AccountSelector />
         <Link
           to="/journal/new"
           style={{

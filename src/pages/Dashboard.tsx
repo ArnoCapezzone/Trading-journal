@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTradesStore } from '../store/tradesStore';
 import { useSettingsStore } from '../store/settingsStore';
+import { useAccountsStore, filterTradesByAccount } from '../lib/accountsStore';
+import { useActiveAccount } from '../hooks/useAccountTrades';
 import {
   calculateDashboardKPIs,
   calculateEquityCurve,
@@ -31,14 +33,26 @@ const PERIODS: { value: Period; label: string }[] = [
 ];
 
 export default function Dashboard() {
-  const { selectedPeriod, setSelectedPeriod, getPeriodTrades, trades } = useTradesStore();
-  const { accountBalance, currency } = useSettingsStore();
+  const { selectedPeriod, setSelectedPeriod, getPeriodTrades, trades: allTrades } = useTradesStore();
+  const { accountBalance: settingsBalance, currency: settingsCurrency } = useSettingsStore();
+  const activeId = useAccountsStore((s) => s.activeId);
+  const tradeMap = useAccountsStore((s) => s.tradeMap);
+  const activeAccount = useActiveAccount();
+
+  // Active account overrides settings balance/currency when one is selected
+  const accountBalance = activeAccount?.initialBalance ?? settingsBalance;
+  const currency = activeAccount?.currency ?? settingsCurrency;
   const c = currency === 'EUR' ? '€' : '$';
 
   const [calYear, setCalYear] = useState(new Date().getFullYear());
   const [calMonth, setCalMonth] = useState(new Date().getMonth());
 
-  const periodTrades = getPeriodTrades();
+  // Apply account filter on top of period filter
+  const trades = useMemo(() => filterTradesByAccount(allTrades, activeId, tradeMap), [allTrades, activeId, tradeMap]);
+  const periodTrades = useMemo(
+    () => filterTradesByAccount(getPeriodTrades(), activeId, tradeMap),
+    [getPeriodTrades, activeId, tradeMap, allTrades, selectedPeriod]
+  );
   const pendingCount = trades.filter((t) => t.status === 'PENDING_REVIEW').length;
 
   const kpis = useMemo(

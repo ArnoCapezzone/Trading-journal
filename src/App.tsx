@@ -15,10 +15,12 @@ import PropFirm from './pages/PropFirm';
 import DailyPlanPage from './pages/DailyPlan';
 import Playbooks from './pages/Playbooks';
 import EconomicCalendarPage from './pages/EconomicCalendar';
+import AccountsPage from './pages/Accounts';
 import { useTradesStore } from './store/tradesStore';
 import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
+import { useAccountsStore } from './lib/accountsStore';
 
 function AppLayout() {
   const isMobile = useIsMobile();
@@ -54,11 +56,19 @@ function AppLayout() {
 function AppInitializer() {
   const loadTrades = useTradesStore((s) => s.loadTrades);
   const loadSettings = useSettingsStore((s) => s.loadSettings);
+  const trades = useTradesStore((s) => s.trades);
+  const initAccounts = useAccountsStore((s) => s.initialize);
+  const accountsInited = useAccountsStore((s) => s.initialized);
 
   useEffect(() => {
     loadSettings();
     loadTrades();
   }, []);
+
+  // Initialize accounts after trades load (so first-run can assign existing trades)
+  useEffect(() => {
+    if (!accountsInited) initAccounts(trades);
+  }, [trades, accountsInited, initAccounts]);
 
   return null;
 }
@@ -115,6 +125,7 @@ export default function App() {
           <Route path="/daily-plan" element={<DailyPlanPage />} />
           <Route path="/playbooks" element={<Playbooks />} />
           <Route path="/calendar" element={<EconomicCalendarPage />} />
+          <Route path="/accounts" element={<AccountsPage />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

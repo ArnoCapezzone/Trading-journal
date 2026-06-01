@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { useTradesStore } from '../store/tradesStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { streamChat, buildSystemPrompt, type Message } from '../lib/mentorClient';
 import {
@@ -12,6 +11,7 @@ import {
 } from '../lib/conversationStore';
 import MessageBubble from '../components/mentor/MessageBubble';
 import { useIsMobile } from '../hooks/useMediaQuery';
+import { useAccountTrades, useActiveAccount } from '../hooks/useAccountTrades';
 
 const SUGGESTED_FR = [
   'Quels sont mes principaux défauts comportementaux ?',
@@ -36,8 +36,11 @@ function detectLang(): 'fr' | 'en' {
 }
 
 export default function Mentor() {
-  const { trades } = useTradesStore();
-  const { accountBalance, currency } = useSettingsStore();
+  const trades = useAccountTrades();
+  const activeAccount = useActiveAccount();
+  const { accountBalance: settingsBalance, currency: settingsCurrency } = useSettingsStore();
+  const accountBalance = activeAccount?.initialBalance ?? settingsBalance;
+  const currency = activeAccount?.currency ?? settingsCurrency;
   const isMobile = useIsMobile();
 
   const [conversations, setConversations] = useState<Conversation[]>([]);

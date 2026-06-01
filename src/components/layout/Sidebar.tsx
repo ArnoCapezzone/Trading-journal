@@ -34,6 +34,19 @@ const NAV_ITEMS = [
     ),
   },
   {
+    to: '/accounts',
+    end: false,
+    label: 'Accounts',
+    icon: (
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3.5" width="12" height="9" rx="1.2" />
+        <line x1="2" y1="6" x2="14" y2="6" />
+        <line x1="4.5" y1="9" x2="9" y2="9" />
+        <circle cx="11.5" cy="9.5" r="0.7" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
     to: '/playbooks',
     end: false,
     label: 'Playbooks',

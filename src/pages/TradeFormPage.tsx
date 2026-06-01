@@ -3,6 +3,7 @@ import { useTradesStore } from '../store/tradesStore';
 import TradeForm from '../components/journal/TradeForm';
 import type { Trade } from '../types/trade';
 import { assignPlaybook } from '../lib/playbooksStore';
+import { useAccountsStore } from '../lib/accountsStore';
 
 export default function TradeFormPage() {
   const { id } = useParams<{ id?: string }>();
@@ -21,11 +22,14 @@ export default function TradeFormPage() {
       await updateTrade(editTrade.id, data);
     } else {
       const newTrade = await addTrade(data);
-      // Apply pending playbook (set by TradeForm.handleSubmit when creating)
-      const pending = sessionStorage.getItem('tj_pending_playbook');
+      // Apply pending playbook + account (set by TradeForm.handleSubmit when creating)
+      const pendingPB = sessionStorage.getItem('tj_pending_playbook');
+      const pendingAcc = sessionStorage.getItem('tj_pending_account');
       sessionStorage.removeItem('tj_pending_playbook');
-      if (pending && newTrade?.id) {
-        assignPlaybook(newTrade.id, pending);
+      sessionStorage.removeItem('tj_pending_account');
+      if (newTrade?.id) {
+        if (pendingPB) assignPlaybook(newTrade.id, pendingPB);
+        if (pendingAcc) useAccountsStore.getState().assignTrade(newTrade.id, pendingAcc);
       }
     }
     navigate('/journal');

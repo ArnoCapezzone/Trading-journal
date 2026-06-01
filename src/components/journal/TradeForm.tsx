@@ -4,6 +4,7 @@ import { calculateTrade } from '../../utils/calculations';
 import { useSettingsStore } from '../../store/settingsStore';
 import { listPlaybooks, getTradePlaybookId, assignPlaybook, type Playbook } from '../../lib/playbooksStore';
 import { useIsMobile } from '../../hooks/useMediaQuery';
+import { useAccountsStore } from '../../lib/accountsStore';
 
 interface Props {
   initialData?: Trade;
@@ -98,15 +99,31 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
   const [playbookId, setPlaybookId] = useState<string>('');
   const [checkedItems, setCheckedItems] = useState<Set<number>>(new Set());
 
+  // Accounts
+  const accounts = useAccountsStore((s) => s.accounts);
+  const activeAccountId = useAccountsStore((s) => s.activeId);
+  const tradeAccountMap = useAccountsStore((s) => s.tradeMap);
+  const assignTradeAccount = useAccountsStore((s) => s.assignTrade);
+  const visibleAccounts = accounts.filter((a) => !a.archived);
+  const [accountId, setAccountId] = useState<string>('');
+
   useEffect(() => {
     setPlaybooks(listPlaybooks());
     if (initialData?.id) {
       const pid = getTradePlaybookId(initialData.id);
       if (pid) setPlaybookId(pid);
+      const aid = tradeAccountMap[initialData.id];
+      if (aid) setAccountId(aid);
+    } else if (activeAccountId !== 'all') {
+      setAccountId(activeAccountId);
+    } else if (visibleAccounts.length > 0) {
+      setAccountId(visibleAccounts[0].id);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData?.id]);
 
   const activePlaybook = playbooks.find((p) => p.id === playbookId) ?? null;
+  const activeAccountForTrade = visibleAccounts.find((a) => a.id === accountId) ?? null;
 
   // Live preview
   const previewTrade: Partial<Trade> = {
@@ -147,11 +164,14 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
     // by relying on the fact that initialData.id exists on edit.
     if (initialData?.id) {
       assignPlaybook(initialData.id, playbookId || null);
+      assignTradeAccount(initialData.id, accountId || null);
     } else {
-      // For new trades, stash the chosen playbook in sessionStorage so the
-      // submit handler can pick it up after Supabase returns the new id.
+      // For new trades, stash selections in sessionStorage so TradeFormPage
+      // can apply them after Supabase returns the new id.
       if (playbookId) sessionStorage.setItem('tj_pending_playbook', playbookId);
       else sessionStorage.removeItem('tj_pending_playbook');
+      if (accountId) sessionStorage.setItem('tj_pending_account', accountId);
+      else sessionStorage.removeItem('tj_pending_account');
     }
     onSubmit({
       source: initialData?.source ?? 'MANUAL',
@@ -376,6 +396,25 @@ export default function TradeForm({ initialData, onSubmit, onCancel }: Props) {
               </select>
             </div>
           </FormRow>
+
+          {/* Account selector */}
+          {visibleAccounts.length > 1 && (
+            <div style={{ marginBottom: 12 }}>
+              <label style={labelStyle()}>Account</label>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <select
+                  value={accountId}
+                  onChange={(e) => setAccountId(e.target.value)}
+                  style={{ ...inputStyle(), cursor: 'pointer', flex: 1 }}
+                >
+                  {visibleAccounts.map((a) => <option key={a.id} value={a.id}>{a.name}{a.broker ? ` · ${a.broker}` : ''}</option>)}
+                </select>
+                {activeAccountForTrade && (
+                  <div style={{ width: 14, height: 14, borderRadius: 4, backgroundColor: activeAccountForTrade.color, flexShrink: 0 }} />
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Playbook selector */}
           {playbooks.length > 0 && (

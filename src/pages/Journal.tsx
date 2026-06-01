@@ -6,12 +6,15 @@ import TradeFilters from '../components/journal/TradeFilters';
 import TradeTable from '../components/journal/TradeTable';
 import TradeDetail from '../components/journal/TradeDetail';
 import VoiceTradeInput from '../components/journal/VoiceTradeInput';
+import { useAccountsStore, filterTradesByAccount } from '../lib/accountsStore';
 
 export default function Journal() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const { trades, filters, setFilters, clearFilters, getFilteredTrades, deleteTrade } = useTradesStore();
+  const { trades: allTrades, filters, setFilters, clearFilters, getFilteredTrades, deleteTrade } = useTradesStore();
+  const activeId = useAccountsStore((s) => s.activeId);
+  const tradeMap = useAccountsStore((s) => s.tradeMap);
 
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
 
@@ -22,7 +25,12 @@ export default function Journal() {
     }
   }, []);
 
-  const filteredTrades = useMemo(() => getFilteredTrades(), [trades, filters]);
+  // Apply account filter on top of regular filters
+  const trades = useMemo(() => filterTradesByAccount(allTrades, activeId, tradeMap), [allTrades, activeId, tradeMap]);
+  const filteredTrades = useMemo(
+    () => filterTradesByAccount(getFilteredTrades(), activeId, tradeMap),
+    [getFilteredTrades, allTrades, filters, activeId, tradeMap]
+  );
 
   const availableInstruments = useMemo(
     () => [...new Set(trades.map((t) => t.instrument))].sort(),

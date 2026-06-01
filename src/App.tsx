@@ -21,6 +21,7 @@ import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
 import { useThemeStore } from './store/themeStore';
 import { useAccountsStore } from './lib/accountsStore';
+import { useSyncStore } from './store/syncStore';
 
 function AppLayout() {
   const isMobile = useIsMobile();
@@ -69,6 +70,10 @@ function AppInitializer() {
   useEffect(() => {
     if (!accountsInited) initAccounts(trades);
   }, [trades, accountsInited, initAccounts]);
+
+  // Initialize MT5 AutoSync (loads persisted folder handle if any)
+  const initSync = useSyncStore((s) => s.initialize);
+  useEffect(() => { void initSync(); }, [initSync]);
 
   return null;
 }

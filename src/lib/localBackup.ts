@@ -13,6 +13,7 @@ const LOCAL_KEYS = [
   'tj_trade_accounts_v1',
   'tj_active_account_v1',
   'tj_theme_preference',
+  'tj_mt5_sync_settings_v1',
 ] as const;
 
 export interface LocalBackup {
@@ -108,6 +109,7 @@ export function getLocalDataSummary(): { key: string; label: string; size: numbe
     tj_trade_accounts_v1: 'Trade ↔ Account map',
     tj_active_account_v1: 'Active account',
     tj_theme_preference: 'Theme preference',
+    tj_mt5_sync_settings_v1: 'MT5 AutoSync settings',
   };
 
   const summary: { key: string; label: string; size: number; count: number }[] = [];

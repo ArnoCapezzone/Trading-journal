@@ -6,6 +6,7 @@ import { exportToJSON, importFromJSON } from '../utils/exportUtils';
 import { supabase } from '../lib/supabase';
 import { downloadBackup, restoreLocalData, getLocalDataSummary } from '../lib/localBackup';
 import { useThemeStore, type ThemePreference } from '../store/themeStore';
+import MT5SyncSection from '../components/settings/MT5SyncSection';
 
 const INSTRUMENTS = ['EURUSD', 'GBPUSD', 'NZDUSD', 'AUDUSD', 'USDCAD', 'USDCHF', 'USDJPY', 'GBPJPY', 'EURJPY', 'NAS100', 'US500', 'XAUUSD'];
 
@@ -284,6 +285,9 @@ export default function Settings() {
           })}
         </div>
       </Section>
+
+      {/* MT5 AutoSync */}
+      <MT5SyncSection />
 
       {/* Data */}
       <Section title="Data Management">

@@ -1,42 +1,30 @@
-// MT5 AutoSync — watches a user-selected folder for the CSV export from MQL5
-// and auto-imports new trades. Uses the File System Access API (Chrome / Edge /
-// Brave / Opera on desktop only).
-//
-// Architecture:
-//  1. User picks the MQL5/Files directory once. We persist the handle to IDB.
-//  2. On every poll, we read the configured CSV file, parse it, and pass new
-//     trades to the consumer. Deduplication is already handled by
-//     useTradesStore.importTrades() via mt5_ticket_id.
+// File System Access API helpers for MT5 AutoSync.
+// Handles persist across reloads via IndexedDB (FSA handles aren't JSON-serialisable).
 
-const DB_NAME = 'tj_mt5_sync';
-const STORE_NAME = 'handles';
-const HANDLE_KEY = 'mt5_dir';
+const IDB_NAME = 'tj_fsa';
+const IDB_STORE = 'handles';
+const IDB_KEY = 'mt5_dir';
 
-// ── Feature detection ───────────────────────────────────────────
+// ── Feature detection ─────────────────────────────────────────────
 export function isFileSystemAccessSupported(): boolean {
-  return typeof window !== 'undefined'
-    && 'showDirectoryPicker' in window
-    && typeof (window as unknown as { showDirectoryPicker?: unknown }).showDirectoryPicker === 'function';
+  return typeof window !== 'undefined' && 'showDirectoryPicker' in window;
 }
 
-// ── IndexedDB persistence ───────────────────────────────────────
-function openSyncDB(): Promise<IDBDatabase> {
+// ── IndexedDB helpers ─────────────────────────────────────────────
+function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = () => {
-      const db = req.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
-    };
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(IDB_STORE);
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });
 }
 
 export async function persistHandle(handle: FileSystemDirectoryHandle): Promise<void> {
-  const db = await openSyncDB();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    tx.objectStore(STORE_NAME).put(handle, HANDLE_KEY);
+  const db = await openDB();
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    tx.objectStore(IDB_STORE).put(handle, IDB_KEY);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
   });
@@ -44,11 +32,11 @@ export async function persistHandle(handle: FileSystemDirectoryHandle): Promise<
 
 export async function loadHandle(): Promise<FileSystemDirectoryHandle | null> {
   try {
-    const db = await openSyncDB();
-    return new Promise((resolve, reject) => {
-      const tx = db.transaction(STORE_NAME, 'readonly');
-      const req = tx.objectStore(STORE_NAME).get(HANDLE_KEY);
-      req.onsuccess = () => resolve(req.result ?? null);
+    const db = await openDB();
+    return await new Promise<FileSystemDirectoryHandle | null>((resolve, reject) => {
+      const tx = db.transaction(IDB_STORE, 'readonly');
+      const req = tx.objectStore(IDB_STORE).get(IDB_KEY);
+      req.onsuccess = () => resolve((req.result as FileSystemDirectoryHandle) ?? null);
       req.onerror = () => reject(req.error);
     });
   } catch {
@@ -58,71 +46,69 @@ export async function loadHandle(): Promise<FileSystemDirectoryHandle | null> {
 
 export async function clearHandle(): Promise<void> {
   try {
-    const db = await openSyncDB();
-    return new Promise((resolve) => {
-      const tx = db.transaction(STORE_NAME, 'readwrite');
-      tx.objectStore(STORE_NAME).delete(HANDLE_KEY);
+    const db = await openDB();
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(IDB_STORE, 'readwrite');
+      tx.objectStore(IDB_STORE).delete(IDB_KEY);
       tx.oncomplete = () => resolve();
-      tx.onerror = () => resolve();
+      tx.onerror = () => reject(tx.error);
     });
-  } catch { /* ignore */ }
+  } catch {}
 }
 
-// ── Permissions ─────────────────────────────────────────────────
-type PermState = 'granted' | 'prompt' | 'denied';
+// ── Permission helpers ────────────────────────────────────────────
+type PermissionState = 'granted' | 'prompt' | 'denied';
 
-interface HandleWithPermission {
-  queryPermission?(opts: { mode: 'read' | 'readwrite' }): Promise<PermissionState>;
-  requestPermission?(opts: { mode: 'read' | 'readwrite' }): Promise<PermissionState>;
-}
-
-export async function queryPermission(handle: FileSystemDirectoryHandle): Promise<PermState> {
-  const h = handle as unknown as HandleWithPermission;
-  if (!h.queryPermission) return 'prompt';
-  const state = await h.queryPermission({ mode: 'read' });
-  return state as PermState;
-}
-
-export async function requestPermission(handle: FileSystemDirectoryHandle): Promise<PermState> {
-  const h = handle as unknown as HandleWithPermission;
-  if (!h.requestPermission) return 'denied';
-  const state = await h.requestPermission({ mode: 'read' });
-  return state as PermState;
-}
-
-// ── Directory picker ────────────────────────────────────────────
-export async function pickDirectory(): Promise<FileSystemDirectoryHandle> {
-  type SDP = (opts?: { mode?: 'read' | 'readwrite' }) => Promise<FileSystemDirectoryHandle>;
-  const showDirectoryPicker = (window as unknown as { showDirectoryPicker: SDP }).showDirectoryPicker;
-  return await showDirectoryPicker({ mode: 'read' });
-}
-
-// ── Read CSV ────────────────────────────────────────────────────
-export interface ReadResult {
-  content: string;
-  lastModified: number;
-  size: number;
-}
-
-export async function readCSVFile(
-  dirHandle: FileSystemDirectoryHandle,
-  filename = 'trading_journal_export.csv'
-): Promise<ReadResult | null> {
+export async function queryPermission(
+  handle: FileSystemDirectoryHandle,
+): Promise<PermissionState> {
   try {
-    const fileHandle = await dirHandle.getFileHandle(filename);
-    const file = await fileHandle.getFile();
-    const content = await file.text();
-    return { content, lastModified: file.lastModified, size: file.size };
-  } catch (e) {
-    // File doesn't exist or unreadable
-    const msg = (e as Error).message ?? '';
-    if (msg.includes('NotFoundError') || (e as Error).name === 'NotFoundError') return null;
-    throw e;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return await (handle as any).queryPermission({ mode: 'read' }) as PermissionState;
+  } catch {
+    return 'prompt';
   }
 }
 
-// ── Helper: human-readable path hint ────────────────────────────
-export function describeHandle(handle: FileSystemDirectoryHandle | null): string {
-  if (!handle) return '—';
+export async function requestPermission(
+  handle: FileSystemDirectoryHandle,
+): Promise<PermissionState> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return await (handle as any).requestPermission({ mode: 'read' }) as PermissionState;
+  } catch {
+    return 'denied';
+  }
+}
+
+// ── Directory picker ──────────────────────────────────────────────
+export async function pickDirectory(): Promise<FileSystemDirectoryHandle> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return await (window as any).showDirectoryPicker({ mode: 'read', startIn: 'desktop' });
+}
+
+export function describeHandle(handle: FileSystemDirectoryHandle): string {
   return handle.name;
+}
+
+// ── CSV reader ────────────────────────────────────────────────────
+export interface CSVReadResult {
+  content: string;
+  lastModified: number;
+}
+
+export async function readCSVFile(
+  dir: FileSystemDirectoryHandle,
+  filename: string,
+): Promise<CSVReadResult | null> {
+  try {
+    const fileHandle = await dir.getFileHandle(filename);
+    const file = await fileHandle.getFile();
+    const content = await file.text();
+    return { content, lastModified: file.lastModified };
+  } catch (e) {
+    // File not found yet — not an error, MT5 may not have exported yet
+    if ((e as DOMException).name === 'NotFoundError') return null;
+    throw e;
+  }
 }

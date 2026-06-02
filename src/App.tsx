@@ -16,6 +16,7 @@ import DailyPlanPage from './pages/DailyPlan';
 import Playbooks from './pages/Playbooks';
 import EconomicCalendarPage from './pages/EconomicCalendar';
 import AccountsPage from './pages/Accounts';
+import VoiceButton from './components/voice/VoiceButton';
 import { useTradesStore } from './store/tradesStore';
 import { useSettingsStore } from './store/settingsStore';
 import { useAuthStore } from './store/authStore';
@@ -50,6 +51,7 @@ function AppLayout() {
           <Outlet />
         </main>
       </div>
+      <VoiceButton />
     </div>
   );
 }

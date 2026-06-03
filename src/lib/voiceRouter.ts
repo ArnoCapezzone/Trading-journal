@@ -3,8 +3,170 @@
 
 import { getTodayPlan, createPlan, savePlan, todayKey } from './dailyPlanStore';
 import { useTradesStore } from '../store/tradesStore';
+import type { Trade } from '../types/trade';
 
 const GROQ_KEY = import.meta.env.VITE_GROQ_API_KEY as string | undefined;
+
+// ── Instrument alias resolution ──────────────────────────────────
+// Maps spoken/written names to a canonical group so "CAC" matches "FRA40.cash".
+const INSTRUMENT_ALIASES: Record<string, string> = {
+  // CAC 40
+  CAC: 'CAC40', CAC40: 'CAC40', FRA40: 'CAC40', FR40: 'CAC40', FCE: 'CAC40', FRANCE40: 'CAC40',
+  // DAX
+  DAX: 'DAX', DAX40: 'DAX', DAX30: 'DAX', GER40: 'DAX', GER30: 'DAX', DE40: 'DAX', DE30: 'DAX', GERMANY40: 'DAX', DE: 'DAX',
+  // S&P 500
+  SP500: 'SP500', SP: 'SP500', SPX: 'SP500', SPX500: 'SP500', US500: 'SP500', ES: 'SP500', SANDP: 'SP500', SANDP500: 'SP500', SPYSP: 'SP500',
+  // Nasdaq
+  NASDAQ: 'NAS', NAS: 'NAS', NAS100: 'NAS', NDX: 'NAS', US100: 'NAS', USTEC: 'NAS', NQ: 'NAS', TECH100: 'NAS', USTECH100: 'NAS',
+  // Dow Jones
+  DOW: 'DOW', DOWJONES: 'DOW', US30: 'DOW', DJI: 'DOW', WS30: 'DOW', DJ30: 'DOW', USA30: 'DOW',
+  // Gold
+  GOLD: 'GOLD', XAUUSD: 'GOLD', XAU: 'GOLD', OR: 'GOLD',
+  // FTSE
+  FTSE: 'FTSE', UK100: 'FTSE', FTSE100: 'FTSE', UK: 'FTSE',
+  // Nikkei
+  NIKKEI: 'NIKKEI', JP225: 'NIKKEI', JPN225: 'NIKKEI', JP: 'NIKKEI', JAPAN225: 'NIKKEI',
+};
+
+function instrumentGroup(raw: string): string {
+  const norm = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (INSTRUMENT_ALIASES[norm]) return INSTRUMENT_ALIASES[norm];
+  // Symbol may carry a suffix like "FRA40.cash" → "FRA40CASH" — match by prefix key
+  for (const key of Object.keys(INSTRUMENT_ALIASES)) {
+    if (key.length >= 3 && norm.includes(key)) return INSTRUMENT_ALIASES[key];
+  }
+  return norm;
+}
+
+export function instrumentMatches(voiceName: string, actualSymbol: string): boolean {
+  if (instrumentGroup(voiceName) === instrumentGroup(actualSymbol)) return true;
+  const a = voiceName.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const b = actualSymbol.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  return a.length >= 2 && b.length >= 2 && (a.includes(b) || b.includes(a));
+}
+
+// ── Shared review→trades resolver ────────────────────────────────
+export interface ReviewIdentifier {
+  instrument?: string;
+  recency?: string;
+  direction?: 'LONG' | 'SHORT';
+  time?: string;
+  order?: 'first' | 'second' | 'third' | 'last';
+  outcome?: 'win' | 'loss';
+}
+
+// Resolves which trades a single review's identifier targets.
+// Returns [] (and never a random fallback) when an instrument is named but absent.
+function selectTradesForId(
+  id: ReviewIdentifier | undefined,
+  available: Trade[],
+): Trade[] {
+  let pool = [...available];
+  const instrumentNamed = !!id?.instrument;
+
+  if (instrumentNamed) {
+    pool = pool.filter((t) => instrumentMatches(id!.instrument!, t.instrument));
+    if (pool.length === 0) return []; // no match → skip, never grab a wrong trade
+  }
+
+  // Recency
+  if (id?.recency === 'today') {
+    const today = new Date().toISOString().slice(0, 10);
+    const f = pool.filter((t) => new Date(t.exitTime).toISOString().slice(0, 10) === today);
+    if (f.length > 0) pool = f;
+  } else if (id?.recency === 'yesterday') {
+    const yest = new Date(Date.now() - 86400_000).toISOString().slice(0, 10);
+    const f = pool.filter((t) => new Date(t.exitTime).toISOString().slice(0, 10) === yest);
+    if (f.length > 0) pool = f;
+  } else if (id?.recency === 'this_week') {
+    const weekAgo = Date.now() - 7 * 86400_000;
+    const f = pool.filter((t) => new Date(t.exitTime).getTime() >= weekAgo);
+    if (f.length > 0) pool = f;
+  }
+
+  // Direction
+  if (id?.direction) {
+    const f = pool.filter((t) => t.direction === id.direction);
+    if (f.length > 0) pool = f;
+  }
+
+  // Outcome
+  if (id?.outcome) {
+    const f = pool.filter((t) => {
+      const pnl = t.mt5Profit ?? 0;
+      return id.outcome === 'win' ? pnl > 0 : pnl < 0;
+    });
+    if (f.length > 0) pool = f;
+  }
+
+  // Approximate time (±30 min on entryTime)
+  if (id?.time) {
+    const [h, m] = id.time.split(':').map(Number);
+    if (!isNaN(h)) {
+      const target = h * 60 + (m || 0);
+      const f = pool.filter((t) => {
+        const e = new Date(t.entryTime);
+        return Math.abs(e.getHours() * 60 + e.getMinutes() - target) <= 30;
+      });
+      if (f.length > 0) {
+        f.sort((a, b) => {
+          const ea = new Date(a.entryTime), eb = new Date(b.entryTime);
+          return Math.abs(ea.getHours() * 60 + ea.getMinutes() - target)
+               - Math.abs(eb.getHours() * 60 + eb.getMinutes() - target);
+        });
+        pool = f;
+      }
+    }
+  }
+
+  // Explicit order → single trade (chronological by entryTime)
+  if (id?.order) {
+    const chrono = [...pool].sort((a, b) =>
+      new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime()
+    );
+    if (id.order === 'first')  return chrono[0] ? [chrono[0]] : [];
+    if (id.order === 'second') return chrono[1] ? [chrono[1]] : chrono.slice(-1);
+    if (id.order === 'third')  return chrono[2] ? [chrono[2]] : chrono.slice(-1);
+    if (id.order === 'last')   return chrono.slice(-1);
+  }
+
+  // Plural intent: instrument named with no singular selector → apply to ALL matches
+  if (instrumentNamed && !id?.direction && !id?.time && !id?.outcome) {
+    return pool;
+  }
+  // Otherwise the single most relevant (most recent by exitTime)
+  const byExit = [...pool].sort((a, b) =>
+    new Date(b.exitTime).getTime() - new Date(a.exitTime).getTime()
+  );
+  return byExit[0] ? [byExit[0]] : [];
+}
+
+export interface ResolvedReview {
+  review: Record<string, unknown>;
+  trades: Trade[];
+  notFoundInstrument?: string;
+}
+
+// Resolves all reviews against the trade list, ensuring no trade is targeted twice.
+export function resolveTradeReviews(reviews: Record<string, unknown>[]): ResolvedReview[] {
+  const allTrades = useTradesStore.getState().trades;
+  const usedIds = new Set<string>();
+  const out: ResolvedReview[] = [];
+
+  for (const review of reviews) {
+    const id = review.identifier as ReviewIdentifier | undefined;
+    const available = allTrades.filter((t) => !usedIds.has(t.id));
+    const matched = selectTradesForId(id, available);
+
+    if (matched.length === 0) {
+      out.push({ review, trades: [], notFoundInstrument: id?.instrument });
+      continue;
+    }
+    matched.forEach((t) => usedIds.add(t.id));
+    out.push({ review, trades: matched });
+  }
+  return out;
+}
 
 // ── Route targets ─────────────────────────────────────────────────
 export type RouteTarget =
@@ -116,11 +278,21 @@ trade_review:
   timeframe: "1M"|"5M"|"15M"|"30M"|"1H"|"4H"|"D"|"W"|null
   lesson: string|null           (leçon explicite SEULEMENT si l'utilisateur dit explicitement "leçon", "j'ai appris", "à retenir", etc.)
 
+RÈGLE INSTRUMENT: garde le nom de l'instrument TEL QUE PRONONCÉ par l'utilisateur
+(ex: "CAC", "DAX", "SP500", "Nasdaq", "Dow", "or"). N'invente PAS de suffixe broker
+(pas de ".cash", pas de "FRA40"). Le système fait la correspondance ensuite.
+
+RÈGLE PLURIEL: si l'utilisateur parle de PLUSIEURS trades sur le même instrument
+au pluriel ("ceux sur le DAX", "mes trades DAX", "les DAX") SANS distinguer lequel,
+crée UNE SEULE review pour cet instrument (le système l'appliquera à tous les trades
+de cet instrument). Ne mets PAS order/direction/time dans ce cas.
+
 EXEMPLES de désambiguïsation pour identifier:
-- "mon premier EURUSD de ce matin" → { instrument: "EURUSD", recency: "today", order: "first" }
-- "le EURUSD long de ce matin" → { instrument: "EURUSD", recency: "today", direction: "LONG" }
-- "le trade EURUSD perdant" → { instrument: "EURUSD", recency: "today", outcome: "loss" }
-- "celui de 9h30 sur EURUSD" → { instrument: "EURUSD", recency: "today", time: "09:30" }
+- "mon premier CAC de ce matin" → { instrument: "CAC", recency: "today", order: "first" }
+- "le CAC long de ce matin" → { instrument: "CAC", recency: "today", direction: "LONG" }
+- "le trade SP500 perdant" → { instrument: "SP500", recency: "today", outcome: "loss" }
+- "celui de 9h30 sur le DAX" → { instrument: "DAX", recency: "today", time: "09:30" }
+- "mes trades sur le DAX" (pluriel) → { instrument: "DAX", recency: "today" }
 - "mon dernier EURUSD" → { instrument: "EURUSD", recency: "last" }
 
 EXEMPLE trade_review (un seul trade):
@@ -137,12 +309,13 @@ Output: { "target": "trade_review", "summary": "Review EURUSD ce matin", "data":
   ]
 }}
 
-EXEMPLE trade_review (plusieurs trades):
-Input: "Mon EURUSD c'était du breakout en H1, et le NAS d'hier j'ai fait du revenge"
-Output: { "target": "trade_review", "summary": "Review 2 trades", "data": {
+EXEMPLE trade_review (plusieurs instruments différents):
+Input: "Le CAC ça respectait le plan, le SP500 j'ai mis BE rapidement, et mes DAX j'ai pris trop de risque en renforçant"
+Output: { "target": "trade_review", "summary": "Review CAC, SP500, DAX", "data": {
   "reviews": [
-    { "identifier": { "instrument": "EURUSD", "recency": "last" }, "notes": "Setup breakout.", "setup": "BREAKOUT", "timeframe": "1H" },
-    { "identifier": { "instrument": "NAS100", "recency": "yesterday" }, "notes": "J'ai fait du revenge trading.", "tags": ["revenge"] }
+    { "identifier": { "instrument": "CAC", "recency": "today" }, "notes": "Ça respectait le plan, j'ai mis break-even puis c'est reparti dans le bon sens.", "tags": ["followed_plan"] },
+    { "identifier": { "instrument": "SP500", "recency": "today" }, "notes": "J'ai tenté un buy sur le plus bas d'hier, mis break-even rapidement car flux incertain, puis c'est parti dans l'autre sens.", "tags": ["early_exit"] },
+    { "identifier": { "instrument": "DAX", "recency": "today" }, "notes": "J'ai acheté la zone, pas voulu mettre break-even alors que j'aurais pu, risque trop grand vs invalidation, et j'ai renforcé mes positions ce qui a conduit à une grosse perte.", "tags": ["oversize","revenge"] }
   ]
 }}
 
@@ -239,137 +412,42 @@ export function applyRoute(result: RouteResult): ApplyResult {
       ? (data.reviews as Record<string, unknown>[])
       : [data];
 
-    const sortedByExit = [...trades].sort((a, b) =>
-      new Date(b.exitTime).getTime() - new Date(a.exitTime).getTime()
-    );
-    const usedIds = new Set<string>();
-
-    interface Identifier {
-      instrument?: string;
-      recency?: string;
-      direction?: 'LONG' | 'SHORT';
-      time?: string;          // "HH:MM"
-      order?: 'first' | 'second' | 'third' | 'last';
-      outcome?: 'win' | 'loss';
-    }
-
-    const findTrade = (id: Identifier | undefined) => {
-      let pool = sortedByExit.filter((t) => !usedIds.has(t.id));
-      if (pool.length === 0) pool = sortedByExit;
-
-      // 1) Filter by instrument
-      if (id?.instrument) {
-        const wanted = id.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        const byInstr = pool.filter((t) => {
-          const s = t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
-          return s.includes(wanted) || wanted.includes(s);
-        });
-        if (byInstr.length > 0) pool = byInstr;
-      }
-
-      // 2) Filter by recency (today/yesterday)
-      if (id?.recency === 'today') {
-        const today = new Date().toISOString().slice(0, 10);
-        const filtered = pool.filter((t) => new Date(t.exitTime).toISOString().slice(0, 10) === today);
-        if (filtered.length > 0) pool = filtered;
-      } else if (id?.recency === 'yesterday') {
-        const yest = new Date(Date.now() - 86400_000).toISOString().slice(0, 10);
-        const filtered = pool.filter((t) => new Date(t.exitTime).toISOString().slice(0, 10) === yest);
-        if (filtered.length > 0) pool = filtered;
-      } else if (id?.recency === 'this_week') {
-        const weekAgo = Date.now() - 7 * 86400_000;
-        const filtered = pool.filter((t) => new Date(t.exitTime).getTime() >= weekAgo);
-        if (filtered.length > 0) pool = filtered;
-      }
-
-      // 3) Filter by direction
-      if (id?.direction) {
-        const filtered = pool.filter((t) => t.direction === id.direction);
-        if (filtered.length > 0) pool = filtered;
-      }
-
-      // 4) Filter by outcome (win/loss based on mt5Profit or computed P&L sign)
-      if (id?.outcome) {
-        const filtered = pool.filter((t) => {
-          const pnl = t.mt5Profit ?? 0;
-          return id.outcome === 'win' ? pnl > 0 : pnl < 0;
-        });
-        if (filtered.length > 0) pool = filtered;
-      }
-
-      // 5) Filter by approximate time (HH:MM within ±30min on entryTime)
-      if (id?.time) {
-        const [h, m] = id.time.split(':').map(Number);
-        if (!isNaN(h)) {
-          const targetMin = h * 60 + (m || 0);
-          const filtered = pool.filter((t) => {
-            const entry = new Date(t.entryTime);
-            const tradeMin = entry.getHours() * 60 + entry.getMinutes();
-            return Math.abs(tradeMin - targetMin) <= 30;
-          });
-          if (filtered.length > 0) {
-            // Sort by closeness to target time
-            filtered.sort((a, b) => {
-              const ea = new Date(a.entryTime); const eb = new Date(b.entryTime);
-              const da = Math.abs(ea.getHours() * 60 + ea.getMinutes() - targetMin);
-              const db = Math.abs(eb.getHours() * 60 + eb.getMinutes() - targetMin);
-              return da - db;
-            });
-            pool = filtered;
-          }
-        }
-      }
-
-      // 6) Apply order — by entryTime ASC (chronological) so "first" = earliest
-      const chrono = [...pool].sort((a, b) =>
-        new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime()
-      );
-      if (id?.order === 'first') return chrono[0];
-      if (id?.order === 'second') return chrono[1] ?? chrono[chrono.length - 1];
-      if (id?.order === 'third') return chrono[2] ?? chrono[chrono.length - 1];
-      if (id?.order === 'last') return chrono[chrono.length - 1];
-
-      // Default: most recent by exitTime
-      return pool[0];
-    };
-
+    const resolved = resolveTradeReviews(reviews);
     const updatePromises: Promise<void>[] = [];
-    let lastTradeId = '';
+    const touchedIds: string[] = [];
 
-    for (const review of reviews) {
-      const id = review.identifier as Identifier | undefined;
-      const target_trade = findTrade(id);
-      if (!target_trade) continue;
-      usedIds.add(target_trade.id);
-      lastTradeId = target_trade.id;
-
+    const buildPatch = (review: Record<string, unknown>, t: Trade): Record<string, unknown> => {
       const patch: Record<string, unknown> = {};
-
       if (review.notes) {
-        const existing = target_trade.notes ?? '';
-        const newNote = review.notes as string;
-        patch.notes = existing ? `${existing}\n${newNote}` : newNote;
+        const existing = t.notes ?? '';
+        patch.notes = existing ? `${existing}\n${review.notes as string}` : (review.notes as string);
       }
       if (Array.isArray(review.tags) && review.tags.length > 0) {
-        const existingTags = target_trade.tags ?? [];
+        const existingTags = t.tags ?? [];
         patch.tags = Array.from(new Set([...existingTags, ...(review.tags as string[])]));
       }
-      // Always overwrite setup/timeframe when explicitly mentioned
       if (review.setup) patch.setup = review.setup;
       if (review.timeframe) patch.timeframe = review.timeframe;
       if (review.lesson) {
-        const existing = (patch.notes as string | undefined) ?? target_trade.notes ?? '';
+        const existing = (patch.notes as string | undefined) ?? t.notes ?? '';
         const lessonLine = `📌 Leçon : ${review.lesson as string}`;
         patch.notes = existing ? `${existing}\n${lessonLine}` : lessonLine;
       }
+      return patch;
+    };
 
-      if (Object.keys(patch).length > 0) {
-        updatePromises.push(useTradesStore.getState().updateTrade(target_trade.id, patch));
+    for (const { review, trades: targets } of resolved) {
+      for (const t of targets) {
+        const patch = buildPatch(review, t);
+        if (Object.keys(patch).length > 0) {
+          updatePromises.push(useTradesStore.getState().updateTrade(t.id, patch));
+          touchedIds.push(t.id);
+        }
       }
     }
 
-    const navigateTo = reviews.length === 1 && lastTradeId
-      ? `/journal/edit/${lastTradeId}`
+    const navigateTo = touchedIds.length === 1
+      ? `/journal/edit/${touchedIds[0]}`
       : '/journal';
 
     if (updatePromises.length === 0) return { navigateTo };

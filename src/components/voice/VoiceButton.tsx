@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { transcribeAudio, routeTranscript, applyRoute, type RouteResult } from '../../lib/voiceRouter';
+import { transcribeAudio, routeTranscript, applyRoute, resolveTradeReviews, type RouteResult } from '../../lib/voiceRouter';
 
 type RecordState = 'idle' | 'recording' | 'processing';
 
@@ -71,6 +71,10 @@ function ConfirmCard({
         .slice(0, 6)
     : [];
 
+  // Resolve which real trades each review targets (for review previews)
+  const resolved = reviews ? resolveTradeReviews(reviews) : null;
+  const allFound = resolved ? resolved.every((r) => r.trades.length > 0) : true;
+
   const renderFieldValue = (v: unknown): string => {
     if (Array.isArray(v)) return v.join(', ');
     if (v && typeof v === 'object') {
@@ -121,20 +125,38 @@ function ConfirmCard({
         </div>
       )}
 
-      {/* Trade reviews — one card per trade */}
-      {reviews && reviews.length > 0 && (
-        <div style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 280, overflowY: 'auto' }}>
-          {reviews.map((rev, i) => {
-            const id = rev.identifier as { instrument?: string; recency?: string } | undefined;
-            const headerLine = id ? [id.instrument, id.recency].filter(Boolean).join(' · ') : `Trade #${i + 1}`;
-            const entries = Object.entries(rev).filter(([k, v]) =>
+      {/* Trade reviews — one card per review, showing resolved trades */}
+      {resolved && resolved.length > 0 && (
+        <div style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 300, overflowY: 'auto' }}>
+          {resolved.map(({ review, trades: targets, notFoundInstrument }, i) => {
+            const entries = Object.entries(review).filter(([k, v]) =>
               k !== 'identifier' && v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0)
             );
+            const notFound = targets.length === 0;
             return (
-              <div key={i} style={{ padding: '8px 10px', backgroundColor: 'var(--bg-app)', borderRadius: 6, border: '1px solid var(--border-faint)' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#06B6D4', marginBottom: 4 }}>🔍 {headerLine}</div>
+              <div key={i} style={{
+                padding: '8px 10px',
+                backgroundColor: 'var(--bg-app)',
+                borderRadius: 6,
+                border: `1px solid ${notFound ? 'rgba(240,72,72,0.35)' : 'var(--border-faint)'}`,
+              }}>
+                {/* Target trades header */}
+                {notFound ? (
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#F04848', marginBottom: 4 }}>
+                    ⚠ Aucun trade trouvé{notFoundInstrument ? ` pour "${notFoundInstrument}"` : ''}
+                  </div>
+                ) : (
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#06B6D4', marginBottom: 4, display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                    🔍 {targets.map((t) => (
+                      <span key={t.id} style={{ padding: '1px 6px', backgroundColor: 'rgba(6,182,212,0.12)', borderRadius: 3 }}>
+                        {t.instrument} {t.direction === 'LONG' ? '▲' : '▼'} {new Date(t.exitTime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })}
+                      </span>
+                    ))}
+                    {targets.length > 1 && <span style={{ color: 'var(--text-muted)' }}>({targets.length} trades)</span>}
+                  </div>
+                )}
                 {entries.map(([k, v]) => (
-                  <div key={k} style={{ display: 'flex', gap: 6, fontSize: 11, marginTop: 2 }}>
+                  <div key={k} style={{ display: 'flex', gap: 6, fontSize: 11, marginTop: 2, opacity: notFound ? 0.5 : 1 }}>
                     <span style={{ color: 'var(--text-tertiary)', minWidth: 70 }}>{fieldLabels[k] ?? k}</span>
                     <span style={{ color: 'var(--text-primary)', fontWeight: 600, flex: 1 }}>{renderFieldValue(v)}</span>
                   </div>
@@ -150,9 +172,10 @@ function ConfirmCard({
         {result.target !== 'unknown' ? (
           <button
             onClick={onApply}
+            disabled={resolved ? !allFound && resolved.every((r) => r.trades.length === 0) : false}
             style={{ flex: 1, padding: '8px', backgroundColor: color, border: 'none', borderRadius: 7, color: '#fff', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}
           >
-            ✓ Appliquer
+            ✓ Appliquer{resolved && !allFound ? ' (trades trouvés)' : ''}
           </button>
         ) : null}
         <button

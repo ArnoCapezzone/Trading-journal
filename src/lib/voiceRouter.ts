@@ -109,13 +109,30 @@ trade_review:
   timeframe: "1M"|"5M"|"15M"|"30M"|"1H"|"4H"|"D"|"W"|null
   lesson: string|null           (leçon explicite SEULEMENT si l'utilisateur dit explicitement "leçon", "j'ai appris", "à retenir", etc.)
 
-EXEMPLE trade_review:
-Input: "Sur mon trade EURUSD de ce matin, j'ai paniqué et coupé trop tôt"
+EXEMPLE trade_review (un seul trade):
+Input: "Sur mon trade EURUSD de ce matin, j'ai paniqué et coupé trop tôt, c'était en M15"
 Output: { "target": "trade_review", "summary": "Review EURUSD ce matin", "data": {
-  "identifier": { "instrument": "EURUSD", "recency": "today" },
-  "notes": "J'ai paniqué et j'ai coupé trop tôt.",
-  "tags": ["fear","early_exit"], "lesson": null
+  "reviews": [
+    {
+      "identifier": { "instrument": "EURUSD", "recency": "today" },
+      "notes": "J'ai paniqué et j'ai coupé trop tôt.",
+      "tags": ["fear","early_exit"],
+      "timeframe": "15M",
+      "lesson": null
+    }
+  ]
 }}
+
+EXEMPLE trade_review (plusieurs trades):
+Input: "Mon EURUSD c'était du breakout en H1, et le NAS d'hier j'ai fait du revenge"
+Output: { "target": "trade_review", "summary": "Review 2 trades", "data": {
+  "reviews": [
+    { "identifier": { "instrument": "EURUSD", "recency": "last" }, "notes": "Setup breakout.", "setup": "BREAKOUT", "timeframe": "1H" },
+    { "identifier": { "instrument": "NAS100", "recency": "yesterday" }, "notes": "J'ai fait du revenge trading.", "tags": ["revenge"] }
+  ]
+}}
+
+IMPORTANT pour trade_review: TOUJOURS retourner { "reviews": [...] } même pour un seul trade.
 
 trade_note:
   note: string`;
@@ -203,65 +220,87 @@ export function applyRoute(result: RouteResult): ApplyResult {
     const trades = useTradesStore.getState().trades;
     if (trades.length === 0) return {};
 
-    const id = data.identifier as { instrument?: string; when?: string; recency?: string } | undefined;
+    // Support both new format { reviews: [...] } and legacy single-object format
+    const reviews = Array.isArray(data.reviews)
+      ? (data.reviews as Record<string, unknown>[])
+      : [data];
+
     const sortedByExit = [...trades].sort((a, b) =>
       new Date(b.exitTime).getTime() - new Date(a.exitTime).getTime()
     );
+    const usedIds = new Set<string>();
 
-    // Find the target trade
-    let target_trade = sortedByExit[0]; // fallback: most recent
-    if (id?.instrument) {
+    const findTrade = (id: { instrument?: string; recency?: string } | undefined) => {
+      let pool = sortedByExit.filter((t) => !usedIds.has(t.id));
+      if (pool.length === 0) pool = sortedByExit;
+
+      if (!id?.instrument) return pool[0];
+
       const wanted = id.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      const matching = sortedByExit.filter((t) =>
-        t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '').includes(wanted) ||
-        wanted.includes(t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, ''))
-      );
-      if (matching.length > 0) {
-        // Filter by recency if provided
-        if (id.recency === 'today') {
-          const today = new Date().toISOString().slice(0, 10);
-          const todayMatch = matching.filter((t) =>
-            new Date(t.exitTime).toISOString().slice(0, 10) === today
-          );
-          if (todayMatch.length > 0) target_trade = todayMatch[0];
-          else target_trade = matching[0];
-        } else if (id.recency === 'yesterday') {
-          const yest = new Date(Date.now() - 86400_000).toISOString().slice(0, 10);
-          const yestMatch = matching.filter((t) =>
-            new Date(t.exitTime).toISOString().slice(0, 10) === yest
-          );
-          target_trade = yestMatch[0] ?? matching[0];
-        } else {
-          target_trade = matching[0];
-        }
+      const matching = pool.filter((t) => {
+        const s = t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        return s.includes(wanted) || wanted.includes(s);
+      });
+      if (matching.length === 0) return pool[0];
+
+      if (id.recency === 'today') {
+        const today = new Date().toISOString().slice(0, 10);
+        const todayMatch = matching.filter((t) =>
+          new Date(t.exitTime).toISOString().slice(0, 10) === today
+        );
+        return todayMatch[0] ?? matching[0];
+      }
+      if (id.recency === 'yesterday') {
+        const yest = new Date(Date.now() - 86400_000).toISOString().slice(0, 10);
+        const yestMatch = matching.filter((t) =>
+          new Date(t.exitTime).toISOString().slice(0, 10) === yest
+        );
+        return yestMatch[0] ?? matching[0];
+      }
+      return matching[0];
+    };
+
+    const updatePromises: Promise<void>[] = [];
+    let lastTradeId = '';
+
+    for (const review of reviews) {
+      const id = review.identifier as { instrument?: string; recency?: string } | undefined;
+      const target_trade = findTrade(id);
+      if (!target_trade) continue;
+      usedIds.add(target_trade.id);
+      lastTradeId = target_trade.id;
+
+      const patch: Record<string, unknown> = {};
+
+      if (review.notes) {
+        const existing = target_trade.notes ?? '';
+        const newNote = review.notes as string;
+        patch.notes = existing ? `${existing}\n${newNote}` : newNote;
+      }
+      if (Array.isArray(review.tags) && review.tags.length > 0) {
+        const existingTags = target_trade.tags ?? [];
+        patch.tags = Array.from(new Set([...existingTags, ...(review.tags as string[])]));
+      }
+      // Always overwrite setup/timeframe when explicitly mentioned
+      if (review.setup) patch.setup = review.setup;
+      if (review.timeframe) patch.timeframe = review.timeframe;
+      if (review.lesson) {
+        const existing = (patch.notes as string | undefined) ?? target_trade.notes ?? '';
+        const lessonLine = `📌 Leçon : ${review.lesson as string}`;
+        patch.notes = existing ? `${existing}\n${lessonLine}` : lessonLine;
+      }
+
+      if (Object.keys(patch).length > 0) {
+        updatePromises.push(useTradesStore.getState().updateTrade(target_trade.id, patch));
       }
     }
 
-    // Build the update patch — only fields explicitly mentioned
-    const patch: Record<string, unknown> = {};
-    if (data.notes) {
-      const existing = target_trade.notes ?? '';
-      const newNote = data.notes as string;
-      patch.notes = existing ? `${existing}\n${newNote}` : newNote;
-    }
-    if (Array.isArray(data.tags) && data.tags.length > 0) {
-      const existingTags = target_trade.tags ?? [];
-      patch.tags = Array.from(new Set([...existingTags, ...(data.tags as string[])]));
-    }
-    if (data.setup && !target_trade.setup) patch.setup = data.setup;
-    if (data.timeframe && !target_trade.timeframe) patch.timeframe = data.timeframe;
-    if (data.lesson) {
-      // Append lesson into notes with a marker
-      const existing = patch.notes as string | undefined ?? target_trade.notes ?? '';
-      const lessonLine = `📌 Leçon : ${data.lesson as string}`;
-      patch.notes = existing ? `${existing}\n${lessonLine}` : lessonLine;
-    }
+    const navigateTo = reviews.length === 1 && lastTradeId
+      ? `/journal/edit/${lastTradeId}`
+      : '/journal';
 
-    if (Object.keys(patch).length === 0) {
-      return { navigateTo: `/journal/edit/${target_trade.id}` };
-    }
-    const asyncWork = useTradesStore.getState().updateTrade(target_trade.id, patch);
-    return { navigateTo: `/journal/edit/${target_trade.id}`, asyncWork };
+    if (updatePromises.length === 0) return { navigateTo };
+    return { navigateTo, asyncWork: Promise.all(updatePromises).then(() => {}) };
   }
 
   if (target === 'trade_note') {

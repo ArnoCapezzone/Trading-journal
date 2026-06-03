@@ -50,11 +50,6 @@ function ConfirmCard({
   const color = TARGET_COLORS[result.target] ?? 'var(--text-muted)';
   const label = TARGET_LABELS[result.target] ?? result.target;
 
-  // Build a readable preview of extracted fields
-  const fields = Object.entries(result.data)
-    .filter(([, v]) => v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0))
-    .slice(0, 5);
-
   const fieldLabels: Record<string, string> = {
     bias: 'Bias', keyLevels: 'Niveaux', setupsToWatch: 'Setups', maxTrades: 'Max trades',
     preNotes: 'Notes', preMood: 'Humeur', preMoodTags: 'Tags',
@@ -62,6 +57,30 @@ function ConfirmCard({
     instrument: 'Paire', direction: 'Direction', entryPrice: 'Entrée', exitPrice: 'Sortie',
     stopLoss: 'SL', takeProfit: 'TP', lotSize: 'Taille', notes: 'Notes', setup: 'Setup',
     note: 'Note', tags: 'Tags', timeframe: 'TF', identifier: 'Cible',
+  };
+
+  // Detect trade_review with multiple reviews
+  const reviews = result.target === 'trade_review' && Array.isArray(result.data.reviews)
+    ? (result.data.reviews as Record<string, unknown>[])
+    : null;
+
+  // For non-review, build flat field list
+  const fields = !reviews
+    ? Object.entries(result.data)
+        .filter(([, v]) => v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0))
+        .slice(0, 6)
+    : [];
+
+  const renderFieldValue = (v: unknown): string => {
+    if (Array.isArray(v)) return v.join(', ');
+    if (v && typeof v === 'object') {
+      const obj = v as Record<string, unknown>;
+      if (obj.instrument || obj.recency) {
+        return [obj.instrument, obj.recency].filter(Boolean).join(' · ');
+      }
+      return JSON.stringify(v);
+    }
+    return String(v);
   };
 
   return (
@@ -88,17 +107,41 @@ function ConfirmCard({
         "{result.transcript}"
       </div>
 
-      {/* Extracted fields */}
+      {/* Extracted fields — flat (non-review) */}
       {fields.length > 0 && (
         <div style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: 4 }}>
           {fields.map(([k, v]) => (
             <div key={k} style={{ display: 'flex', gap: 6, fontSize: 11 }}>
               <span style={{ color: 'var(--text-tertiary)', minWidth: 90 }}>{fieldLabels[k] ?? k}</span>
-              <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>
-                {Array.isArray(v) ? v.join(', ') : String(v)}
+              <span style={{ color: 'var(--text-primary)', fontWeight: 600, flex: 1 }}>
+                {renderFieldValue(v)}
               </span>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Trade reviews — one card per trade */}
+      {reviews && reviews.length > 0 && (
+        <div style={{ padding: '8px 14px', display: 'flex', flexDirection: 'column', gap: 8, maxHeight: 280, overflowY: 'auto' }}>
+          {reviews.map((rev, i) => {
+            const id = rev.identifier as { instrument?: string; recency?: string } | undefined;
+            const headerLine = id ? [id.instrument, id.recency].filter(Boolean).join(' · ') : `Trade #${i + 1}`;
+            const entries = Object.entries(rev).filter(([k, v]) =>
+              k !== 'identifier' && v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0)
+            );
+            return (
+              <div key={i} style={{ padding: '8px 10px', backgroundColor: 'var(--bg-app)', borderRadius: 6, border: '1px solid var(--border-faint)' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#06B6D4', marginBottom: 4 }}>🔍 {headerLine}</div>
+                {entries.map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', gap: 6, fontSize: 11, marginTop: 2 }}>
+                    <span style={{ color: 'var(--text-tertiary)', minWidth: 70 }}>{fieldLabels[k] ?? k}</span>
+                    <span style={{ color: 'var(--text-primary)', fontWeight: 600, flex: 1 }}>{renderFieldValue(v)}</span>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
 

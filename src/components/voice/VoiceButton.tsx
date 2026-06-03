@@ -8,6 +8,7 @@ const TARGET_LABELS: Record<string, string> = {
   daily_plan_morning: '📋 Plan du jour',
   daily_plan_evening: '🌙 Bilan du soir',
   trade_form:         '📈 Nouveau trade',
+  trade_review:       '🔍 Review trade',
   trade_note:         '📝 Note trade',
   unknown:            '❓ Non reconnu',
 };
@@ -16,6 +17,7 @@ const TARGET_COLORS: Record<string, string> = {
   daily_plan_morning: '#3D8EF0',
   daily_plan_evening: '#8B5CF6',
   trade_form:         '#00C47A',
+  trade_review:       '#06B6D4',
   trade_note:         '#F0A030',
   unknown:            'var(--text-muted)',
 };
@@ -59,7 +61,7 @@ function ConfirmCard({
     followedPlan: 'Plan suivi', bestDecision: 'Meilleure décision', lesson: 'Leçon',
     instrument: 'Paire', direction: 'Direction', entryPrice: 'Entrée', exitPrice: 'Sortie',
     stopLoss: 'SL', takeProfit: 'TP', lotSize: 'Taille', notes: 'Notes', setup: 'Setup',
-    note: 'Note',
+    note: 'Note', tags: 'Tags', timeframe: 'TF', identifier: 'Cible',
   };
 
   return (

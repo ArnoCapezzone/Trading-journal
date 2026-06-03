@@ -11,6 +11,7 @@ export type RouteTarget =
   | 'daily_plan_morning'
   | 'daily_plan_evening'
   | 'trade_form'
+  | 'trade_review'
   | 'trade_note'
   | 'unknown';
 
@@ -60,8 +61,9 @@ Réponds UNIQUEMENT avec un JSON valide (sans markdown, sans backticks) avec exa
 RÈGLES DE CLASSIFICATION:
 - Bias, plan de session, niveaux clés, setup à surveiller, humeur du matin → "daily_plan_morning"
 - Bilan de journée, ce qui s'est passé, décisions, leçons → "daily_plan_evening"
-- Description d'un trade (paire, direction, entrée, sortie) → "trade_form"
-- Note rapide sur un trade récent → "trade_note"
+- Description d'un NOUVEAU trade (paire, direction, entrée, sortie, taille) sans référence à un trade passé → "trade_form"
+- Commentaire / analyse / leçon / émotion à propos d'un trade DÉJÀ FAIT (ex: "sur mon trade EURUSD de ce matin…", "le NAS d'hier…", "mon dernier trade…", "j'ai paniqué sur le XAU") → "trade_review"
+- Note très courte sans contexte clair → "trade_note"
 - Autre → "unknown"
 
 CHAMPS PAR CIBLE:
@@ -98,6 +100,14 @@ trade_form:
   timeframe: "1M"|"5M"|"15M"|"30M"|"1H"|"4H"|"D"|"W"|null
   notes: string|null
   tags: string[]|null
+
+trade_review:
+  identifier: { instrument?: string, when?: string, recency?: "last"|"today"|"yesterday"|"this_week" }
+  notes: string|null            (commentaire à ajouter aux notes existantes)
+  tags: string[]|null           (parmi fear,greed,fomo,early_exit,late_entry,revenge,oversize,good_execution,followed_plan,news_trade)
+  setup: "BREAKOUT"|"REVERSAL"|"SUPPORT_RESISTANCE"|"TREND_FOLLOWING"|"RANGE"|"NEWS"|"OTHER"|null
+  timeframe: "1M"|"5M"|"15M"|"30M"|"1H"|"4H"|"D"|"W"|null
+  lesson: string|null           (leçon explicite tirée du trade)
 
 trade_note:
   note: string`;
@@ -178,6 +188,70 @@ export function applyRoute(result: RouteResult): ApplyResult {
 
   if (target === 'trade_form') {
     return { navigateTo: '/journal/new', navigateState: { prefill: data } };
+  }
+
+  if (target === 'trade_review') {
+    const trades = useTradesStore.getState().trades;
+    if (trades.length === 0) return {};
+
+    const id = data.identifier as { instrument?: string; when?: string; recency?: string } | undefined;
+    const sortedByExit = [...trades].sort((a, b) =>
+      new Date(b.exitTime).getTime() - new Date(a.exitTime).getTime()
+    );
+
+    // Find the target trade
+    let target_trade = sortedByExit[0]; // fallback: most recent
+    if (id?.instrument) {
+      const wanted = id.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const matching = sortedByExit.filter((t) =>
+        t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '').includes(wanted) ||
+        wanted.includes(t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, ''))
+      );
+      if (matching.length > 0) {
+        // Filter by recency if provided
+        if (id.recency === 'today') {
+          const today = new Date().toISOString().slice(0, 10);
+          const todayMatch = matching.filter((t) =>
+            new Date(t.exitTime).toISOString().slice(0, 10) === today
+          );
+          if (todayMatch.length > 0) target_trade = todayMatch[0];
+          else target_trade = matching[0];
+        } else if (id.recency === 'yesterday') {
+          const yest = new Date(Date.now() - 86400_000).toISOString().slice(0, 10);
+          const yestMatch = matching.filter((t) =>
+            new Date(t.exitTime).toISOString().slice(0, 10) === yest
+          );
+          target_trade = yestMatch[0] ?? matching[0];
+        } else {
+          target_trade = matching[0];
+        }
+      }
+    }
+
+    // Build the update patch — only fields explicitly mentioned
+    const patch: Record<string, unknown> = {};
+    if (data.notes) {
+      const existing = target_trade.notes ?? '';
+      const newNote = data.notes as string;
+      patch.notes = existing ? `${existing}\n${newNote}` : newNote;
+    }
+    if (Array.isArray(data.tags) && data.tags.length > 0) {
+      const existingTags = target_trade.tags ?? [];
+      patch.tags = Array.from(new Set([...existingTags, ...(data.tags as string[])]));
+    }
+    if (data.setup && !target_trade.setup) patch.setup = data.setup;
+    if (data.timeframe && !target_trade.timeframe) patch.timeframe = data.timeframe;
+    if (data.lesson) {
+      // Append lesson into notes with a marker
+      const existing = patch.notes as string | undefined ?? target_trade.notes ?? '';
+      const lessonLine = `📌 Leçon : ${data.lesson as string}`;
+      patch.notes = existing ? `${existing}\n${lessonLine}` : lessonLine;
+    }
+
+    if (Object.keys(patch).length > 0) {
+      void useTradesStore.getState().updateTrade(target_trade.id, patch);
+    }
+    return { navigateTo: `/journal/edit/${target_trade.id}` };
   }
 
   if (target === 'trade_note') {

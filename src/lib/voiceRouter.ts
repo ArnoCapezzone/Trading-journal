@@ -103,11 +103,19 @@ trade_form:
 
 trade_review:
   identifier: { instrument?: string, when?: string, recency?: "last"|"today"|"yesterday"|"this_week" }
-  notes: string|null            (commentaire à ajouter aux notes existantes)
+  notes: string                 (OBLIGATOIRE — résumé fidèle de TOUT ce que l'utilisateur a dit sur ce trade, à la première personne, en français. Ne JAMAIS laisser vide ou null si l'utilisateur a parlé de ce trade.)
   tags: string[]|null           (parmi fear,greed,fomo,early_exit,late_entry,revenge,oversize,good_execution,followed_plan,news_trade)
   setup: "BREAKOUT"|"REVERSAL"|"SUPPORT_RESISTANCE"|"TREND_FOLLOWING"|"RANGE"|"NEWS"|"OTHER"|null
   timeframe: "1M"|"5M"|"15M"|"30M"|"1H"|"4H"|"D"|"W"|null
-  lesson: string|null           (leçon explicite tirée du trade)
+  lesson: string|null           (leçon explicite SEULEMENT si l'utilisateur dit explicitement "leçon", "j'ai appris", "à retenir", etc.)
+
+EXEMPLE trade_review:
+Input: "Sur mon trade EURUSD de ce matin, j'ai paniqué et coupé trop tôt"
+Output: { "target": "trade_review", "summary": "Review EURUSD ce matin", "data": {
+  "identifier": { "instrument": "EURUSD", "recency": "today" },
+  "notes": "J'ai paniqué et j'ai coupé trop tôt.",
+  "tags": ["fear","early_exit"], "lesson": null
+}}
 
 trade_note:
   note: string`;
@@ -153,6 +161,7 @@ export async function routeTranscript(transcript: string): Promise<RouteResult> 
 export interface ApplyResult {
   navigateTo?: string;
   navigateState?: unknown;
+  asyncWork?: Promise<void>;
 }
 
 export function applyRoute(result: RouteResult): ApplyResult {
@@ -248,10 +257,11 @@ export function applyRoute(result: RouteResult): ApplyResult {
       patch.notes = existing ? `${existing}\n${lessonLine}` : lessonLine;
     }
 
-    if (Object.keys(patch).length > 0) {
-      void useTradesStore.getState().updateTrade(target_trade.id, patch);
+    if (Object.keys(patch).length === 0) {
+      return { navigateTo: `/journal/edit/${target_trade.id}` };
     }
-    return { navigateTo: `/journal/edit/${target_trade.id}` };
+    const asyncWork = useTradesStore.getState().updateTrade(target_trade.id, patch);
+    return { navigateTo: `/journal/edit/${target_trade.id}`, asyncWork };
   }
 
   if (target === 'trade_note') {
@@ -262,8 +272,9 @@ export function applyRoute(result: RouteResult): ApplyResult {
         const last = [...trades].sort((a, b) =>
           new Date(b.exitTime).getTime() - new Date(a.exitTime).getTime()
         )[0];
-        const updated = { ...last, notes: last.notes ? `${last.notes}\n${note}` : note };
-        void useTradesStore.getState().updateTrade(last.id, updated);
+        const newNotes = last.notes ? `${last.notes}\n${note}` : note;
+        const asyncWork = useTradesStore.getState().updateTrade(last.id, { notes: newNotes });
+        return { navigateTo: `/journal/edit/${last.id}`, asyncWork };
       }
     }
     return {};

@@ -193,10 +193,16 @@ export default function VoiceButton() {
     else if (state === 'recording') stopRecording();
   };
 
-  const handleApply = () => {
+  const handleApply = async () => {
     if (!result) return;
-    const { navigateTo, navigateState } = applyRoute(result);
+    const { navigateTo, navigateState, asyncWork } = applyRoute(result);
     setResult(null);
+    try {
+      if (asyncWork) await asyncWork;
+    } catch (e) {
+      setError((e as Error).message?.slice(0, 100) ?? 'Erreur lors de la mise à jour');
+      return;
+    }
     if (navigateTo) navigate(navigateTo, navigateState ? { state: navigateState } : undefined);
   };
 

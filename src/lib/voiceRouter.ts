@@ -102,12 +102,26 @@ trade_form:
   tags: string[]|null
 
 trade_review:
-  identifier: { instrument?: string, when?: string, recency?: "last"|"today"|"yesterday"|"this_week" }
+  identifier: {
+    instrument?: string,
+    recency?: "last"|"today"|"yesterday"|"this_week",
+    direction?: "LONG"|"SHORT",          (si l'utilisateur dit "le long", "celui en achat", "le short", "celui à la vente")
+    time?: string,                        (heure approximative HH:MM si mentionnée, ex: "09:30", "14:00")
+    order?: "first"|"second"|"third"|"last",  (si "le premier", "le deuxième", "le dernier" du jour/de la période)
+    outcome?: "win"|"loss"                (si "gagnant", "perdant", "celui que j'ai gagné", "celui que j'ai perdu")
+  }
   notes: string                 (OBLIGATOIRE — résumé fidèle de TOUT ce que l'utilisateur a dit sur ce trade, à la première personne, en français. Ne JAMAIS laisser vide ou null si l'utilisateur a parlé de ce trade.)
   tags: string[]|null           (parmi fear,greed,fomo,early_exit,late_entry,revenge,oversize,good_execution,followed_plan,news_trade)
   setup: "BREAKOUT"|"REVERSAL"|"SUPPORT_RESISTANCE"|"TREND_FOLLOWING"|"RANGE"|"NEWS"|"OTHER"|null
   timeframe: "1M"|"5M"|"15M"|"30M"|"1H"|"4H"|"D"|"W"|null
   lesson: string|null           (leçon explicite SEULEMENT si l'utilisateur dit explicitement "leçon", "j'ai appris", "à retenir", etc.)
+
+EXEMPLES de désambiguïsation pour identifier:
+- "mon premier EURUSD de ce matin" → { instrument: "EURUSD", recency: "today", order: "first" }
+- "le EURUSD long de ce matin" → { instrument: "EURUSD", recency: "today", direction: "LONG" }
+- "le trade EURUSD perdant" → { instrument: "EURUSD", recency: "today", outcome: "loss" }
+- "celui de 9h30 sur EURUSD" → { instrument: "EURUSD", recency: "today", time: "09:30" }
+- "mon dernier EURUSD" → { instrument: "EURUSD", recency: "last" }
 
 EXEMPLE trade_review (un seul trade):
 Input: "Sur mon trade EURUSD de ce matin, j'ai paniqué et coupé trop tôt, c'était en M15"
@@ -230,41 +244,100 @@ export function applyRoute(result: RouteResult): ApplyResult {
     );
     const usedIds = new Set<string>();
 
-    const findTrade = (id: { instrument?: string; recency?: string } | undefined) => {
+    interface Identifier {
+      instrument?: string;
+      recency?: string;
+      direction?: 'LONG' | 'SHORT';
+      time?: string;          // "HH:MM"
+      order?: 'first' | 'second' | 'third' | 'last';
+      outcome?: 'win' | 'loss';
+    }
+
+    const findTrade = (id: Identifier | undefined) => {
       let pool = sortedByExit.filter((t) => !usedIds.has(t.id));
       if (pool.length === 0) pool = sortedByExit;
 
-      if (!id?.instrument) return pool[0];
+      // 1) Filter by instrument
+      if (id?.instrument) {
+        const wanted = id.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        const byInstr = pool.filter((t) => {
+          const s = t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          return s.includes(wanted) || wanted.includes(s);
+        });
+        if (byInstr.length > 0) pool = byInstr;
+      }
 
-      const wanted = id.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      const matching = pool.filter((t) => {
-        const s = t.instrument.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        return s.includes(wanted) || wanted.includes(s);
-      });
-      if (matching.length === 0) return pool[0];
-
-      if (id.recency === 'today') {
+      // 2) Filter by recency (today/yesterday)
+      if (id?.recency === 'today') {
         const today = new Date().toISOString().slice(0, 10);
-        const todayMatch = matching.filter((t) =>
-          new Date(t.exitTime).toISOString().slice(0, 10) === today
-        );
-        return todayMatch[0] ?? matching[0];
-      }
-      if (id.recency === 'yesterday') {
+        const filtered = pool.filter((t) => new Date(t.exitTime).toISOString().slice(0, 10) === today);
+        if (filtered.length > 0) pool = filtered;
+      } else if (id?.recency === 'yesterday') {
         const yest = new Date(Date.now() - 86400_000).toISOString().slice(0, 10);
-        const yestMatch = matching.filter((t) =>
-          new Date(t.exitTime).toISOString().slice(0, 10) === yest
-        );
-        return yestMatch[0] ?? matching[0];
+        const filtered = pool.filter((t) => new Date(t.exitTime).toISOString().slice(0, 10) === yest);
+        if (filtered.length > 0) pool = filtered;
+      } else if (id?.recency === 'this_week') {
+        const weekAgo = Date.now() - 7 * 86400_000;
+        const filtered = pool.filter((t) => new Date(t.exitTime).getTime() >= weekAgo);
+        if (filtered.length > 0) pool = filtered;
       }
-      return matching[0];
+
+      // 3) Filter by direction
+      if (id?.direction) {
+        const filtered = pool.filter((t) => t.direction === id.direction);
+        if (filtered.length > 0) pool = filtered;
+      }
+
+      // 4) Filter by outcome (win/loss based on mt5Profit or computed P&L sign)
+      if (id?.outcome) {
+        const filtered = pool.filter((t) => {
+          const pnl = t.mt5Profit ?? 0;
+          return id.outcome === 'win' ? pnl > 0 : pnl < 0;
+        });
+        if (filtered.length > 0) pool = filtered;
+      }
+
+      // 5) Filter by approximate time (HH:MM within ±30min on entryTime)
+      if (id?.time) {
+        const [h, m] = id.time.split(':').map(Number);
+        if (!isNaN(h)) {
+          const targetMin = h * 60 + (m || 0);
+          const filtered = pool.filter((t) => {
+            const entry = new Date(t.entryTime);
+            const tradeMin = entry.getHours() * 60 + entry.getMinutes();
+            return Math.abs(tradeMin - targetMin) <= 30;
+          });
+          if (filtered.length > 0) {
+            // Sort by closeness to target time
+            filtered.sort((a, b) => {
+              const ea = new Date(a.entryTime); const eb = new Date(b.entryTime);
+              const da = Math.abs(ea.getHours() * 60 + ea.getMinutes() - targetMin);
+              const db = Math.abs(eb.getHours() * 60 + eb.getMinutes() - targetMin);
+              return da - db;
+            });
+            pool = filtered;
+          }
+        }
+      }
+
+      // 6) Apply order — by entryTime ASC (chronological) so "first" = earliest
+      const chrono = [...pool].sort((a, b) =>
+        new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime()
+      );
+      if (id?.order === 'first') return chrono[0];
+      if (id?.order === 'second') return chrono[1] ?? chrono[chrono.length - 1];
+      if (id?.order === 'third') return chrono[2] ?? chrono[chrono.length - 1];
+      if (id?.order === 'last') return chrono[chrono.length - 1];
+
+      // Default: most recent by exitTime
+      return pool[0];
     };
 
     const updatePromises: Promise<void>[] = [];
     let lastTradeId = '';
 
     for (const review of reviews) {
-      const id = review.identifier as { instrument?: string; recency?: string } | undefined;
+      const id = review.identifier as Identifier | undefined;
       const target_trade = findTrade(id);
       if (!target_trade) continue;
       usedIds.add(target_trade.id);

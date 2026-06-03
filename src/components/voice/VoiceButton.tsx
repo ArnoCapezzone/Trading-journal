@@ -173,10 +173,14 @@ export default function VoiceButton() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<RouteResult | null>(null);
 
+  const [textMode, setTextMode] = useState(false);
+  const [textValue, setTextValue] = useState('');
+
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const errorTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const textInputRef = useRef<HTMLTextAreaElement | null>(null);
 
   // Auto-clear error after 4s
   useEffect(() => {
@@ -236,6 +240,31 @@ export default function VoiceButton() {
     else if (state === 'recording') stopRecording();
   };
 
+  const submitText = async () => {
+    const text = textValue.trim();
+    if (!text) return;
+    setError(null);
+    setResult(null);
+    setState('processing');
+    try {
+      const routeResult = await routeTranscript(text);
+      setResult(routeResult);
+      setTextValue('');
+      setTextMode(false);
+    } catch (e) {
+      setError((e as Error).message?.slice(0, 80) ?? 'Erreur');
+    } finally {
+      setState('idle');
+    }
+  };
+
+  const openTextMode = () => {
+    setError(null);
+    setResult(null);
+    setTextMode(true);
+    setTimeout(() => textInputRef.current?.focus(), 50);
+  };
+
   const handleApply = async () => {
     if (!result) return;
     const { navigateTo, navigateState, asyncWork } = applyRoute(result);
@@ -282,6 +311,88 @@ export default function VoiceButton() {
         }}>
           {error}
         </div>
+      )}
+
+      {/* Text input panel */}
+      {textMode && (
+        <div style={{
+          position: 'fixed', bottom: 90, right: 24, zIndex: 9999,
+          width: 320, maxWidth: 'calc(100vw - 48px)',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border-default)',
+          borderRadius: 12,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+          padding: 12,
+          animation: 'slideUp 0.2s ease-out',
+        }}>
+          <style>{`@keyframes slideUp { from { transform: translateY(16px); opacity: 0; } to { transform: none; opacity: 1; } }`}</style>
+          <div style={{ fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 8, fontWeight: 600 }}>
+            ⌨️ Écris : plan, trade, ou review
+          </div>
+          <textarea
+            ref={textInputRef}
+            value={textValue}
+            onChange={(e) => setTextValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); void submitText(); }
+              if (e.key === 'Escape') { setTextMode(false); setTextValue(''); }
+            }}
+            placeholder="Ex: sur mon EURUSD long de ce matin j'ai coupé trop tôt par peur…"
+            rows={3}
+            style={{
+              width: '100%', padding: '8px 10px',
+              backgroundColor: 'var(--bg-app)',
+              border: '1px solid var(--border-default)',
+              borderRadius: 7,
+              color: 'var(--text-primary)',
+              fontSize: 13, fontFamily: 'inherit',
+              outline: 'none', resize: 'none', boxSizing: 'border-box',
+              lineHeight: 1.4,
+            }}
+          />
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button
+              onClick={() => void submitText()}
+              disabled={!textValue.trim() || state === 'processing'}
+              style={{
+                flex: 1, padding: '8px', borderRadius: 7, border: 'none',
+                backgroundColor: textValue.trim() ? '#3D8EF0' : 'var(--bg-surface-2)',
+                color: textValue.trim() ? '#fff' : 'var(--text-muted)',
+                fontSize: 12, fontWeight: 700,
+                cursor: textValue.trim() ? 'pointer' : 'default',
+              }}
+            >
+              {state === 'processing' ? '⟳ Analyse…' : 'Envoyer ⏎'}
+            </button>
+            <button
+              onClick={() => { setTextMode(false); setTextValue(''); }}
+              style={{ padding: '8px 14px', borderRadius: 7, border: '1px solid var(--border-default)', backgroundColor: 'var(--bg-surface-2)', color: 'var(--text-secondary)', fontSize: 12, cursor: 'pointer' }}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Keyboard toggle button (secondary, left of mic) */}
+      {!textMode && state === 'idle' && (
+        <button
+          onClick={openTextMode}
+          title="Écrire au lieu de dicter"
+          style={{
+            position: 'fixed', bottom: 30, right: 86, zIndex: 9996,
+            width: 40, height: 40, borderRadius: '50%',
+            backgroundColor: 'var(--bg-surface-2)',
+            border: '1px solid var(--border-default)',
+            cursor: 'pointer',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--text-secondary)',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+            fontSize: 16,
+          }}
+        >
+          ⌨️
+        </button>
       )}
 
       {/* Floating mic button */}
